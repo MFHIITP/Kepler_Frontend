@@ -1,0 +1,57 @@
+import React, { useEffect } from "react";
+import { useParams } from "react-router-dom";
+
+function Login_Auth() {
+  const { email } = useParams();
+  const serv_addr = import.meta.env.VITE_SERV_ADDR;
+
+  useEffect(() => {
+    const loginfunction = async () => {
+      const response = await fetch(`${serv_addr}/login/authlogin`, {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: email,
+        }),
+      });
+      if (response.status === 200) {
+        const data = await response.json();
+        const token = data.token;
+  
+        const responsed = await fetch(`${serv_addr}/checktoken`, {
+          method: "POST",
+          credentials: 'include',
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            token: token,
+          })
+        });
+  
+        if (responsed.status === 200) {
+          document.cookie = `Token=${data.token}; path=/; domain=${window.location.hostname}; secure=true; sameSite=None;`
+          document.cookie = `ProfileInfo=${encodeURIComponent(`j:` + JSON.stringify(data.profileinfo))};  path=/; domain=${window.location.hostname}; secure=true; sameSite=None;`
+          localStorage.setItem('toast_message', `Login Successful! Welcome to Kepler ${data.profileinfo.name}`)
+          window.location.href = '/';
+        }
+      } else {
+        localStorage.setItem('authfail', 'Please provide some more informations about yourself.');
+        window.location.href = `/authregister/${email}`
+      }
+    };
+    loginfunction()
+  }, []);
+
+  return <div className="m-12 text-xl text-blue-800 font-mono">
+    Your credentials have been verified successfully. 
+    <div>You are going to be directed to the website shortly.</div> Please wait patiently.
+
+    <img src="../../../Images/milky-way-shooting-star.webp" alt="" height={600} width={600} className="mt-6 rounded-lg"/>
+  </div>;
+}
+
+export default Login_Auth;
