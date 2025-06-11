@@ -7,8 +7,7 @@ function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const serv_addr = import.meta.env.VITE_SERV_ADDR;
-  console.log(serv_addr);
+  const serv_addr = import.meta.env.VITE_SERV_ADDR
 
   useEffect(() => {
     if (localStorage.getItem("registration_toast")) {
@@ -22,7 +21,6 @@ function Login() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     setLoading(true);
-    console.log(`${serv_addr}`);
     const response = await api.post(apiRoutes.auth.login.signInLogin, {
         email: email,
         password: password,
@@ -30,15 +28,11 @@ function Login() {
 
     if (response.status === 200) {
       const data = await response.data;
-      const token = data.token;
 
-      const responsed = await api.post(apiRoutes.auth.tokenCheck, {
-          token: token,
-        });
-
-      if (responsed.status === 200) {
+      if (data.accessToken != null && data.refreshToken != null) {
         setLoading(false);
-        document.cookie = `Token=${data.token}; path=/; domain=${window.location.hostname}; secure=true; sameSite=None;`;
+        document.cookie = `AccessToken=${data.accessToken}; path=/; domain=${window.location.hostname}; secure=true; sameSite=None;`;
+        document.cookie = `RefreshToken=${data.refreshToken}; path=/; domain=${window.location.hostname}; secure=true; sameSite=None;`;
         document.cookie = `ProfileInfo=${encodeURIComponent(
           `j:` + JSON.stringify(data.profileinfo)
         )};  path=/; domain=${

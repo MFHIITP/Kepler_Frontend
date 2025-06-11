@@ -14,13 +14,13 @@ function App() {
   const scrollRef = useRef<HTMLDivElement | null>(null)
 
   const getToken = () => {
-    const token = Cookies.get("Token");
+    const token = Cookies.get("AccessToken");
     if (token) {
       return token;
     }
     return null;
   };
-  const getProfileInfo = async () => {
+  const getProfileInfo = () => {
     const profile = Cookies.get("ProfileInfo");
     if (profile) {
       const decodedProfile = decodeURIComponent(profile.substring(2));

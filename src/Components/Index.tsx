@@ -7,6 +7,7 @@ import toast from "react-hot-toast";
 import { componentPropsInterface } from "./Interfaces/ComponentProps.interface";
 import api from "../utils/api";
 import apiRoutes from "../utils/Routes/apiRoutes";
+import Cookies from "js-cookie";
 
 const Index: FC<componentPropsInterface> = ({ auth, details }) => {
   var name = details?.name;
@@ -22,7 +23,6 @@ const Index: FC<componentPropsInterface> = ({ auth, details }) => {
   const [coreTeamDropdownOpen, setcoreTeamDropdownOpen] = useState(false);
   const context = useContext(MyContext);  
   const adminemails = context?.adminemails ?? []
-  const serv_addr = import.meta.env.VITE_SERV_ADDR;
 
   const handleLogout = async () => {
     setLoading(true);
@@ -30,8 +30,9 @@ const Index: FC<componentPropsInterface> = ({ auth, details }) => {
         email: details?.email,
       });
     if (response.status == 200) {
-      document.cookie = `Token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=${window.location.hostname};`;
-      document.cookie = `ProfileInfo=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=${window.location.hostname};`;
+      Cookies.remove("AccessToken")
+      Cookies.remove("RefreshToken")
+      Cookies.remove("ProfileInfo")
       localStorage.setItem("toast_message", "Logout Successful!");
       setLoading(false);
       window.location.href = "/";
