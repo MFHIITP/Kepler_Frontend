@@ -26,9 +26,9 @@ const apiRoutes = {
             authLogin: `/login/authlogin`,
             signInLogin: `/login/direct_login`
         },
-        tokenCheck: `/checktoken`,
         logout: `/logout`,
-        otpVerify: `/users/verifyOTP`
+        otpVerify: `/users/verifyOTP`,
+        getNewAccessToken: `/authRefreshToken/newAccessToken`
     },
     chat: {
         groupChat: {
