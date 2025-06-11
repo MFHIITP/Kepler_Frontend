@@ -20,7 +20,9 @@ function Library(props) {
 
   useEffect(() => {
     const getbooks = async () => {
-      const { data } = await api.get(apiRoutes.library.getBooks);
+      const { data } = await api.post(apiRoutes.library.getBooks, {
+        course: course
+      });
       setBooks(data); // Ensure to set the fetched books in state
     };
     getbooks();
