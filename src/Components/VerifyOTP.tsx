@@ -1,4 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
+import api from "../utils/api";
+import apiRoutes from "../utils/Routes/apiRoutes";
 
 function Otpverify() {
   const emailref = useRef(null)
@@ -26,16 +28,10 @@ function Otpverify() {
     setLoading(true);
     event.preventDefault();
     try {
-      const response = await fetch(`${serv_addr}/users/verifyOTP`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
+      const response = await api.post(apiRoutes.auth.otpVerify, {
           otp: otp,
           data: data,
-        }),
-      });
+        });
 
       if (!(response.status == 200)) {
         throw new Error("Network response was not ok");

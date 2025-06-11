@@ -1,17 +1,20 @@
 import React, { useEffect, useState } from "react";
-import toast from 'react-hot-toast'
+import toast from "react-hot-toast";
 import { useParams } from "react-router-dom";
+import api from "../utils/api";
+import apiRoutes from "../utils/Routes/apiRoutes";
 
 function AuthRegister() {
-  const {email} = useParams();
+  const { email } = useParams();
 
   useEffect(() => {
-    if(localStorage.getItem('authfail')){
-      toast.success('Almost there. Please fill the following details for finer verification')
-      localStorage.removeItem('authfail')
+    if (localStorage.getItem("authfail")) {
+      toast.success(
+        "Almost there. Please fill the following details for finer verification"
+      );
+      localStorage.removeItem("authfail");
     }
-  }, [])
-  
+  }, []);
 
   const [formData, setFormData] = useState({
     name: "",
@@ -27,7 +30,9 @@ function AuthRegister() {
   const [loading, setLoading] = useState(false);
   const serv_addr = import.meta.env.VITE_SERV_ADDR;
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     const { id, value } = e.target;
     setFormData((prevData) => ({
       ...prevData,
@@ -40,26 +45,33 @@ function AuthRegister() {
     setLoading(true);
 
     try {
-      const response = await fetch(`${serv_addr}/users/authsignup`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name: formData.name,
-          phone: formData.phone,
-          email: email,
-          school: formData.educationType === "school" ? formData.school : undefined,
-          school_year:
-            formData.educationType === "school" ? formData.school_year : undefined,
-          college: formData.educationType === "college" ? formData.college : undefined,
-          college_stream:
-            formData.educationType === "college" ? formData.college_stream : undefined,
-          college_year:
-            formData.educationType === "college" ? formData.college_year : undefined,
-        }),
+      const response = await api.post(apiRoutes.auth.register.authRegister, {
+        name: formData.name,
+        phone: formData.phone,
+        email: email,
+        school:
+          formData.educationType === "school" ? formData.school : undefined,
+        school_year:
+          formData.educationType === "school"
+            ? formData.school_year
+            : undefined,
+        college:
+          formData.educationType === "college" ? formData.college : undefined,
+        college_stream:
+          formData.educationType === "college"
+            ? formData.college_stream
+            : undefined,
+        college_year:
+          formData.educationType === "college"
+            ? formData.college_year
+            : undefined,
       });
 
       if (response.status === 200) {
-        localStorage.setItem('registration_toast', 'Congratulations, your account has been created. Please Login Again.')
+        localStorage.setItem(
+          "registration_toast",
+          "Congratulations, your account has been created. Please Login Again."
+        );
         window.location.pathname = "/login";
       } else {
         alert(
@@ -84,26 +96,25 @@ function AuthRegister() {
           Register for Kepler 22B
         </h1>
         <form onSubmit={handleSubmit} className="space-y-5">
-          {["name", "phone"].map(
-            (id) => (
-              <div key={id}>
-                <label
-                  htmlFor={id}
-                  className="block text-sm font-medium text-gray-600 mb-1"
-                >
-                  {id.charAt(0).toUpperCase() + id.slice(1).replace(/([A-Z])/g, " $1")}
-                </label>
-                <input
-                  type={id.includes("password") ? "password" : "text"}
-                  id={id}
-                  value={id == 'name' ? formData.name : formData.phone}
-                  onChange={handleChange}
-                  className="w-full px-4 py-2 border rounded-md text-gray-700 bg-gray-100 focus:ring focus:ring-blue-300 focus:outline-none"
-                  required={!(id === "password" || id === "confirmPassword")}
-                />
-              </div>
-            )
-          )}
+          {["name", "phone"].map((id) => (
+            <div key={id}>
+              <label
+                htmlFor={id}
+                className="block text-sm font-medium text-gray-600 mb-1"
+              >
+                {id.charAt(0).toUpperCase() +
+                  id.slice(1).replace(/([A-Z])/g, " $1")}
+              </label>
+              <input
+                type={id.includes("password") ? "password" : "text"}
+                id={id}
+                value={id == "name" ? formData.name : formData.phone}
+                onChange={handleChange}
+                className="w-full px-4 py-2 border rounded-md text-gray-700 bg-gray-100 focus:ring focus:ring-blue-300 focus:outline-none"
+                required={!(id === "password" || id === "confirmPassword")}
+              />
+            </div>
+          ))}
 
           <div>
             <label className="block text-sm font-medium text-gray-600 mb-1">
@@ -111,7 +122,10 @@ function AuthRegister() {
             </label>
             <div className="space-y-2">
               {["school", "college"].map((type) => (
-                <label key={type} className="inline-flex items-center space-x-2 mx-12 cursor-pointer px-2 pr-4 hover:bg-gray-400 bg-gray-300 rounded-lg">
+                <label
+                  key={type}
+                  className="inline-flex items-center space-x-2 mx-12 cursor-pointer px-2 pr-4 hover:bg-gray-400 bg-gray-300 rounded-lg"
+                >
                   <input
                     type="radio"
                     className="hidden peer"
@@ -120,7 +134,9 @@ function AuthRegister() {
                     checked={formData.educationType === type}
                     onChange={handleChange}
                   />
-                  <span className="text-gray-700">{type.charAt(0).toUpperCase() + type.slice(1)}</span>
+                  <span className="text-gray-700">
+                    {type.charAt(0).toUpperCase() + type.slice(1)}
+                  </span>
                 </label>
               ))}
             </div>
@@ -236,7 +252,12 @@ function AuthRegister() {
             {loading ? "Registering..." : "Register"}
           </button>
         </form>
-        <div className="text-md font-semibold text-gray-600 my-4 flex justify-center">Already Registered? &nbsp; <a href = '/login' className="text-blue-500 hover:underline">Login</a></div>
+        <div className="text-md font-semibold text-gray-600 my-4 flex justify-center">
+          Already Registered? &nbsp;{" "}
+          <a href="/login" className="text-blue-500 hover:underline">
+            Login
+          </a>
+        </div>
       </div>
     </div>
   );

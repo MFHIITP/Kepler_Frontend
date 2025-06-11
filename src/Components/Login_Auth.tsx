@@ -1,5 +1,7 @@
 import React, { useEffect } from "react";
 import { useParams } from "react-router-dom";
+import api from "../utils/api";
+import apiRoutes from "../utils/Routes/apiRoutes";
 
 function Login_Auth() {
   const { email } = useParams();
@@ -7,30 +9,16 @@ function Login_Auth() {
 
   useEffect(() => {
     const loginfunction = async () => {
-      const response = await fetch(`${serv_addr}/login/authlogin`, {
-        method: "POST",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
+      const response = await api.post(apiRoutes.auth.login.authLogin, {
           email: email,
-        }),
-      });
+        });
       if (response.status === 200) {
-        const data = await response.json();
+        const data = await response.data;
         const token = data.token;
   
-        const responsed = await fetch(`${serv_addr}/checktoken`, {
-          method: "POST",
-          credentials: 'include',
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
+        const responsed = await api.post(apiRoutes.auth.tokenCheck, {
             token: token,
-          })
-        });
+          });
   
         if (responsed.status === 200) {
           document.cookie = `Token=${data.token}; path=/; domain=${window.location.hostname}; secure=true; sameSite=None;`

@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import api from "../utils/api";
+import apiRoutes from "../utils/Routes/apiRoutes";
 
 function Student_Details(props) {
   const [newname, setNewname] = useState("");
@@ -21,20 +23,13 @@ function Student_Details(props) {
   const serv_addr = import.meta.env.VITE_SERV_ADDR;
 
   const handleupdate = async (type, val) => {
-    const response = await fetch(`${serv_addr}/users/update`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
+    const response = await api.post(apiRoutes.user.updateProfile, {
         email: props.details.email,
         old: type,
         name: val,
-      }),
-      credentials: "include",
-    });
+      });
     if (response.status === 200) {
-      const data = await response.json();
+      const data = await response.data;
       document.cookie = `ProfileInfo=${encodeURIComponent(
         "j:" + JSON.stringify(data.profileinfo)
       )}; path=/; domain=${
@@ -48,15 +43,9 @@ function Student_Details(props) {
 
   const handleremove = async () => {
     alert("Are you sure you want to remove your profile?");
-    const response = await fetch(`${serv_addr}/removeprofile`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
+    const response = await api.post(apiRoutes.user.removeProfile, {
         email: props.details.email,
-      }),
-    });
+      });
     if (response.status === 200) {
       document.cookie = `Token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=${window.location.hostname};`;
       document.cookie = `ProfileInfo=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=${window.location.hostname};`;

@@ -2,6 +2,8 @@ import React, { useEffect, useState, useContext, FC } from "react";
 import { MyContext } from "../../main";
 import { componentPropsInterface } from "../Interfaces/ComponentProps.interface";
 import { teamDetails } from "../Interfaces/Details.interface";
+import api from "../../utils/api";
+import apiRoutes from "../../utils/Routes/apiRoutes";
 
 const TreasuryTeam: FC<componentPropsInterface> = ({ details }) => {
   const [team, setTeam] = useState<teamDetails[]>([]);
@@ -17,16 +19,7 @@ const TreasuryTeam: FC<componentPropsInterface> = ({ details }) => {
 
   useEffect(() => {
     const devteamcall = async () => {
-      const response = await fetch(
-        `${serv_addr}/treasuryteam/gettreasuryteamdata`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      const data = await response.json();
+      const { data } = await api.get(apiRoutes.teams.teamInfo.treasury);
       setTeam(data);
       const priorityOrder = ["Team Convenor", "Assistant Convenor", "Coordinator"];
       data.sort((a: teamDetails, b: teamDetails) => {return priorityOrder.indexOf(a.position) - priorityOrder.indexOf(b.position)});
@@ -44,23 +37,15 @@ const TreasuryTeam: FC<componentPropsInterface> = ({ details }) => {
   };
 
   const handleSubmit = async () => {
-    const response = await fetch(
-      `${serv_addr}/treasuryteam/addtreasuryperson`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
+    const response = await api.post(
+      apiRoutes.teams.teamUpdates.treasuryAddition, {
           position: position,
           name: name,
           phone_number: Phone,
           email_id: email,
           degree: Degree,
           linkedin: linkedIn,
-        }),
-      }
-    );
+        });
     if (response.status === 200) {
       setTeam((prevTeam) => [
         ...prevTeam,
