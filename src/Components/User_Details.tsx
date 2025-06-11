@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import api from "../utils/api";
+import apiRoutes from "../utils/Routes/apiRoutes";
 
 function User_Details(props) {
   const [userdetails, setUserdetails] = useState({})
@@ -12,7 +13,7 @@ function User_Details(props) {
 
   useEffect(() => {
     const fetchUserDetails = async()=>{
-      const response = await api.post(`/payment/getUserInformation`, {
+      const response = await api.post(apiRoutes.courses.payment.userInformation, {
           email: props.details.email,
           name: props.details.name
         })

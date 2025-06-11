@@ -3,6 +3,7 @@ import { MyContext } from "../main";
 import PdfPreview from "./PdfPreview";
 import { useParams } from "react-router-dom";
 import api from "../utils/api";
+import apiRoutes from "../utils/Routes/apiRoutes";
 
 function Library(props) {
   const {course} = useParams()
@@ -19,7 +20,7 @@ function Library(props) {
 
   useEffect(() => {
     const getbooks = async () => {
-      const { data } = await api.get(`/library/books`);
+      const { data } = await api.get(apiRoutes.library.getBooks);
       setBooks(data); // Ensure to set the fetched books in state
     };
     getbooks();
@@ -51,7 +52,7 @@ function Library(props) {
       formData.append("image", pdfFile);
 
       try {
-        const { data } = await api.post(`/talks/imagestore`, formData);
+        const { data } = await api.post(apiRoutes.imagePosting, formData);
         console.log(data);
         if (data.url) {
           bookurl = data.url; 
@@ -67,7 +68,7 @@ function Library(props) {
         return;
       }
 
-      const response = await api.post(`/library/books`, {
+      const response = await api.post(apiRoutes.library.postBooks, {
           course: course,
           title: title,
           author: Author,

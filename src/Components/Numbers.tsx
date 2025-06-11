@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import api from "../utils/api";
+import apiRoutes from "../utils/Routes/apiRoutes";
 
 function Numbers() {
   const serv_addr = import.meta.env.VITE_SERV_ADDR
@@ -29,7 +30,7 @@ function Numbers() {
 
   useEffect(() => {
     const servercall = async()=>{
-      const response = await api.get(`/users/usernumber`)
+      const response = await api.get(apiRoutes.user.live.numberOfUsers)
       const usernum = await response.data
       console.log(usernum)
       setUserNumber(usernum)

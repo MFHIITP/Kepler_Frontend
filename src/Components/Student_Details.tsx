@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import api from "../utils/api";
+import apiRoutes from "../utils/Routes/apiRoutes";
 
 function Student_Details(props) {
   const [newname, setNewname] = useState("");
@@ -22,7 +23,7 @@ function Student_Details(props) {
   const serv_addr = import.meta.env.VITE_SERV_ADDR;
 
   const handleupdate = async (type, val) => {
-    const response = await api.post(`/users/update`, {
+    const response = await api.post(apiRoutes.user.updateProfile, {
         email: props.details.email,
         old: type,
         name: val,
@@ -42,7 +43,7 @@ function Student_Details(props) {
 
   const handleremove = async () => {
     alert("Are you sure you want to remove your profile?");
-    const response = await api.post(`/removeprofile`, {
+    const response = await api.post(apiRoutes.user.removeProfile, {
         email: props.details.email,
       });
     if (response.status === 200) {

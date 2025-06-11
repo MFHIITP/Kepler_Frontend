@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { MyContext } from '../main';
 import api from '../utils/api';
+import apiRoutes from '../utils/Routes/apiRoutes';
 
 const FetchAndDisplayData = (props) => {
   const [data, setData] = useState([]);
@@ -10,7 +11,7 @@ const FetchAndDisplayData = (props) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await api.get(`/historyusers`);
+        const response = await api.get(apiRoutes.user.history.userHistory);
         const result = await response.data;
         result.sort((a, b) => {
           if (a.logouttime === null && b.logouttime !== null) return -1;

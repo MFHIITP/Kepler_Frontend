@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import api from "../utils/api";
+import apiRoutes from "../utils/Routes/apiRoutes";
 
 function Otpverify() {
   const emailref = useRef(null)
@@ -27,7 +28,7 @@ function Otpverify() {
     setLoading(true);
     event.preventDefault();
     try {
-      const response = await api.post(`/users/verifyOTP`, {
+      const response = await api.post(apiRoutes.auth.otpVerify, {
           otp: otp,
           data: data,
         });

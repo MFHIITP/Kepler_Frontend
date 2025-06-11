@@ -4,6 +4,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import toast from "react-hot-toast";
 import Talk from "./Talk";
 import api from "../utils/api";
+import apiRoutes from "../utils/Routes/apiRoutes";
 
 function GroupChat(props) {
   const [fs, setfs] = useState(false)
@@ -19,7 +20,7 @@ function GroupChat(props) {
 
   useEffect(() => {
     const output = async () => {
-      const response = await api.post(`/number/take`, {
+      const response = await api.post(apiRoutes.chat.groupChat.getGroups, {
           email: props.details.email,
         });
       if (response.status === 200) {
@@ -42,7 +43,7 @@ function GroupChat(props) {
     }
     setGroupname("");
     event.target.disabled = true;
-    const response = await api.post(`/number/add`, {
+    const response = await api.post(apiRoutes.chat.groupChat.addGroup, {
         id_num: groupnumbers[groupnumbers.length - 1].id + 1,
         name: groupname,
       });
@@ -75,7 +76,7 @@ function GroupChat(props) {
   };
 
   const handleremoveclick = async (id) => {
-    const response = await api.post(`/number/remove`, {
+    const response = await api.post(apiRoutes.chat.groupChat.removeGroup, {
         id_num: id,
       });
     if (response.status === 200) {

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import toast from "react-hot-toast";
 import api from "../utils/api";
+import apiRoutes from "../utils/Routes/apiRoutes";
 
 function QueryBox() {
   const [name, setName] = useState("");
@@ -13,7 +14,7 @@ function QueryBox() {
     e.preventDefault();
     setSending(true)
     try {
-      const response = await api.post(`/api/sendquery`, {
+      const response = await api.post(apiRoutes.querySending, {
           name: name,
           email: email,
           subject: subject,

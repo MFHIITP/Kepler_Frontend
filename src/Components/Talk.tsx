@@ -5,6 +5,7 @@ import { faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 import PdfPreview from "./PdfPreview";
 import Group_Members from "./Group_Members";
 import api from "../utils/api";
+import apiRoutes from "../utils/Routes/apiRoutes";
 
 function Talk(props) {
   const scrollref = useRef(null);
@@ -39,8 +40,9 @@ function Talk(props) {
 
   useEffect(() => {
     const getdata = async () => {
-      const response = await api.post(`/talks/getchat`);
+      const response = await api.post(apiRoutes.chat.Talk.getPastChats);
       if (response.status == 200) {
+
         const data = await response.data;
         setAllmessages(data);
       }
@@ -69,7 +71,7 @@ function Talk(props) {
         const imageform = new FormData();
         imageform.append("name", props.details.name);
         imageform.append("image", file);
-        const response = await api.post(`/talks/imagestore`, imageform);
+        const response = await api.post(apiRoutes.imagePosting, imageform);
         console.log(response);
         const resp = await response.data;
         formdata.append("image", resp.url);
@@ -99,7 +101,7 @@ function Talk(props) {
 
   const handleDelete = async (posts, index) => {
     alert("Do you really want to delete this?");
-    const response = await api.post(`/talks/deletemessage`, {
+    const response = await api.post(apiRoutes.chat.Talk.deleteMessage, {
         name: posts.name,
         message: posts.message,
         image: posts.image,

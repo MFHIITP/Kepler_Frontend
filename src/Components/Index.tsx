@@ -6,6 +6,7 @@ import { faBars, faClose } from "@fortawesome/free-solid-svg-icons";
 import toast from "react-hot-toast";
 import { componentPropsInterface } from "./Interfaces/ComponentProps.interface";
 import api from "../utils/api";
+import apiRoutes from "../utils/Routes/apiRoutes";
 
 const Index: FC<componentPropsInterface> = ({ auth, details }) => {
   var name = details?.name;
@@ -25,7 +26,7 @@ const Index: FC<componentPropsInterface> = ({ auth, details }) => {
 
   const handleLogout = async () => {
     setLoading(true);
-    const response = await api.post(`/logout`, {
+    const response = await api.post(apiRoutes.auth.logout, {
         email: details?.email,
       });
     if (response.status == 200) {

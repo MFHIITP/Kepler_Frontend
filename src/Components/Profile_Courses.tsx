@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import api from "../utils/api";
+import apiRoutes from "../utils/Routes/apiRoutes";
 
 function Profile_Courses(props) {
   const [currentCourses, setCurrentCourses] = useState([]);
@@ -23,7 +24,7 @@ function Profile_Courses(props) {
   useEffect(() => {
     const fetchCurrentCourses = async () => {
       const response = await api.post(
-        `/payment/getCurrentCourses`,{
+        apiRoutes.courses.payment.currentCourses,{
             email: props.details.email,
             name: props.details.name,
           });
@@ -81,7 +82,7 @@ function Profile_Courses(props) {
   const handleApplyCourses = async () => {
     const subjectList = courses.flatMap((category) => choices[category]);
     const response = await api.post(
-      `${import.meta.env.VITE_SERV_ADDR}/payment/applyCourses`, {
+      apiRoutes.courses.payment.appliedCourses, {
           name: props.details.name,
           email: props.details.email,
           selectedCourses: subjectList,

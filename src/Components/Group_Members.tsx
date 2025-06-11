@@ -1,6 +1,7 @@
 import React, { FC, useEffect, useState } from "react";
 import api from "../utils/api";
 import { componentPropsInterface } from "./Interfaces/ComponentProps.interface";
+import apiRoutes from "../utils/Routes/apiRoutes";
 
 const Group_Members = (props) => {
   const [Participants, setParticipants] = useState([]);
@@ -8,7 +9,7 @@ const Group_Members = (props) => {
 
   useEffect(() => {
     const participant_find = async () => {
-      const response = await api.post(`/number/participant_list`, {
+      const response = await api.post(apiRoutes.chat.groupMembers.memberList, {
         groupname: props.groupname,
       });
       if (response.status === 200) {
