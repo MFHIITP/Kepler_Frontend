@@ -1,4 +1,11 @@
-import React, { useEffect, useState, useContext, useRef } from "react";
+import React, {
+  useEffect,
+  useState,
+  useContext,
+  useRef,
+  FC,
+  MutableRefObject,
+} from "react";
 import { MyContext } from "../main";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrashAlt } from "@fortawesome/free-solid-svg-icons";
@@ -6,17 +13,35 @@ import PdfPreview from "./PdfPreview";
 import Group_Members from "./Group_Members";
 import api from "../utils/api";
 import apiRoutes from "../utils/Routes/apiRoutes";
+import { userdetails } from "./Interfaces/Details.interface";
 
-function Talk(props) {
-  const scrollref = useRef(null);
-  const [group, setGroup] = useState(props.groupnumber);
+interface TalkInterface {
+  key: number;
+  details: userdetails;
+  groupNumber: number;
+  groupName: string;
+  ref: MutableRefObject<HTMLDivElement | null>;
+  groupDescription: string;
+}
+
+const Talk: FC<TalkInterface> = ({
+  key,
+  details,
+  groupNumber,
+  groupName,
+  ref,
+  groupDescription,
+}) => {
+  const scrollref = useRef<HTMLDivElement | null>(null);
+  const [group, setGroup] = useState(groupNumber);
   const [opendetails, setOpendetails] = useState(false);
   const [message, setMessage] = useState("");
   const [file, setFile] = useState({});
   const [allmessages, setAllmessages] = useState([]);
-  const [Socket, setSocket] = useState(null);
+  const [Socket, setSocket] = useState<WebSocket | null>(null);
   const [loading, setLoading] = useState(true);
-  const { adminemails } = useContext(MyContext);
+  const context = useContext(MyContext);
+  const adminemails = context?.adminemails;
   const serv_addr = import.meta.env.VITE_SERV_ADDR;
   const webs_addr = import.meta.env.VITE_WEBS_ADDR;
 
@@ -40,13 +65,16 @@ function Talk(props) {
 
   useEffect(() => {
     const getdata = async () => {
-      const response = await api.post(apiRoutes.chat.Talk.getPastChats);
-      if (response.status == 200) {
-
-        const data = await response.data;
-        setAllmessages(data);
+      if (groupNumber != -1) {
+        const response = await api.post(apiRoutes.chat.Talk.getPastChats, {
+          groupNumber: groupNumber
+        });
+        if (response.status == 200) {
+          const data = await response.data;
+          setAllmessages(data);
+        }
       }
-      setLoading(false);
+      setLoading(false);  
     };
     getdata();
   }, [serv_addr]);
@@ -63,13 +91,13 @@ function Talk(props) {
 
     if (Socket) {
       const formdata = new FormData();
-      formdata.append("email", props.details.email);
+      formdata.append("email", details.email);
       formdata.append("group_id", group);
-      formdata.append("name", props.details.name);
+      formdata.append("name", details.name);
       formdata.append("message", message);
       if (file) {
         const imageform = new FormData();
-        imageform.append("name", props.details.name);
+        imageform.append("name", details.name);
         imageform.append("image", file);
         const response = await api.post(apiRoutes.imagePosting, imageform);
         console.log(response);
@@ -102,10 +130,10 @@ function Talk(props) {
   const handleDelete = async (posts, index) => {
     alert("Do you really want to delete this?");
     const response = await api.post(apiRoutes.chat.Talk.deleteMessage, {
-        name: posts.name,
-        message: posts.message,
-        image: posts.image,
-      });
+      name: posts.name,
+      message: posts.message,
+      image: posts.image,
+    });
     if (response.status == 200) {
       setAllmessages((prevMessages) =>
         prevMessages.filter((_, i) => i !== index)
@@ -133,7 +161,7 @@ function Talk(props) {
       </div>
     );
   }
-  if (!props.details.name) {
+  if (!details.name) {
     return (
       <div className="bg-black text-white h-screen flex justify-center items-center  text-4xl">
         Please Log In
@@ -145,7 +173,7 @@ function Talk(props) {
     <div className="w-full bg-gray-900 h-[90vh] flex">
       <div className={`flex flex-col ${opendetails ? "w-[80%]" : "w-[100%]"}`}>
         <div className="h-14 mx-12 text-2xl flex justify-between items-center text-white font-bold">
-          <div className="">{props.groupname}</div>
+          <div className="">{groupName}</div>
           {!opendetails && (
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -194,7 +222,7 @@ function Talk(props) {
               <li
                 key={index}
                 className={`p-4 rounded-lg shadow-lg relative transition-all duration-300 transform ${
-                  props.details.email === post.email
+                  details.email === post.email
                     ? "ml-auto bg-blue-600 hover:bg-blue-800 text-white border-black"
                     : "mr-auto ml-4 bg-gray-300 hover:bg-gray-400 border-black"
                 } w-1/3 ${post.group_id == group ? "" : "hidden"}`}
@@ -205,8 +233,8 @@ function Talk(props) {
                 <button
                   onClick={() => handleDelete(post, index)}
                   className={`absolute top-2 right-1 text-white hover:text-red-500 transition ${
-                    props.details.name === post.name ||
-                    adminemails.includes(props.details.email)
+                    details.name === post.name ||
+                    adminemails?.includes(details.email)
                       ? ""
                       : "hidden"
                   }`}
@@ -220,8 +248,8 @@ function Talk(props) {
                       <div>{post.name}</div>
                     </div>
                   </div>
-                  <p style={{ whiteSpace: "pre-line" }} className="">
-                    {post.message}
+                  <p style={{ whiteSpace: "pre-line" }} className={``}>
+                    {post.message.startsWith('http') || post.message.startsWith('https') ? <a href={post.message} className="underline" target="_blank" rel="noopener noreferrer">{post.message}</a> : post.message}
                   </p>
                   {post.image && !post.image.endsWith(".pdf") && (
                     <img
@@ -331,16 +359,16 @@ function Talk(props) {
       </div>
       {opendetails && (
         <Group_Members
-          key={props.groupnumber}
-          groupnumber={props.groupnumber}
-          groupname={props.groupname}
-          details={props.details}
-          groupdescription = {props.groupdescription}
+          key={groupNumber}
+          groupnumber={groupNumber}
+          groupname={groupName}
+          details={details}
+          groupdescription={groupDescription}
           className="transition-transform"
         />
       )}
     </div>
   );
-}
+};
 
 export default Talk;
