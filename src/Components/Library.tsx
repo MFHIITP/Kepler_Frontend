@@ -2,6 +2,8 @@ import React, { useState, useContext, useEffect } from "react";
 import { MyContext } from "../main";
 import PdfPreview from "./PdfPreview";
 import { useParams } from "react-router-dom";
+import api from "../utils/api";
+import apiRoutes from "../utils/Routes/apiRoutes";
 
 function Library(props) {
   const {course} = useParams()
@@ -11,19 +13,14 @@ function Library(props) {
   const [Author, setAuthor] = useState('Jadavpur Mathematics Society');
   const [pdfFile, setPdfFile] = useState(null);
   const [uploadStatus, setUploadStatus] = useState("");
-  const { adminemails } = useContext(MyContext);
+  const context = useContext(MyContext);
+  const adminemails = context?.adminemails
   const [books, setBooks] = useState([]);
   const serve_addr = import.meta.env.VITE_SERV_ADDR
 
   useEffect(() => {
     const getbooks = async () => {
-      const response = await fetch(`${serve_addr}/library/books`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json"
-        }
-      });
-      const data = await response.json();
+      const { data } = await api.get(apiRoutes.library.getBooks);
       setBooks(data); // Ensure to set the fetched books in state
     };
     getbooks();
@@ -55,11 +52,7 @@ function Library(props) {
       formData.append("image", pdfFile);
 
       try {
-        const response = await fetch(`${serve_addr}/talks/imagestore`, {
-          method: "POST",
-          body: formData,
-        });
-        const data = await response.json();
+        const { data } = await api.post(apiRoutes.imagePosting, formData);
         console.log(data);
         if (data.url) {
           bookurl = data.url; 
@@ -75,18 +68,12 @@ function Library(props) {
         return;
       }
 
-      const response = await fetch(`${serve_addr}/library/books`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
+      const response = await api.post(apiRoutes.library.postBooks, {
           course: course,
           title: title,
           author: Author,
           url: bookurl
-        })
-      });
+        });
 
       if (response.status === 200) {
         setLoading(false)
@@ -146,7 +133,7 @@ function Library(props) {
             </p>
           )}
         </div>
-      <div className={`${adminemails.includes(props.details.email) ? "none" : "hidden"} absolute bottom-2 right-2 text-white bg-gray-700 p-1 rounded-lg`}>
+      <div className={`${adminemails?.includes(props.details.email) ? "none" : "hidden"} absolute bottom-2 right-2 text-white bg-gray-700 p-1 rounded-lg`}>
         <div className="pdf-uploader flex flex-col">
           <h2 className="flex justify-center m-1 p-1 text-3xl ">Upload PDF File</h2>
           <label className=" text-2xl m-1 p-1">Title</label>
@@ -162,7 +149,7 @@ function Library(props) {
             value={Author}
             onChange={(e) => setAuthor(e.target.value)}
             className="mb-2 p-2 rounded-lg border border-gray-600 text-white bg-slate-800"
-            disabled = {adminemails.includes(props.details.email) ? false : true}
+            disabled = {adminemails?.includes(props.details.email) ? false : true}
           />
           <input
             type="file"

@@ -2,6 +2,8 @@ import React, { useEffect, useState, useContext, FC } from "react";
 import { MyContext } from "../../main";
 import { componentPropsInterface } from "../Interfaces/ComponentProps.interface";
 import { teamDetails } from "../Interfaces/Details.interface";
+import api from "../../utils/api";
+import apiRoutes from "../../utils/Routes/apiRoutes";
 
 const ExecutiveTeam: FC<componentPropsInterface> = ({ details }) => {
   const [team, setTeam] = useState<teamDetails[]>([]);
@@ -13,22 +15,24 @@ const ExecutiveTeam: FC<componentPropsInterface> = ({ details }) => {
   const [linkedIn, setLinkedIn] = useState("");
   const context = useContext(MyContext);
   const adminemails = context?.adminemails ?? [];
-  const serv_addr = import.meta.env.VITE_SERV_ADDR
+  const serv_addr = import.meta.env.VITE_SERV_ADDR;
 
   useEffect(() => {
     const devteamcall = async () => {
-      const response = await fetch(
-        `${serv_addr}/executiveteam/getexecutiveteamdata`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      const data = await response.json();
-      const priorityOrder = ["Vice President", "Founder", "Secretary", "Treasurer", "Joint Secretary", "Vice Treasurer"];
-      data.sort((a: teamDetails, b: teamDetails) => {return priorityOrder.indexOf(a.position) - priorityOrder.indexOf(b.position)});
+      const { data } = await api.get(apiRoutes.teams.teamInfo.executive);
+      const priorityOrder = [
+        "Vice President",
+        "Founder",
+        "Secretary",
+        "Treasurer",
+        "Joint Secretary",
+        "Vice Treasurer",
+      ];
+      data.sort((a: teamDetails, b: teamDetails) => {
+        return (
+          priorityOrder.indexOf(a.position) - priorityOrder.indexOf(b.position)
+        );
+      });
       setTeam(data);
     };
     devteamcall();
@@ -44,23 +48,14 @@ const ExecutiveTeam: FC<componentPropsInterface> = ({ details }) => {
   };
 
   const handleSubmit = async () => {
-    const response = await fetch(
-      `${serv_addr}/executiveteam/addexecutiveperson`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          position: position,
-          name: name,
-          phone_number: Phone,
-          email_id: email,
-          degree: Degree,
-          linkedin: linkedIn,
-        }),
-      }
-    );
+    const response = await api.post(apiRoutes.teams.teamUpdates.executiveAddition, {
+      position: position,
+      name: name,
+      phone_number: Phone,
+      email_id: email,
+      degree: Degree,
+      linkedin: linkedIn,
+    });
     if (response.status === 200) {
       setTeam((prevTeam) => [
         ...prevTeam,
@@ -102,10 +97,12 @@ const ExecutiveTeam: FC<componentPropsInterface> = ({ details }) => {
                 <strong>Name:</strong> {member.name}
               </p>
               <p>
-                <strong>Phone:</strong> <a href={`tel:${member.phone_number}`}>{member.phone_number}</a>
+                <strong>Phone:</strong>{" "}
+                <a href={`tel:${member.phone_number}`}>{member.phone_number}</a>
               </p>
               <p>
-                <strong>Email:</strong> <a href={`mailto:${member.email_id}`}>{member.email_id}</a>
+                <strong>Email:</strong>{" "}
+                <a href={`mailto:${member.email_id}`}>{member.email_id}</a>
               </p>
               <p>
                 <strong>Degree:</strong> {member.degree}
@@ -128,7 +125,11 @@ const ExecutiveTeam: FC<componentPropsInterface> = ({ details }) => {
       </div>
 
       {/* Add Team Member Form */}
-      <div className={`mt-12 bg-white p-8 rounded-xl shadow-md max-w-4xl mx-auto ${adminemails.includes(details?.email ?? "") ? '' : 'hidden'}`}>
+      <div
+        className={`mt-12 bg-white p-8 rounded-xl shadow-md max-w-4xl mx-auto ${
+          adminemails.includes(details?.email ?? "") ? "" : "hidden"
+        }`}
+      >
         <h3 className="text-2xl font-semibold text-gray-800 mb-4">
           Add a New Team Member
         </h3>
@@ -185,6 +186,6 @@ const ExecutiveTeam: FC<componentPropsInterface> = ({ details }) => {
       </div>
     </div>
   );
-}
+};
 
 export default ExecutiveTeam;

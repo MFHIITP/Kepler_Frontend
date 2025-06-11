@@ -29,7 +29,7 @@ const UsersTable = (props) => {
 
   const deleteaccount = async (id) => {
     alert("Do you want to remove this person ?");
-    const response = await fetch(
+    const response = (
       `${serv_addr}/users/deleteuser`,
       {
         method: "POST",

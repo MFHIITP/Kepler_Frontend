@@ -2,8 +2,10 @@ import React, { useEffect, useState, useContext, FC } from "react";
 import { MyContext } from "../../main";
 import { componentPropsInterface } from "../Interfaces/ComponentProps.interface";
 import { teamDetails } from "../Interfaces/Details.interface";
+import api from "../../utils/api";
+import apiRoutes from "../../utils/Routes/apiRoutes";
 
-const ContentTeam: FC<componentPropsInterface> = ({details}) => {
+const ContentTeam: FC<componentPropsInterface> = ({ details }) => {
   const [team, setTeam] = useState<teamDetails[]>([]);
   const [position, setPosition] = useState("");
   const [name, setName] = useState("");
@@ -13,23 +15,22 @@ const ContentTeam: FC<componentPropsInterface> = ({details}) => {
   const [linkedIn, setLinkedIn] = useState("");
   const context = useContext(MyContext);
   const adminemails = context?.adminemails ?? [];
-  const serv_addr = import.meta.env.VITE_SERV_ADDR
+  const serv_addr = import.meta.env.VITE_SERV_ADDR;
 
   useEffect(() => {
     const devteamcall = async () => {
-      const response = await fetch(
-        `${serv_addr}/contentteam/getcontentteamdata`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      const data = await response.json();
+      const { data } = await api.get(apiRoutes.teams.teamInfo.content);
       setTeam(data);
-      const priorityOrder = ["Team Convenor", "Assistant Convenor", "Coordinator"];
-      data.sort((a: teamDetails, b: teamDetails) => {return priorityOrder.indexOf(a.position) - priorityOrder.indexOf(b.position)});
+      const priorityOrder = [
+        "Team Convenor",
+        "Assistant Convenor",
+        "Coordinator",
+      ];
+      data.sort((a: teamDetails, b: teamDetails) => {
+        return (
+          priorityOrder.indexOf(a.position) - priorityOrder.indexOf(b.position)
+        );
+      });
     };
     devteamcall();
   }, [serv_addr]);
@@ -44,21 +45,15 @@ const ContentTeam: FC<componentPropsInterface> = ({details}) => {
   };
 
   const handleSubmit = async () => {
-    const response = await fetch(
-      `${serv_addr}/contentteam/addcontentperson`,
+    const response = await api.post(
+      apiRoutes.teams.teamUpdates.contentAddition,
       {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          position: position,
-          name: name,
-          phone_number: Phone,
-          email_id: email,
-          degree: Degree,
-          linkedin: linkedIn,
-        }),
+        position: position,
+        name: name,
+        phone_number: Phone,
+        email_id: email,
+        degree: Degree,
+        linkedin: linkedIn,
       }
     );
     if (response.status === 200) {
@@ -102,10 +97,12 @@ const ContentTeam: FC<componentPropsInterface> = ({details}) => {
                 <strong>Name:</strong> {member.name}
               </p>
               <p>
-                <strong>Phone:</strong> <a href={`tel:${member.phone_number}`}>{member.phone_number}</a>
+                <strong>Phone:</strong>{" "}
+                <a href={`tel:${member.phone_number}`}>{member.phone_number}</a>
               </p>
               <p>
-                <strong>Email:</strong> <a href={`mailto:${member.email_id}`}>{member.email_id}</a>
+                <strong>Email:</strong>{" "}
+                <a href={`mailto:${member.email_id}`}>{member.email_id}</a>
               </p>
               <p>
                 <strong>Degree:</strong> {member.degree}
@@ -128,7 +125,11 @@ const ContentTeam: FC<componentPropsInterface> = ({details}) => {
       </div>
 
       {/* Add Team Member Form */}
-      <div className={`mt-12 bg-white p-8 rounded-xl shadow-md max-w-4xl mx-auto ${adminemails.includes(details?.email ?? "") ? '' : 'hidden'}`}>
+      <div
+        className={`mt-12 bg-white p-8 rounded-xl shadow-md max-w-4xl mx-auto ${
+          adminemails.includes(details?.email ?? "") ? "" : "hidden"
+        }`}
+      >
         <h3 className="text-2xl font-semibold text-gray-800 mb-4">
           Add a New Team Member
         </h3>
@@ -185,6 +186,6 @@ const ContentTeam: FC<componentPropsInterface> = ({details}) => {
       </div>
     </div>
   );
-}
+};
 
 export default ContentTeam;

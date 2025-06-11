@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import api from "../utils/api";
+import apiRoutes from "../utils/Routes/apiRoutes";
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -21,32 +23,18 @@ function Login() {
     event.preventDefault();
     setLoading(true);
     console.log(`${serv_addr}`);
-    const response = await fetch(`${serv_addr}/login/direct_login`, {
-      method: "POST",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
+    const response = await api.post(apiRoutes.auth.login.signInLogin, {
         email: email,
         password: password,
-      }),
-    });
+      });
 
     if (response.status === 200) {
-      const data = await response.json();
+      const data = await response.data;
       const token = data.token;
 
-      const responsed = await fetch(`${serv_addr}/checktoken`, {
-        method: "POST",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
+      const responsed = await api.post(apiRoutes.auth.tokenCheck, {
           token: token,
-        }),
-      });
+        });
 
       if (responsed.status === 200) {
         setLoading(false);
@@ -66,7 +54,7 @@ function Login() {
       setLoading(false);
       setEmail("");
       setPassword("");
-      const data = await response.json();
+      const data = await response.data;
       toast.error(data.message);
     }
   };

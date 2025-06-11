@@ -2,8 +2,10 @@ import React, { useEffect, useState, useContext, FC } from "react";
 import { MyContext } from "../../main";
 import { componentPropsInterface } from "../Interfaces/ComponentProps.interface";
 import { teamDetails } from "../Interfaces/Details.interface";
+import api from "../../utils/api";
+import apiRoutes from "../../utils/Routes/apiRoutes";
 
-const CoreTeam: FC<componentPropsInterface> = ({details}) => {
+const CoreTeam: FC<componentPropsInterface> = ({ details }) => {
   const [team, setTeam] = useState<teamDetails[]>([]);
   const [position, setPosition] = useState("");
   const [name, setName] = useState("");
@@ -13,20 +15,11 @@ const CoreTeam: FC<componentPropsInterface> = ({details}) => {
   const [linkedIn, setLinkedIn] = useState("");
   const context = useContext(MyContext);
   const adminemails = context?.adminemails ?? [];
-  const serv_addr = import.meta.env.VITE_SERV_ADDR
+  const serv_addr = import.meta.env.VITE_SERV_ADDR;
 
   useEffect(() => {
     const devteamcall = async () => {
-      const response = await fetch(
-        `${serv_addr}/coreteam/getcoreteamdata`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      const data = await response.json();
+      const { data } = await api.get(apiRoutes.teams.teamInfo.core);
       const priorityOrder = [
         "Vice President",
         "Founder",
@@ -38,10 +31,13 @@ const CoreTeam: FC<componentPropsInterface> = ({details}) => {
 
       // Filter and sort based on priorityOrder
       const priorityMembers = data
-        .filter((member: teamDetails) => priorityOrder.includes(member.position))
+        .filter((member: teamDetails) =>
+          priorityOrder.includes(member.position)
+        )
         .sort(
           (a: teamDetails, b: teamDetails) =>
-            priorityOrder.indexOf(a.position) - priorityOrder.indexOf(b.position)
+            priorityOrder.indexOf(a.position) -
+            priorityOrder.indexOf(b.position)
         );
       const otherMembers = data.filter(
         (member: teamDetails) => !priorityOrder.includes(member.position)
@@ -61,23 +57,14 @@ const CoreTeam: FC<componentPropsInterface> = ({details}) => {
   };
 
   const handleSubmit = async () => {
-    const response = await fetch(
-      `${serv_addr}/coreteam/addcoreperson`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          position: position,
-          name: name,
-          phone_number: Phone,
-          email_id: email,
-          degree: Degree,
-          linkedin: linkedIn,
-        }),
-      }
-    );
+    const response = await api.post(apiRoutes.teams.teamUpdates.coreAddition, {
+      position: position,
+      name: name,
+      phone_number: Phone,
+      email_id: email,
+      degree: Degree,
+      linkedin: linkedIn,
+    });
     if (response.status === 200) {
       setTeam((prevTeam) => [
         ...prevTeam,
@@ -208,6 +195,6 @@ const CoreTeam: FC<componentPropsInterface> = ({details}) => {
       </div>
     </div>
   );
-}
+};
 
 export default CoreTeam;
