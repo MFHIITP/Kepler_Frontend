@@ -42,12 +42,8 @@ api.interceptors.response.use(
         const refreshToken = getToken("RefreshToken")
         if(error.response.status == 401){
             const data = await getNewAccessToken(refreshToken ?? "");
-            Cookies.set("AccessToken", data.accessToken, {
-                path: '/',
-                domain: window.location.hostname,
-                secure: true,
-                sameSite: 'None'
-            })
+            Cookies.remove("AccessToken");
+            document.cookie = `AccessToken=${data.accessToken}; path=/; domain=${window.location.hostname}; secure=true; sameSite=None;`;
             originalRequest.headers.AuthorizationAccessToken = `Bearer ${data.accessToken}`;
             return api(originalRequest);
         }

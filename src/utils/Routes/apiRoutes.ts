@@ -56,8 +56,8 @@ const apiRoutes = {
         removeProfile: `/removeprofile`
     },
     library: {
-        getBooks: `/library/books`,
-        postBooks: `/library/books`
+        getBooks: `/library/books/getBook`,
+        postBooks: `/library/books/postBook`
     },
     imagePosting: `/talks/imagestore`,
     querySending: `/api/sendquery`,

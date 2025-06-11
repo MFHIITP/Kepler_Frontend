@@ -176,10 +176,10 @@ function GroupChat(props) {
       <Talk
         key={number}
         details={props.details}
-        groupnumber={number}
-        groupname={name}
+        groupNumber={number}
+        groupName={name}
         ref={scrollref}
-        groupdescription={groupdescription}
+        groupDescription={groupdescription}
       />
     </div>
   );
