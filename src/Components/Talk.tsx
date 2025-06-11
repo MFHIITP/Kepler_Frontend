@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 import PdfPreview from "./PdfPreview";
 import Group_Members from "./Group_Members";
+import api from "../utils/api";
 
 function Talk(props) {
   const scrollref = useRef(null);
@@ -38,11 +39,9 @@ function Talk(props) {
 
   useEffect(() => {
     const getdata = async () => {
-      const response = await fetch(`${serv_addr}/talks/getchat`, {
-        method: "POST",
-      });
+      const response = await api.post(`/talks/getchat`);
       if (response.status == 200) {
-        const data = await response.json();
+        const data = await response.data;
         setAllmessages(data);
       }
       setLoading(false);
@@ -70,12 +69,9 @@ function Talk(props) {
         const imageform = new FormData();
         imageform.append("name", props.details.name);
         imageform.append("image", file);
-        const response = await fetch(`${serv_addr}/talks/imagestore`, {
-          method: "POST",
-          body: imageform,
-        });
+        const response = await api.post(`/talks/imagestore`, imageform);
         console.log(response);
-        const resp = await response.json();
+        const resp = await response.data;
         formdata.append("image", resp.url);
         formdata.append("image_title", file.name);
       } else {
@@ -103,17 +99,11 @@ function Talk(props) {
 
   const handleDelete = async (posts, index) => {
     alert("Do you really want to delete this?");
-    const response = await fetch(`${serv_addr}/talks/deletemessage`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
+    const response = await api.post(`/talks/deletemessage`, {
         name: posts.name,
         message: posts.message,
         image: posts.image,
-      }),
-    });
+      });
     if (response.status == 200) {
       setAllmessages((prevMessages) =>
         prevMessages.filter((_, i) => i !== index)

@@ -3,33 +3,27 @@ import { MyContext } from "../main";
 import DeleteIcon from "@mui/icons-material/Delete";
 import toast from "react-hot-toast";
 import Talk from "./Talk";
+import api from "../utils/api";
 
 function GroupChat(props) {
   const [fs, setfs] = useState(false)
   const fullscreenref = useRef(null)
-  const scrollref = useRef(null);
+  const scrollref = useRef<HTMLDivElement | null>(null);
   const [groupdescription, setGroupdescription] = useState("");
   const [groupname, setGroupname] = useState("");
   const [number, setNumber] = useState(-1);
   const [name, setName] = useState("");
-  const { adminemails } = useContext(MyContext);
-  const serv_addr = import.meta.env.VITE_SERV_ADDR;
+  const context = useContext(MyContext);
+  const adminemails = context?.adminemails
   const [groupnumbers, setGroupnumbers] = useState([]);
 
   useEffect(() => {
     const output = async () => {
-      const response = await fetch(`${serv_addr}/number/take`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
+      const response = await api.post(`/number/take`, {
           email: props.details.email,
-        }),
-      });
+        });
       if (response.status === 200) {
-        const resp = await response.json();
-        console.log(resp);
+        const resp = response.data
         const grouplist = resp.list;
         const combinedset = new Set(grouplist.concat(groupnumbers));
         setGroupnumbers([...combinedset].sort((a, b) => a.id - b.id));
@@ -39,7 +33,7 @@ function GroupChat(props) {
       }
     };
     output();
-  }, [serv_addr]);
+  }, []);
 
   const handleaddclick = async (event) => {
     if (groupname.length == 0) {
@@ -48,16 +42,10 @@ function GroupChat(props) {
     }
     setGroupname("");
     event.target.disabled = true;
-    const response = await fetch(`${serv_addr}/number/add`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
+    const response = await api.post(`/number/add`, {
         id_num: groupnumbers[groupnumbers.length - 1].id + 1,
         name: groupname,
-      }),
-    });
+      });
     if (response.status === 200) {
       event.target.disabled = false;
       setGroupnumbers((prevNumbers) => {
@@ -87,15 +75,9 @@ function GroupChat(props) {
   };
 
   const handleremoveclick = async (id) => {
-    const response = await fetch(`${serv_addr}/number/remove`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
+    const response = await api.post(`/number/remove`, {
         id_num: id,
-      }),
-    });
+      });
     if (response.status === 200) {
       setGroupnumbers((prevNumbers) =>
         prevNumbers.map((num) =>
@@ -134,7 +116,7 @@ function GroupChat(props) {
             <div
               key={index}
               className={`flex items-center justify-between px-4 py-3 border rounded-lg shadow-lg ${
-                val.id === 5 && !adminemails.includes(props.details.email)
+                val.id === 5 && !adminemails?.includes(props.details.email)
                   ? "hidden"
                   : "bg-gray-600"
               } ${
@@ -169,7 +151,7 @@ function GroupChat(props) {
             </div>
           ))}
         </div>
-        {adminemails.includes(props.details.email) && (
+        {adminemails?.includes(props.details.email) && (
           <div className="flex">
             <button
               className="mt-6 px-6 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition"

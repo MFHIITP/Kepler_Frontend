@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import api from "../utils/api";
 
 function User_Details(props) {
   const [userdetails, setUserdetails] = useState({})
@@ -11,18 +12,12 @@ function User_Details(props) {
 
   useEffect(() => {
     const fetchUserDetails = async()=>{
-      const response = await fetch(`${import.meta.env.VITE_SERV_ADDR}/payment/getUserInformation`, {
-        method: 'POST',
-        headers: {
-          'Content-type': 'application/json'
-        },
-        body: JSON.stringify({
+      const response = await api.post(`/payment/getUserInformation`, {
           email: props.details.email,
           name: props.details.name
         })
-      })
       if(response.status == 200){
-        const resp = await response.json();
+        const resp = await response.data
         console.log(resp);
         setUserdetails(resp.data);
         setLoading(false);

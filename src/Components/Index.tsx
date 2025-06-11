@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars, faClose } from "@fortawesome/free-solid-svg-icons";
 import toast from "react-hot-toast";
 import { componentPropsInterface } from "./Interfaces/ComponentProps.interface";
+import api from "../utils/api";
 
 const Index: FC<componentPropsInterface> = ({ auth, details }) => {
   var name = details?.name;
@@ -24,15 +25,9 @@ const Index: FC<componentPropsInterface> = ({ auth, details }) => {
 
   const handleLogout = async () => {
     setLoading(true);
-    const response = await fetch(`${serv_addr}/logout`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
+    const response = await api.post(`/logout`, {
         email: details?.email,
-      }),
-    });
+      });
     if (response.status == 200) {
       document.cookie = `Token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=${window.location.hostname};`;
       document.cookie = `ProfileInfo=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=${window.location.hostname};`;

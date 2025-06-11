@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import api from "../utils/api";
 
 function Profile_Courses(props) {
   const [currentCourses, setCurrentCourses] = useState([]);
@@ -21,21 +22,13 @@ function Profile_Courses(props) {
   });
   useEffect(() => {
     const fetchCurrentCourses = async () => {
-      const response = await fetch(
-        `${import.meta.env.VITE_SERV_ADDR}/payment/getCurrentCourses`,
-        {
-          method: "POST",
-          headers: {
-            "Content-type": "application/json",
-          },
-          body: JSON.stringify({
+      const response = await api.post(
+        `/payment/getCurrentCourses`,{
             email: props.details.email,
             name: props.details.name,
-          }),
-        }
-      );
+          });
       if (response.status == 201) {
-        const resp = await response.json();
+        const resp = await response.data;
         console.log(resp);
         setCurrentCourses(resp.data);
         const filteredChoices = {
@@ -87,20 +80,12 @@ function Profile_Courses(props) {
 
   const handleApplyCourses = async () => {
     const subjectList = courses.flatMap((category) => choices[category]);
-    const response = await fetch(
-      `${import.meta.env.VITE_SERV_ADDR}/payment/applyCourses`,
-      {
-        method: "POST",
-        headers: {
-          "Content-type": "application/json",
-        },
-        body: JSON.stringify({
+    const response = await api.post(
+      `${import.meta.env.VITE_SERV_ADDR}/payment/applyCourses`, {
           name: props.details.name,
           email: props.details.email,
           selectedCourses: subjectList,
-        }),
-      }
-    );
+        });
     if (response.status == 200) {
       props.goToPage("dashboard");
     } else {

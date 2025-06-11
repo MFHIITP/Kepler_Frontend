@@ -1,21 +1,17 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { MyContext } from '../main';
+import api from '../utils/api';
 
 const FetchAndDisplayData = (props) => {
   const [data, setData] = useState([]);
-  const {adminemails} = useContext(MyContext)
-  const serv_addr = import.meta.env.VITE_SERV_ADDR
+  const context = useContext(MyContext)
+  const adminemails = context?.adminemails
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(`${serv_addr}/historyusers`, {
-            method: "GET", 
-            headers: {
-                "Content-Type": "application/json"
-            }
-        });
-        const result = await response.json();
+        const response = await api.get(`/historyusers`);
+        const result = await response.data;
         result.sort((a, b) => {
           if (a.logouttime === null && b.logouttime !== null) return -1;
           if (a.logouttime !== null && b.logouttime === null) return 1;
@@ -27,9 +23,9 @@ const FetchAndDisplayData = (props) => {
       }
     };
     fetchData();
-  }, [serv_addr]);
+  }, []);
 
-  if(!adminemails.includes(props.details.email)){
+  if(!adminemails?.includes(props.details.email)){
     return (
       <>
         <div className="text-white font-4xl">You are not an admin. Please leave immediately</div>

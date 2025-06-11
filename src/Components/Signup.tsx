@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import api from "../utils/api";
+import apiRoutes from "../utils/Routes/apiRoutes";
 
 function Register() {
 
@@ -38,10 +40,7 @@ function Register() {
     }
 
     try {
-      const response = await fetch(`${serv_addr}/users/signup`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
+      const response = await api.post(apiRoutes.auth.register.signupRegister, {
           name: formData.name,
           email: formData.email,
           password: formData.password,
@@ -54,8 +53,7 @@ function Register() {
             formData.educationType === "college" ? formData.college_stream : undefined,
           college_year:
             formData.educationType === "college" ? formData.college_year : undefined,
-        }),
-      });
+        });
 
       if (response.status === 200) {
         window.location.pathname = "/verifyOTP";

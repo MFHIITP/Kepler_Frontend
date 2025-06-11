@@ -1,21 +1,18 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { MyContext } from '../main';
+import api from '../utils/api';
 
 const FetchAndDisplayData = (props) => {
   const [data, setData] = useState([]);
-  const {adminemails} = useContext(MyContext)
+  const context = useContext(MyContext)
+  const adminemails = context?.adminemails
   const serv_addr = import.meta.env.VITE_SERV_ADDR;
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(`${serv_addr}/liveusers`, {
-            method: "GET", 
-            headers: {
-                "Content-Type": "application/json"
-            }
-        });
-        const result = await response.json();
+        const response = await api.get(`/liveusers`);
+        const result = await response.data;
         setData(result); 
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -24,7 +21,7 @@ const FetchAndDisplayData = (props) => {
     fetchData();
   }, [serv_addr]);
 
-  if(!adminemails.includes(props.details.email)){
+  if(!adminemails?.includes(props.details.email)){
     return (
       <>
         <div className="text-white font-4xl">You are not an admin. Please leave immediately</div>

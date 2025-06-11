@@ -1,24 +1,19 @@
-import React, { useEffect, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
+import api from "../utils/api";
+import { componentPropsInterface } from "./Interfaces/ComponentProps.interface";
 
-function Group_Members(props) {
+const Group_Members = (props) => {
   const [Participants, setParticipants] = useState([]);
   const serv_addr = import.meta.env.VITE_SERV_ADDR;
 
   useEffect(() => {
     const participant_find = async () => {
-      const response = await fetch(`${serv_addr}/number/participant_list`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          groupname: props.groupname,
-        }),
+      const response = await api.post(`/number/participant_list`, {
+        groupname: props.groupname,
       });
       if (response.status === 200) {
-        const data = await response.json();
-        console.log(data);
-        setParticipants(data.participant_list);
+        console.log(response.data);
+        setParticipants(response.data.participant_list);
       }
     };
     participant_find();
@@ -60,6 +55,6 @@ function Group_Members(props) {
       </div>
     </div>
   );
-}
+};
 
 export default Group_Members;
