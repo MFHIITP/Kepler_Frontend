@@ -1,6 +1,6 @@
 import { lazy, ReactElement, ReactInstance, Suspense } from "react";
 import { userdetails } from "../Components/Interfaces/Details.interface";
-import { createBrowserRouter, RouterProps } from "react-router-dom";
+import { createBrowserRouter, Navigate, RouterProps } from "react-router-dom";
 
 const Login = lazy(() => import("../Components/Login"));
 const Part1 = lazy(() => import("../Components/Part1"));
@@ -18,61 +18,70 @@ const Courses = lazy(() => import("../Components/Courses"));
 const ReadBook = lazy(() => import("../Components/ReadBook"));
 const Popping = lazy(() => import("../Components/Popping"));
 const ExecutiveTeam = lazy(() => import("../Components/Teams/ExecutiveTeam"));
-const DevelopmentTeam = lazy(() => import("../Components/Teams/DevelopmentTeam"));
-const PayPal = lazy(()=> import ("../Components/PayPalComponent"))
-const QRPage = lazy(()=> import ("../Components/QRPage"))
-const CoreTeam = lazy(()=> import ("../Components/Teams/CoreTeam"))
+const DevelopmentTeam = lazy(
+  () => import("../Components/Teams/DevelopmentTeam")
+);
+const PayPal = lazy(() => import("../Components/PayPalComponent"));
+const QRPage = lazy(() => import("../Components/QRPage"));
+const CoreTeam = lazy(() => import("../Components/Teams/CoreTeam"));
 const ContentTeam = lazy(() => import("../Components/Teams/ContentTeam"));
 const PRTeam = lazy(() => import("../Components/Teams/PRTeam"));
 const Treasury = lazy(() => import("../Components/Teams/Treasury"));
 const LiveUsers = lazy(() => import("../Components/Live_Usere"));
 const HistoryUsers = lazy(() => import("../Components/History_Users"));
-const DonateUs = lazy(()=> import ("../Components/DonateUs"));
-const  Course_Details = lazy(()=> import ("../Components/Course_Details"));
-const  ReferCode = lazy(()=> import ("../Components/ReferCode"));
-const  Course_Schedules = lazy(()=> import ("../Components/Course_Schedules"));
-const  GroupChat = lazy(()=> import ("../Components/GroupChat"));
-const  Library_main = lazy(()=> import ("../Components/Library_main"));
-const  Numbers = lazy(()=> import ("../Components/Numbers"));
-const  Login_Auth = lazy(()=> import ("../Components/Login_Auth"));
-const  AuthRegister = lazy(()=>import ("../Components/AuthRegister"))
+const DonateUs = lazy(() => import("../Components/DonateUs"));
+const Course_Details = lazy(() => import("../Components/Course_Details"));
+const ReferCode = lazy(() => import("../Components/ReferCode"));
+const Course_Schedules = lazy(() => import("../Components/Course_Schedules"));
+const GroupChat = lazy(() => import("../Components/GroupChat"));
+const Library_main = lazy(() => import("../Components/Library_main"));
+const Numbers = lazy(() => import("../Components/Numbers"));
+const Login_Auth = lazy(() => import("../Components/Login_Auth"));
+const AuthRegister = lazy(() => import("../Components/AuthRegister"));
 const Footer = lazy(() => import("../Components/Footer"));
 
-export const RouterFrontend = (authenticated: boolean, details: userdetails | undefined) => 
+export const RouterFrontend = (
+  authenticated: boolean,
+  details: userdetails | undefined
+) =>
   createBrowserRouter([
     {
       path: "/",
       element: (
         <Suspense>
-          <Popping>
-            <Part1 />
-          </Popping>
-          <Part2 />
-          <Popping>
-            <Numbers/>
-          </Popping>
-          <Popping>
-            <QueryBox />
-          </Popping>
-          <Popping><Footer /></Popping>
+          <div>
+            <Popping>
+              <Part1 />
+            </Popping>
+            <Part2 />
+            <Popping>
+              <Numbers />
+            </Popping>
+            <Popping>
+              <QueryBox />
+            </Popping>
+            <Popping>
+              <Footer />
+            </Popping>
+          </div>
         </Suspense>
       ),
     },
     {
-      path: 'authlogin/:email',
+      path: "authlogin/:email",
       element: (
         <Suspense fallback={<div>Loading...</div>}>
-          <Login_Auth/>
+          <Login_Auth />
         </Suspense>
-      )
+      ),
     },
     {
-      path: '/authregister/:email',
+      path: "/authregister/:email",
       element: (
-        <Suspense fallback = {<div>Loading...</div>}>
-          <AuthRegister/>
+        <Suspense fallback={<div>Loading...</div>}>
+          <AuthRegister />
         </Suspense>
-      )
+      ),
     },
     {
       path: "/login",
@@ -102,7 +111,7 @@ export const RouterFrontend = (authenticated: boolean, details: userdetails | un
       path: "/admins/coreteam/executivecommittee",
       element: (
         <Suspense fallback={<div>Loading...</div>}>
-          <ExecutiveTeam details={details}/>
+          <ExecutiveTeam details={details} />
         </Suspense>
       ),
     },
@@ -110,7 +119,7 @@ export const RouterFrontend = (authenticated: boolean, details: userdetails | un
       path: "/admins/liveusers",
       element: (
         <Suspense fallback={<div>Loading...</div>}>
-          <LiveUsers details={details}/>
+          <LiveUsers details={details} />
         </Suspense>
       ),
     },
@@ -118,7 +127,7 @@ export const RouterFrontend = (authenticated: boolean, details: userdetails | un
       path: "/admins/historyusers",
       element: (
         <Suspense fallback={<div>Loading...</div>}>
-          <HistoryUsers details={details}/>
+          <HistoryUsers details={details} />
         </Suspense>
       ),
     },
@@ -126,7 +135,7 @@ export const RouterFrontend = (authenticated: boolean, details: userdetails | un
       path: "/admins/coreteam/developmentteam",
       element: (
         <Suspense fallback={<div>Loading...</div>}>
-          <DevelopmentTeam details={details}/>
+          <DevelopmentTeam details={details} />
         </Suspense>
       ),
     },
@@ -134,7 +143,7 @@ export const RouterFrontend = (authenticated: boolean, details: userdetails | un
       path: "/admins/coreteam/educatorsteam",
       element: (
         <Suspense fallback={<div>Loading...</div>}>
-          <ContentTeam details={details}/>
+          <ContentTeam details={details} />
         </Suspense>
       ),
     },
@@ -142,7 +151,7 @@ export const RouterFrontend = (authenticated: boolean, details: userdetails | un
       path: "/admins/coreteam/prteam",
       element: (
         <Suspense fallback={<div>Loading...</div>}>
-          <PRTeam details={details}/>
+          <PRTeam details={details} />
         </Suspense>
       ),
     },
@@ -150,35 +159,41 @@ export const RouterFrontend = (authenticated: boolean, details: userdetails | un
       path: "/admins/coreteam/corecommittee",
       element: (
         <Suspense fallback={<div>Loading...</div>}>
-          <CoreTeam details={details}/>
+          <CoreTeam details={details} />
         </Suspense>
       ),
     },
     {
       path: "/notice/donation",
       element: (
-        <Suspense fallback = {<div>Loading...</div>}><DonateUs/></Suspense>
-      )
+        <Suspense fallback={<div>Loading...</div>}>
+          <DonateUs />
+        </Suspense>
+      ),
     },
     {
       path: "/admins/coreteam/treasurycommittee",
       element: (
         <Suspense fallback={<div>Loading...</div>}>
-          <Treasury details={details}/>
+          <Treasury details={details} />
         </Suspense>
       ),
     },
     {
       path: "/notice/donation/qrcode",
       element: (
-        <Suspense><QRPage/></Suspense>
-      )
+        <Suspense>
+          <QRPage />
+        </Suspense>
+      ),
     },
     {
       path: "/notice/donation/paypal/:donation",
       element: (
-      <Suspense><PayPal/></Suspense>
-    )
+        <Suspense>
+          <PayPal />
+        </Suspense>
+      ),
     },
     {
       path: "/admins/userlist",
@@ -187,7 +202,7 @@ export const RouterFrontend = (authenticated: boolean, details: userdetails | un
           <UsersTable details={details} />
         </Suspense>
       ) : (
-        <></>
+        <><Navigate to = "/login"/></>
       ),
     },
     {
@@ -197,16 +212,18 @@ export const RouterFrontend = (authenticated: boolean, details: userdetails | un
           <Landing details={details} />
         </Suspense>
       ) : (
-        <></>
+        <><Navigate to = "/login"/></>
       ),
     },
     {
       path: "/group_chat",
       element: authenticated ? (
-        <Suspense fallback = {<div>Loading...</div>}>
-          <GroupChat details = {details}/>
+        <Suspense fallback={<div>Loading...</div>}>
+          <GroupChat details={details} />
         </Suspense>
-      ) : <></>
+      ) : (
+        <><Navigate to = "/login"/></>
+      ),
     },
     {
       path: "/meeting",
@@ -215,7 +232,7 @@ export const RouterFrontend = (authenticated: boolean, details: userdetails | un
           <Meet details={details} />
         </Suspense>
       ) : (
-        <></>
+        <><Navigate to = "/login"/></>
       ),
     },
     {
@@ -225,7 +242,7 @@ export const RouterFrontend = (authenticated: boolean, details: userdetails | un
           <MeetingRoom />
         </Suspense>
       ) : (
-        <></>
+        <><Navigate to = "/login"/></>
       ),
     },
     {
@@ -235,7 +252,7 @@ export const RouterFrontend = (authenticated: boolean, details: userdetails | un
           <Library_main />
         </Suspense>
       ) : (
-        <></>
+        <><Navigate to = "/login"/></>
       ),
     },
     {
@@ -245,7 +262,7 @@ export const RouterFrontend = (authenticated: boolean, details: userdetails | un
           <LibraryUI details={details} />
         </Suspense>
       ) : (
-        <></>
+        <><Navigate to = "/login"/></>
       ),
     },
     {
@@ -253,7 +270,7 @@ export const RouterFrontend = (authenticated: boolean, details: userdetails | un
       element: (
         <Suspense fallback={<div>Loading...</div>}>
           <About />
-        </Suspense> 
+        </Suspense>
       ),
     },
     {
@@ -267,10 +284,10 @@ export const RouterFrontend = (authenticated: boolean, details: userdetails | un
     {
       path: "/courses/:exam",
       element: (
-        <Suspense fallback = {<div>Loading...</div>}>
+        <Suspense fallback={<div>Loading...</div>}>
           <Course_Details />
         </Suspense>
-      )
+      ),
     },
     {
       path: "/readbook/:thisurl",
@@ -279,21 +296,27 @@ export const RouterFrontend = (authenticated: boolean, details: userdetails | un
           <ReadBook />
         </Suspense>
       ) : (
-        <></>
+        <><Navigate to = "/login"/></>
       ),
     },
     {
       path: "/courses/college/refercode",
       element: authenticated ? (
-        <Suspense fallback = {<div>Loading...</div>}>
-          <ReferCode details = {details}/>
+        <Suspense fallback={<div>Loading...</div>}>
+          <ReferCode details={details} />
         </Suspense>
       ) : (
-        <><Login/></>
-      )
+        <>
+          <Login />
+        </>
+      ),
     },
     {
       path: "/courses/:examname/details",
-      element: <><Course_Schedules/></>
-    }
+      element: (
+        <>
+          <Course_Schedules />
+        </>
+      ),
+    },
   ]);
