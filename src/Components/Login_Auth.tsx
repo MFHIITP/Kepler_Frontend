@@ -14,14 +14,10 @@ function Login_Auth() {
         });
       if (response.status === 200) {
         const data = await response.data;
-        const token = data.token;
   
-        const responsed = await api.post(apiRoutes.auth.tokenCheck, {
-            token: token,
-          });
-  
-        if (responsed.status === 200) {
-          document.cookie = `Token=${data.token}; path=/; domain=${window.location.hostname}; secure=true; sameSite=None;`
+        if (data.accessToken != null && data.refreshToken != null) {
+          document.cookie = `AccessToken=${data.accessToken}; path=/; domain=${window.location.hostname}; secure=true; sameSite=None;`
+          document.cookie = `RefreshToken=${data.refreshToken}; path=/; domain=${window.location.hostname}; secure=true; sameSite=None;`
           document.cookie = `ProfileInfo=${encodeURIComponent(`j:` + JSON.stringify(data.profileinfo))};  path=/; domain=${window.location.hostname}; secure=true; sameSite=None;`
           localStorage.setItem('toast_message', `Login Successful! Welcome to Kepler ${data.profileinfo.name}`)
           window.location.href = '/';
