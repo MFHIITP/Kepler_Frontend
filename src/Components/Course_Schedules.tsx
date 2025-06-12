@@ -1,11 +1,12 @@
 import React, { useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { schedules, syllabus } from "../lists.js";
 import Footer from '../Components/Footer.jsx'
 import Playlist from "./Playlist.jsx";
 
 function Course_Schedules() {
   const { examname } = useParams();
+  const navigate = useNavigate();
   const [list, setList] = useState({
     college: {
       type: "Full Syllabus Batch",
@@ -60,7 +61,7 @@ function Course_Schedules() {
               </div>
             </div>
           </div>
-          <div className="bg-blue-800 text-white p-2 rounded-lg shadow-md font-bold cursor-pointer mt-[-6px] hover:shadow-lg hover:shadow-gray-600" onClick={()=>{window.location.pathname = '/profiles'}}>
+          <div className="bg-blue-800 text-white p-2 rounded-lg shadow-md font-bold cursor-pointer mt-[-6px] hover:shadow-lg hover:shadow-gray-600" onClick={()=>{navigate('/profiles')}}>
             Get Subscription and Start Learing
           </div>
         </div>

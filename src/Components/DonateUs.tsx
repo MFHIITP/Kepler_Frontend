@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 
 function DonateUs() {
   const [donationAmount, setDonationAmount] = useState(0);
@@ -37,24 +38,24 @@ function DonateUs() {
             />
           </div>
 
-          <a href={`/notice/donation/paypal/${(donationAmount / 70)}`} onClick={(e)=>{if(donationAmount <= 0){e.preventDefault(); alert("Donation Amount Cannot be 0.")}}}>
+          <Link to={`/notice/donation/paypal/${(donationAmount / 70)}`} onClick={(e)=>{if(donationAmount <= 0){e.preventDefault(); alert("Donation Amount Cannot be 0.")}}}>
             <div
               className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg shadow-md hover:bg-blue-700 transition-all duration-300 mb-4"
             >
               Donate via PayPal
             </div>
-          </a>
+          </Link>
         </form>
       </div>
 
       <div className="mt-8 text-center text-gray-600">
         <p className="text-md">Alternatively, you can donate via QR code:</p>
         <div className="flex justify-center gap-6 mt-4">
-          <a href="/notice/donation/qrcode">
+          <Link to="/notice/donation/qrcode">
             <button className="bg-green-600 text-white py-3 rounded-lg px-10 shadow-md hover:bg-green-700 transition-all duration-300">
               Donate via QR Code
             </button>
-          </a>
+          </Link>
         </div>
       </div>
     </div>

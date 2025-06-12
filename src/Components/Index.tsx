@@ -8,6 +8,7 @@ import { componentPropsInterface } from "./Interfaces/ComponentProps.interface";
 import api from "../utils/api";
 import apiRoutes from "../utils/Routes/apiRoutes";
 import Cookies from "js-cookie";
+import { Link, useNavigate } from "react-router-dom";
 
 const Index: FC<componentPropsInterface> = ({ auth, details }) => {
   var name = details?.name;
@@ -23,6 +24,7 @@ const Index: FC<componentPropsInterface> = ({ auth, details }) => {
   const [coreTeamDropdownOpen, setcoreTeamDropdownOpen] = useState(false);
   const context = useContext(MyContext);  
   const adminemails = context?.adminemails ?? []
+  const navigate = useNavigate();
 
   const handleLogout = async () => {
     setLoading(true);
@@ -35,7 +37,7 @@ const Index: FC<componentPropsInterface> = ({ auth, details }) => {
       Cookies.remove("ProfileInfo")
       localStorage.setItem("toast_message", "Logout Successful!");
       setLoading(false);
-      window.location.href = "/";
+      window.location.href = '/';
     } else {
       setLoading(false);
       toast.error("Do again");
@@ -55,8 +57,8 @@ const Index: FC<componentPropsInterface> = ({ auth, details }) => {
             className="rounded-lg hover:transition hover:duration-500 hover:scale-125"
           />
           <div className="font-semibold text-xl tracking-wide text-blue-900 transition-colors hover:scale-105  ml-4">
-            <a href="/">
-            </a>
+            <Link to="/">
+            </Link>
           </div>
         </div>
 
@@ -69,7 +71,7 @@ const Index: FC<componentPropsInterface> = ({ auth, details }) => {
                 : "text-gray-900"
             }`}
           >
-            <a href="/">Home</a>
+            <Link to="/">Home</Link>
           </div>
           {["About Us", "Courses"].map((link, index) => (
             <div
@@ -81,7 +83,7 @@ const Index: FC<componentPropsInterface> = ({ auth, details }) => {
                   : "text-gray-900"
               }`}
             >
-              <a href={`/${link.toLowerCase().replace(/\s/g, "")}`}>{link}</a>
+              <Link to={`/${link.toLowerCase().replace(/\s/g, "")}`}>{link}</Link>
             </div>
           ))}
           <div
@@ -125,29 +127,29 @@ const Index: FC<componentPropsInterface> = ({ auth, details }) => {
                         "Educators Team",
                         "PR Team",
                       ].map((team, index) => (
-                        <a
+                        <Link
                           key={index}
-                          href={`/admins/coreteam/${team
+                          to={`/admins/coreteam/${team
                             .toLowerCase()
                             .replace(/\s/g, "")}`}
                           className="block px-4 py-2 text-sm text-black hover:text-white hover:bg-gray-950 transition"
                         >
                           {team}
-                        </a>
+                        </Link>
                       ))}
                     </div>
                   )}
                 </div>
-                <a
-                  href="/admins/userlist"
+                <Link
+                  to="/admins/userlist"
                   className={`block px-4 py-2 text-sm text-black hover:text-white hover:bg-gray-950 transition ${
                     auth ? "" : "hidden"
                   }`}
                 >
                   UserList
-                </a>
-                <a
-                  href="/admins/liveusers"
+                </Link>
+                <Link
+                  to="/admins/liveusers"
                   className={`block px-4 py-2 text-sm text-black hover:text-white hover:bg-gray-950 transition ${
                     auth ? "" : "hidden"
                   } ${
@@ -155,9 +157,9 @@ const Index: FC<componentPropsInterface> = ({ auth, details }) => {
                   }`}
                 >
                   Live Users
-                </a>
-                <a
-                  href="/admins/historyusers"
+                </Link>
+                <Link
+                  to="/admins/historyusers"
                   className={`block px-4 py-2 text-sm text-black hover:text-white hover:bg-gray-950 transition ${
                     auth ? "" : "hidden"
                   } ${
@@ -165,7 +167,7 @@ const Index: FC<componentPropsInterface> = ({ auth, details }) => {
                   }`}
                 >
                   User History
-                </a>
+                </Link>
               </div>
             )}
           </div>
@@ -192,18 +194,18 @@ const Index: FC<componentPropsInterface> = ({ auth, details }) => {
                   setLibrarydrop(true);
                 }}
               >
-                <a
-                  href="/library/resources"
+                <Link
+                  to="/library/resources"
                   className="block px-4 py-2 text-sm text-black hover:text-white hover:bg-black transition"
                 >
                   Resources
-                </a>
-                <a
-                  href="/library/problems"
+                </Link>
+                <Link
+                  to="/library/problems"
                   className="block px-4 py-2 text-sm text-black hover:text-white hover:bg-black transition"
                 >
                   Daily Problems
-                </a>
+                </Link>
               </div>
             )}
           </div>
@@ -214,7 +216,7 @@ const Index: FC<componentPropsInterface> = ({ auth, details }) => {
                 : "text-gray-900"
             } cursor-pointer hover:text-blue-900 duration-100 transition-colors hover:scale-110 ${auth ? "" : "hidden"}`}
           >
-            <a href="/group_chat">Group Chat</a>
+            <Link to="/group_chat">Group Chat</Link>
           </div>
           {["Meeting"].map((link, index) => (
             <div
@@ -226,7 +228,7 @@ const Index: FC<componentPropsInterface> = ({ auth, details }) => {
                   : "text-gray-900"
               } ${auth ? "" : "hidden"}`}
             >
-              <a href={`/${link.toLowerCase().replace(/\s/g, "")}`}>{link}</a>
+              <Link to={`/${link.toLowerCase().replace(/\s/g, "")}`}>{link}</Link>
             </div>
           ))}
 
@@ -237,9 +239,9 @@ const Index: FC<componentPropsInterface> = ({ auth, details }) => {
                 : "text-gray-900"
             } hover:text-blue-900`}
           >
-            <a href="https://sites.google.com/d/1YIiDDXlB4EW7wCFTASiACXPuoZ6JQRqL/edit">
+            <Link to="https://sites.google.com/d/1YIiDDXlB4EW7wCFTASiACXPuoZ6JQRqL/edit">
               Gallery
-            </a>
+            </Link>
           </div>
 
           <div
@@ -263,32 +265,32 @@ const Index: FC<componentPropsInterface> = ({ auth, details }) => {
                   setNoticedrop(true);
                 }}
               >
-                <a
-                  href="/notice/notices"
+                <Link
+                  to="/notice/notices"
                   className={`block px-4 py-2 text-sm text-black hover:text-white hover:bg-black transition ${
                     auth ? "" : "hidden"
                   }`}
                 >
                   Notice and Circulars
-                </a>
-                <a
-                  href="/notice/merchandise"
+                </Link>
+                <Link
+                  to="/notice/merchandise"
                   className="block px-4 py-2 text-sm text-black hover:text-white hover:bg-black transition"
                 >
                   Merchandise
-                </a>
-                <a
-                  href="/notice/donation"
+                </Link>
+                <Link
+                  to="/notice/donation"
                   className="block px-4 py-2 text-sm text-black hover:text-white hover:bg-black transition"
                 >
                   Donate Us
-                </a>
+                </Link>
               </div>
             )}
           </div>
           {/* Profile Icon */}
           <div className={`cursor-pointer ${auth ? "" : "hidden"}`}>
-            <a href="/profiles">
+            <Link to="/profiles">
               <Avatar
                 sx={{
                   bgcolor:
@@ -303,7 +305,7 @@ const Index: FC<componentPropsInterface> = ({ auth, details }) => {
               >
                 {name}
               </Avatar>
-            </a>
+            </Link>
           </div>
         </div>
 
@@ -316,7 +318,7 @@ const Index: FC<componentPropsInterface> = ({ auth, details }) => {
                 : "text-gray-900 border-transparent"
             } hover:shadow-md ${auth ? "hidden" : ""}`}
           >
-            <a href="/login">Login</a>
+            <Link to="/login">Login</Link>
           </div>
           <button
             className={`px-4 py-2 rounded-md transition-all duration-300 ${
@@ -372,7 +374,7 @@ const Index: FC<componentPropsInterface> = ({ auth, details }) => {
                   : "text-gray-300"
               }`}
             >
-              <a href="/">Home</a>
+              <Link to="/">Home</Link>
             </div>
             {["About Us", "Rules"].map((link, index) => (
               <div
@@ -384,7 +386,7 @@ const Index: FC<componentPropsInterface> = ({ auth, details }) => {
                     : "text-gray-300"
                 }`}
               >
-                <a href={`/${link.toLowerCase().replace(/\s/g, "")}`}>{link}</a>
+                <Link to={`/${link.toLowerCase().replace(/\s/g, "")}`}>{link}</Link>
               </div>
             ))}
             <div
@@ -432,29 +434,29 @@ const Index: FC<componentPropsInterface> = ({ auth, details }) => {
                           "Appointment Sub-Committee",
                           "Disciplinary Sub-Committee",
                         ].map((team, index) => (
-                          <a
+                          <Link
                             key={index}
-                            href={`/admins/coreteam/${team
+                            to={`/admins/coreteam/${team
                               .toLowerCase()
                               .replace(/\s/g, "")}`}
                             className="block px-4 py-1.5 text-sm text-gray-300 hover:text-white hover:bg-gray-700 transition "
                           >
                             {team}
-                          </a>
+                          </Link>
                         ))}
                       </div>
                     )}
                   </div>
-                  <a
-                    href="/admins/userlist"
+                  <Link
+                    to="/admins/userlist"
                     className={`block px-4 py-2 text-sm text-gray-300 hover:text-white hover:bg-gray-700 transition ${
                       auth ? "" : "hidden"
                     }`}
                   >
                     UserList
-                  </a>
-                  <a
-                    href="/admins/liveusers"
+                  </Link>
+                  <Link
+                    to="/admins/liveusers"
                     className={`block px-4 py-2 text-sm text-gray-300 hover:text-white hover:bg-gray-700 transition ${
                       auth ? "" : "hidden"
                     } ${
@@ -462,9 +464,9 @@ const Index: FC<componentPropsInterface> = ({ auth, details }) => {
                     }`}
                   >
                     Live Users
-                  </a>
-                  <a
-                    href="/admins/historyusers"
+                  </Link>
+                  <Link
+                    to="/admins/historyusers"
                     className={`block px-4 py-2 text-sm text-gray-300 hover:text-white hover:bg-gray-700 transition ${
                       auth ? "" : "hidden"
                     } ${
@@ -472,7 +474,7 @@ const Index: FC<componentPropsInterface> = ({ auth, details }) => {
                     }`}
                   >
                     User History
-                  </a>
+                  </Link>
                 </div>
               )}
             </div>
@@ -499,18 +501,18 @@ const Index: FC<componentPropsInterface> = ({ auth, details }) => {
                     setLibrarydrop(true);
                   }}
                 >
-                  <a
-                    href="/library/resources"
+                  <Link
+                    to="/library/resources"
                     className="block px-4 py-2 text-sm text-gray-300 hover:text-white hover:bg-gray-700 transition"
                   >
                     Resources
-                  </a>
-                  <a
-                    href="/library/problems"
+                  </Link>
+                  <Link
+                    to="/library/problems"
                     className="block px-4 py-2 text-sm text-gray-300 hover:text-white hover:bg-gray-700 transition"
                   >
                     Daily Problems
-                  </a>
+                  </Link>
                 </div>
               )}
             </div>
@@ -524,7 +526,7 @@ const Index: FC<componentPropsInterface> = ({ auth, details }) => {
                     : "text-gray-300"
                 } ${auth ? "" : "hidden"}`}
               >
-                <a href={`/${link.toLowerCase().replace(/\s/g, "")}`}>{link}</a>
+                <Link to={`/${link.toLowerCase().replace(/\s/g, "")}`}>{link}</Link>
               </div>
             ))}
 
@@ -535,9 +537,9 @@ const Index: FC<componentPropsInterface> = ({ auth, details }) => {
                   : "text-gray-300"
               } hover:text-blue-500`}
             >
-              <a href="https://sites.google.com/d/1YIiDDXlB4EW7wCFTASiACXPuoZ6JQRqL/edit">
+              <Link to="https://sites.google.com/d/1YIiDDXlB4EW7wCFTASiACXPuoZ6JQRqL/edit">
                 Gallery
-              </a>
+              </Link>
             </div>
 
             <div
@@ -563,32 +565,32 @@ const Index: FC<componentPropsInterface> = ({ auth, details }) => {
                     setNoticedrop(true);
                   }}
                 >
-                  <a
+                  <Link
                     href="/notice/notices"
                     className={`block px-4 py-2 text-sm text-gray-300 hover:text-white hover:bg-gray-700 transition ${
                       auth ? "" : "hidden"
                     }`}
                   >
                     Notice and Circulars
-                  </a>
-                  <a
+                  </Link>
+                  <Link
                     href="/notice/merchandise"
                     className="block px-4 py-2 text-sm text-gray-300 hover:text-white hover:bg-gray-700 transition"
                   >
                     Merchandise
-                  </a>
-                  <a
+                  </Link>
+                  <Link
                     href="/notice/donation"
                     className="block px-4 py-2 text-sm text-gray-300 hover:text-white hover:bg-gray-700 transition"
                   >
                     Donate Us
-                  </a>
+                  </Link>
                 </div>
               )}
             </div>
             {/* Profile Icon */}
             <div className={`cursor-pointer ${auth ? "" : "hidden"}`}>
-              <a href="/profiles">
+              <Link to="/profiles">
                 <Avatar
                   sx={{
                     bgcolor:
@@ -604,7 +606,7 @@ const Index: FC<componentPropsInterface> = ({ auth, details }) => {
                 >
                   {name}
                 </Avatar>
-              </a>
+              </Link>
             </div>
           </div>
 
@@ -617,7 +619,7 @@ const Index: FC<componentPropsInterface> = ({ auth, details }) => {
                   : "text-gray-300 border-transparent"
               } hover:shadow-md ${auth ? "hidden" : ""}`}
             >
-              <a href="/login">Login</a>
+              <Link to="/login">Login</Link>
             </div>
             <button
               className={`px-4 py-2 rounded-md transition-all duration-300 ${

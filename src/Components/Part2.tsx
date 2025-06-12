@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Popping from "./Popping";
+import { useNavigate } from "react-router-dom";
 
 function Part2() {
   
@@ -65,6 +66,7 @@ function Part2() {
         "Test Modules, carefully curated by our seasoned educators to help the students in tracking their progress.",
     },
   ]);
+  const navigate = useNavigate();
   
   let filteredlist = exams.filter((val) => {
     return val.name.toLowerCase().includes(search.toLowerCase());
@@ -99,7 +101,7 @@ function Part2() {
                 key={index}
                 className="border-gray-300 border flex flex-col justify-around items-center rounded-lg shadow-sm hover:shadow-lg hover:border-orange-600 transition-transform hover:scale-105 p-10 cursor-pointer hover:shadow-blue-400"
                 onClick={() => {
-                  window.location.href = `/courses/${val.exam}`;
+                  navigate(`/courses/${val.exam}`);
                 }}
               >
                 <img

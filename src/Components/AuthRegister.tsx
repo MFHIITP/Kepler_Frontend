@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import { useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import api from "../utils/api";
 import apiRoutes from "../utils/Routes/apiRoutes";
 
 function AuthRegister() {
   const { email } = useParams();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (localStorage.getItem("authfail")) {
@@ -72,7 +73,7 @@ function AuthRegister() {
           "registration_toast",
           "Congratulations, your account has been created. Please Login Again."
         );
-        window.location.pathname = "/login";
+        navigate("/login");
       } else {
         alert(
           "You have already registered before. Please remove your earlier registration."
@@ -254,9 +255,9 @@ function AuthRegister() {
         </form>
         <div className="text-md font-semibold text-gray-600 my-4 flex justify-center">
           Already Registered? &nbsp;{" "}
-          <a href="/login" className="text-blue-500 hover:underline">
+          <Link to="/login" className="text-blue-500 hover:underline">
             Login
-          </a>
+          </Link>
         </div>
       </div>
     </div>

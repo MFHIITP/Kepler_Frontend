@@ -5,7 +5,6 @@ import "./App.css";
 import { userdetails } from "./Components/Interfaces/Details.interface";
 import { RouterFrontend } from "./utils/apiRoutesFrontend";
 import { getProfileInfo, getToken } from "./utils/TokenUtilityFunctions";
-const Index = lazy(() => import("./Components/Index"));
 
 function App() {
   const [details, setDetails] = useState<userdetails | undefined>(undefined);
@@ -58,11 +57,6 @@ function App() {
       ref={scrollRef}
       onScroll={handleScroll}>
       <Toaster/>
-      <div className={`sticky top-0 left-0 z-20 ${scrollAtTop ? '' : 'bg-gray-200 transition-colors duration-500'}`}>
-        <Suspense>
-          <Index auth={authenticated} details={details} />
-        </Suspense>
-      </div>
       {router_val && <RouterProvider router={router_val}/>}
     </div>
   );
