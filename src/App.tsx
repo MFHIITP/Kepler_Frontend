@@ -1,32 +1,17 @@
-import { useState, useEffect, lazy, Suspense, useRef } from "react";
+import { useState, useEffect, lazy, Suspense, useRef, useMemo } from "react";
 import { RouterProvider } from "react-router-dom";
 import {Toaster} from 'react-hot-toast'
 import "./App.css";
-import Cookies from "js-cookie";
 import { userdetails } from "./Components/Interfaces/Details.interface";
 import { RouterFrontend } from "./utils/apiRoutesFrontend";
+import { getProfileInfo, getToken } from "./utils/TokenUtilityFunctions";
 const Index = lazy(() => import("./Components/Index"));
 
 function App() {
-  const [details, setDetails] = useState<userdetails | undefined>();
+  const [details, setDetails] = useState<userdetails | undefined>(undefined);
   const [authenticated, setAuthenticated] = useState<boolean>(false);
   const [scrollAtTop, setScrollAtTop] = useState<boolean>(true)
   const scrollRef = useRef<HTMLDivElement | null>(null)
-
-  const getToken = () => {
-    const token = Cookies.get("AccessToken");
-    if (token) {
-      return token;
-    }
-    return null;
-  };
-  const getProfileInfo = () => {
-    const profile = Cookies.get("ProfileInfo");
-    if (profile) {
-      const decodedProfile = decodeURIComponent(profile.substring(2));
-      return JSON.parse(decodedProfile);
-    }
-  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -56,8 +41,10 @@ function App() {
     fetchData();
   }, []);
 
-  const router_val = RouterFrontend(authenticated, details)
-
+  const router_val = useMemo(()=>{
+    return RouterFrontend(authenticated, details)
+  }, [authenticated, details])
+  
   const handleScroll = ()=>{
     if(scrollRef.current){ 
       const scrolltop = scrollRef.current.scrollTop;
@@ -76,7 +63,7 @@ function App() {
           <Index auth={authenticated} details={details} />
         </Suspense>
       </div>
-      <RouterProvider router={router_val}/>
+      {router_val && <RouterProvider router={router_val}/>}
     </div>
   );
 }

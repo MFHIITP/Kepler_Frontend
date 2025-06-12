@@ -1,6 +1,6 @@
 import { lazy, ReactElement, ReactInstance, Suspense } from "react";
 import { userdetails } from "../Components/Interfaces/Details.interface";
-import { createBrowserRouter, Navigate, RouterProps } from "react-router-dom";
+import { createBrowserRouter, Navigate } from "react-router-dom";
 
 const Login = lazy(() => import("../Components/Login"));
 const Part1 = lazy(() => import("../Components/Part1"));
@@ -43,8 +43,9 @@ const Footer = lazy(() => import("../Components/Footer"));
 export const RouterFrontend = (
   authenticated: boolean,
   details: userdetails | undefined
-) =>
-  createBrowserRouter([
+) => {
+  console.log(authenticated)
+  return createBrowserRouter([
     {
       path: "/",
       element: (
@@ -202,7 +203,7 @@ export const RouterFrontend = (
           <UsersTable details={details} />
         </Suspense>
       ) : (
-        <><Navigate to = "/login"/></>
+        <></>
       ),
     },
     {
@@ -212,7 +213,7 @@ export const RouterFrontend = (
           <Landing details={details} />
         </Suspense>
       ) : (
-        <><Navigate to = "/login"/></>
+        <></>
       ),
     },
     {
@@ -222,7 +223,7 @@ export const RouterFrontend = (
           <GroupChat details={details} />
         </Suspense>
       ) : (
-        <><Navigate to = "/login"/></>
+        <></>
       ),
     },
     {
@@ -232,7 +233,7 @@ export const RouterFrontend = (
           <Meet details={details} />
         </Suspense>
       ) : (
-        <><Navigate to = "/login"/></>
+        <></>
       ),
     },
     {
@@ -242,7 +243,7 @@ export const RouterFrontend = (
           <MeetingRoom />
         </Suspense>
       ) : (
-        <><Navigate to = "/login"/></>
+        <></>
       ),
     },
     {
@@ -252,7 +253,7 @@ export const RouterFrontend = (
           <Library_main />
         </Suspense>
       ) : (
-        <><Navigate to = "/login"/></>
+        <></>
       ),
     },
     {
@@ -262,7 +263,7 @@ export const RouterFrontend = (
           <LibraryUI details={details} />
         </Suspense>
       ) : (
-        <><Navigate to = "/login"/></>
+        <></>
       ),
     },
     {
@@ -296,7 +297,7 @@ export const RouterFrontend = (
           <ReadBook />
         </Suspense>
       ) : (
-        <><Navigate to = "/login"/></>
+        <></>
       ),
     },
     {
@@ -319,4 +320,4 @@ export const RouterFrontend = (
         </>
       ),
     },
-  ]);
+  ])};
