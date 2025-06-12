@@ -1,11 +1,12 @@
 import React, { useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import Footer from "./Footer";
 import { courseTeachersInterface } from "./Interfaces/CourseTeachers.interface";
 
 function Course_Details() {
   const { exam } = useParams();
+  const navigate = useNavigate();
   const [collegeteachers, setCollegeteachers] = useState<courseTeachersInterface[]>([
     {
       id: 1,
@@ -95,15 +96,15 @@ function Course_Details() {
   ]);
 
   const handlereferclick = () => {
-    window.location.pathname = "/courses/college/refercode";
+    navigate("/courses/college/refercode");
   };
 
   const handlebatchclick = (examname: string) => {
-    window.location.pathname = `/courses/${examname}/details`;
+    navigate(`/courses/${examname}/details`);
   };
 
   const handlesubmitclick = () => {
-    window.location.pathname = `/profiles`;
+    navigate(`/profiles`);
   };
 
   const fees = {

@@ -5,7 +5,7 @@ import Profile_Courses from "./Profile_Courses.jsx";
 function Landing(props) {
   const [option, setOption] = useState("courses");
   return (
-    <div className="flex h-[91.2%] ">
+    <div className="flex h-[91vh] ">
       <div className="flex flex-col justify-between w-[14%] bg-[#1A233A] text-white">
         <div className="flex flex-col">
           <div className="flex flex-row ml-5 gap-2 my-1 mt-5">

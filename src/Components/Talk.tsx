@@ -14,6 +14,7 @@ import Group_Members from "./Group_Members";
 import api from "../utils/api";
 import apiRoutes from "../utils/Routes/apiRoutes";
 import { userdetails } from "./Interfaces/Details.interface";
+import { useNavigate } from "react-router-dom";
 
 interface TalkInterface {
   key: number;
@@ -44,6 +45,7 @@ const Talk: FC<TalkInterface> = ({
   const adminemails = context?.adminemails;
   const serv_addr = import.meta.env.VITE_SERV_ADDR;
   const webs_addr = import.meta.env.VITE_WEBS_ADDR;
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (scrollref.current) {
@@ -84,7 +86,7 @@ const Talk: FC<TalkInterface> = ({
     const listed = bookurl.split("/");
     const newurl = listed[listed.length - 1];
     localStorage.setItem("before_url", "image/upload/v1735395980");
-    window.location.pathname = `/readbook/${newurl}`;
+    navigate(`/readbook/${newurl}`);
   };
   const handleSubmit = async (event) => {
     event.preventDefault(); // Prevents the page from refreshing

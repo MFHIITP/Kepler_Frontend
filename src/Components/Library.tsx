@@ -1,7 +1,7 @@
 import React, { useState, useContext, useEffect } from "react";
 import { MyContext } from "../main";
 import PdfPreview from "./PdfPreview";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import api from "../utils/api";
 import apiRoutes from "../utils/Routes/apiRoutes";
 
@@ -17,6 +17,7 @@ function Library(props) {
   const adminemails = context?.adminemails
   const [books, setBooks] = useState([]);
   const serve_addr = import.meta.env.VITE_SERV_ADDR
+  const navigate = useNavigate();
 
   useEffect(() => {
     const getbooks = async () => {
@@ -42,7 +43,7 @@ function Library(props) {
     const listed = bookurl.split('/');
     const newurl = listed[listed.length - 1];
     localStorage.setItem('before_url', 'image/upload/v1735395980')
-    window.location.pathname = `/readbook/${newurl}`;
+    navigate(`/readbook/${newurl}`);
   }
 
   const handleSubmit = async (event) => {

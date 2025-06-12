@@ -1,8 +1,11 @@
 import React, { useState } from "react";
 import api from "../utils/api";
 import apiRoutes from "../utils/Routes/apiRoutes";
+import { useNavigate } from "react-router-dom";
 
 function Register() {
+
+  const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
     name: "",
@@ -56,7 +59,7 @@ function Register() {
         });
 
       if (response.status === 200) {
-        window.location.pathname = "/verifyOTP";
+        navigate("/verifyOTP");
       } else {
         alert(
           "You have already registered before. Please remove your earlier registration."

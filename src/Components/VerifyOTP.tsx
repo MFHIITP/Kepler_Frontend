@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import api from "../utils/api";
 import apiRoutes from "../utils/Routes/apiRoutes";
+import { useNavigate } from "react-router-dom";
 
 function Otpverify() {
   const emailref = useRef(null)
@@ -8,6 +9,7 @@ function Otpverify() {
   const [data, setData] = useState({});
   const [loading, setLoading] = useState(false)
   const serv_addr = import.meta.env.VITE_SERV_ADDR
+  const navigate = useNavigate();
 
   useEffect(() => {
     const output = async () => {
@@ -39,12 +41,12 @@ function Otpverify() {
       localStorage.clear();
       setLoading(false)
       localStorage.setItem('registration_toast', 'Successfully Registered! Thank you for Registering')
-      window.location.href = "/login";
+      navigate("/login");
     } catch (error) {
       localStorage.clear();
       alert("Incorrect OTP Provided.");
       setLoading(false);
-      window.location.href = "/register"
+      navigate("/register")
     }
   };
 
