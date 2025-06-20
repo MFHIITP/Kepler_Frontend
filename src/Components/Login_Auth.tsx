@@ -5,7 +5,6 @@ import apiRoutes from "../utils/Routes/apiRoutes";
 
 function Login_Auth() {
   const { email } = useParams();
-  const serv_addr = import.meta.env.VITE_SERV_ADDR;
 
   useEffect(() => {
     const loginfunction = async () => {
@@ -21,7 +20,7 @@ function Login_Auth() {
           document.cookie = `RefreshToken=${data.refreshToken}; path=/; domain=${window.location.hostname}; secure=true; sameSite=None;`
           document.cookie = `ProfileInfo=${encodeURIComponent(`j:` + JSON.stringify(data.profileinfo))};  path=/; domain=${window.location.hostname}; secure=true; sameSite=None;`
           localStorage.setItem('toast_message', `Login Successful! Welcome to Kepler ${data.profileinfo.name}`)
-          window.location.href = '/';
+          window.location.href = '/'
         }
       } else {
         localStorage.setItem('authfail', 'Please provide some more informations about yourself.');

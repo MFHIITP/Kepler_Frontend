@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import api from "../utils/api";
 import apiRoutes from "../utils/Routes/apiRoutes";
+import { useNavigate } from "react-router-dom";
 
 function Student_Details(props) {
   const [newname, setNewname] = useState("");
@@ -21,6 +22,7 @@ function Student_Details(props) {
   const [changeschool, setChangeschool] = useState("");
   const [changeschool_year, setChangeschool_year] = useState("");
   const serv_addr = import.meta.env.VITE_SERV_ADDR;
+  const navigate = useNavigate()
 
   const handleupdate = async (type, val) => {
     const response = await api.post(apiRoutes.user.updateProfile, {
@@ -50,7 +52,7 @@ function Student_Details(props) {
       document.cookie = `Token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=${window.location.hostname};`;
       document.cookie = `ProfileInfo=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=${window.location.hostname};`;
       localStorage.setItem("toast_message", "Account Removed Succfully!");
-      window.location.href = "/";
+      navigate("/");
     }
   };
 

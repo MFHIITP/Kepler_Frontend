@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { librarylist } from "../lists";
+import { useNavigate } from "react-router-dom";
 
 function Library_main() {
   const [search, setSearch] = useState<string>("");
+  const navigate = useNavigate();
   const filteredlist = librarylist.filter((val) => {
     return val.toLowerCase().includes(search.toLowerCase());
   });
   const handleclick = (course: string) => {
-    window.location.href = `/library/resources/${course}`;
+    navigate(`/library/resources/${course}`);
   };
   return (
     <div className="libbd h-[90vh]">

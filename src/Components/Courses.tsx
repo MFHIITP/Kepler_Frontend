@@ -3,6 +3,8 @@ import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { popupitems } from "../lists.js";
 import Footer from "./Footer.jsx";
+import { Link, useNavigate } from "react-router-dom";
+import LiveImage from "../../Images/Live_Classes/webp"
 
 function Rules() {
   const [image_index, setImage_index] = useState(0);
@@ -88,6 +90,8 @@ function Rules() {
   const [fade, setFade] = useState(false);
   const [isopen, setIsopen] = useState(false);
 
+  const navigate = useNavigate();
+
   useEffect(() => {
     const timer = setInterval(() => {
       setFade(true);
@@ -103,15 +107,15 @@ function Rules() {
     <>
       <div className={`relative w-4/5 h-3/5 mt-12 rounded-lg mx-auto ${isopen ? 'bg-gray-500 opacity-50' : ''}`} id="nonpopup">
         {/* Images */}
-        <a href="/">
+        <Link to="/">
           <img
             src={images[image_index].img}
             alt={`Image${images[image_index].ind}`}
-            className={`absolute top-0 left-0 hover:shadow-xl w-full h-full z-10 rounded-lg transition-opacity duration-500 ${
+            className={`w-[30%] hover:shadow-xl z-10 rounded-lg transition-opacity duration-500 ${
               fade == true ? "opacity-10" : "opacity-100"
             }`}
           />
-        </a>
+        </Link>
         <div
           className="absolute right-0 top-[40%] z-10 bg-black text-white transition-transform hover:scale-105 opacity-70 text-2xl p-2 m-1 rounded-lg cursor-pointer"
           onClick={() => {
@@ -365,7 +369,7 @@ function Rules() {
                 key={index}
                 className="flex-col border-gray-300 border flex justify-center items-center rounded-lg shadow-sm hover:shadow-lg hover:border-orange-600 transition-transform hover:scale-105 p-10 cursor-pointer bg-indigo-200"
                 onClick={() => {
-                  window.location.href = `/courses/${val.exam}`;
+                  navigate(`/courses/${val.exam}`);
                 }}
               >
                 <img

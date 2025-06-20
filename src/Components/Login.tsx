@@ -2,12 +2,14 @@ import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import api from "../utils/api";
 import apiRoutes from "../utils/Routes/apiRoutes";
+import { useNavigate } from "react-router-dom";
 
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const serv_addr = import.meta.env.VITE_SERV_ADDR
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (localStorage.getItem("registration_toast")) {
@@ -42,7 +44,7 @@ function Login() {
           "toast_message",
           `Login Successful! Welcome to Kepler ${data.profileinfo.name}`
         );
-        window.location.href = "/";
+        window.location.href = '/';
       }
     } else {
       setLoading(false);
