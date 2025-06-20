@@ -5,7 +5,6 @@ import apiRoutes from "../utils/Routes/apiRoutes";
 
 function Login_Auth() {
   const { email } = useParams();
-  const serv_addr = import.meta.env.VITE_SERV_ADDR;
 
   useEffect(() => {
     const loginfunction = async () => {

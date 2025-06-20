@@ -1,8 +1,13 @@
 import React, { useEffect, useState } from "react";
 import api from "../utils/api";
 import apiRoutes from "../utils/Routes/apiRoutes";
+import loadRazorPayScript from "../utils/Razorpay/RazorpayPayments";
+import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
+const razorpayKeyId = import.meta.env.VITE_RAZORPAY_KEY_ID
 
 function User_Details(props) {
+  const navigate = useNavigate();
   const [userdetails, setUserdetails] = useState({})
   const [loading, setLoading] = useState(true);
 
@@ -29,7 +34,51 @@ function User_Details(props) {
     }
     fetchUserDetails()
   }, [])
-  
+
+
+  const handleRazorpayPayment = async() => {
+    const scriptLoaded = await loadRazorPayScript();
+    if(!scriptLoaded){
+      toast.error("Failed to Load Razorpay Payment Interface. Please try again with stable internet");
+      return;
+    }
+
+    const amountPayment = userdetails?.upcoming_payments?.find(val => val.name == "Payment Amount")?.value;
+    const orderRes = await api.post(apiRoutes.razorpay.payment.createOrder, {
+      amount: parseInt(amountPayment)
+    })
+    const orderData = orderRes.data.data;
+
+    const options = {
+      key: razorpayKeyId,
+      amount: orderData.amount,
+      currency: 'INR',
+      name: props.details.name,
+      description: "Course Payment",
+      order_id: orderData.id,
+      handler: async function (response){
+        const verifyRes = await api.post(apiRoutes.razorpay.payment.verifyPayment, {
+          userEmail: props.details.email,
+          userName: props.details.name,
+          razorpay_payment_id: response.razorpay_payment_id,
+          razorpay_order_id: response.razorpay_order_id,
+          razorpay_signature: response.razorpay_signature,
+        })
+        if(verifyRes.status == 200){
+          toast.success("Payment Successful! Enjoy your studies with Kepler")
+          navigate('/')
+        }
+        else{
+          toast.error("Payment failed! Please try again");
+        }
+      },
+      theme: {
+        color: "#0d9488"
+      }
+    }
+    const razorPayInstance = new window.Razorpay(options);
+    razorPayInstance.open();
+  }
 
   return (
     <div className={`flex flex-col min-h-screen`}>
@@ -185,6 +234,7 @@ function User_Details(props) {
             <div className="text-lg text-black font-semibold flex justify-between items-center">
               <div className="">Upcoming Payment Details:</div>
               <div
+                onClick={handleRazorpayPayment}
                 className={`text-white p-2 w-[20%] mb-2 rounded-lg flex justify-center items-center ${(() => {
                   const paymentDateStr = userdetails.upcoming_payments.find(
                     (val) => val.name === "Upcoming Payment Date"

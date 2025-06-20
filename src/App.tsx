@@ -1,10 +1,16 @@
 import { useState, useEffect, lazy, Suspense, useRef, useMemo } from "react";
 import { RouterProvider } from "react-router-dom";
-import {Toaster} from 'react-hot-toast'
+import toast, {Toaster} from 'react-hot-toast'
 import "./App.css";
 import { userdetails } from "./Components/Interfaces/Details.interface";
 import { RouterFrontend } from "./utils/apiRoutesFrontend";
 import { getProfileInfo, getToken } from "./utils/TokenUtilityFunctions";
+
+declare global {
+  interface Window {
+    Razorpay: any;
+  }
+}
 
 function App() {
   const [details, setDetails] = useState<userdetails | undefined>(undefined);
@@ -39,6 +45,7 @@ function App() {
     };
     fetchData();
   }, []);
+  
 
   const router_val = useMemo(()=>{
     return RouterFrontend(authenticated, details)

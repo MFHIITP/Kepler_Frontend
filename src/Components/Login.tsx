@@ -56,7 +56,7 @@ function Login() {
   };
 
   const handlegooglelogin = () => {
-    navigate(`${serv_addr}/auth/google`);
+    window.location.href = `${serv_addr}/auth/google`;
   };
 
   return (
