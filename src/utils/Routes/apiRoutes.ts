@@ -67,6 +67,12 @@ const apiRoutes = {
             appliedCourses: `/payment/applyCourses`,
             userInformation: `/payment/getUserInformation`
         }
+    },
+    razorpay: {
+        payment: {
+            createOrder: '/razorpay/create-order',
+            verifyPayment: '/razorpay/verify-order'
+        }
     }
 }
 export default apiRoutes

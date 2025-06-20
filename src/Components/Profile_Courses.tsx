@@ -24,10 +24,12 @@ function Profile_Courses(props) {
   useEffect(() => {
     const fetchCurrentCourses = async () => {
       const response = await api.post(
-        apiRoutes.courses.payment.currentCourses,{
-            email: props.details.email,
-            name: props.details.name,
-          });
+        apiRoutes.courses.payment.currentCourses,
+        {
+          email: props.details.email,
+          name: props.details.name,
+        }
+      );
       if (response.status == 201) {
         const resp = await response.data;
         console.log(resp);
@@ -81,12 +83,11 @@ function Profile_Courses(props) {
 
   const handleApplyCourses = async () => {
     const subjectList = courses.flatMap((category) => choices[category]);
-    const response = await api.post(
-      apiRoutes.courses.payment.appliedCourses, {
-          name: props.details.name,
-          email: props.details.email,
-          selectedCourses: subjectList,
-        });
+    const response = await api.post(apiRoutes.courses.payment.appliedCourses, {
+      name: props.details.name,
+      email: props.details.email,
+      selectedCourses: subjectList,
+    });
     if (response.status == 200) {
       props.goToPage("dashboard");
     } else {
@@ -269,12 +270,12 @@ function Profile_Courses(props) {
                           type="checkbox"
                           className="form-checkbox text-blue-600 h-5 w-5 mr-3"
                           checked={choices[category].includes(
-                            `Mathematics And Computer Science ${sem}`
+                            `Mathematics And Computer Science - ${sem}`
                           )}
                           onChange={() =>
                             handleChoiceChange(
                               category,
-                              `Mathematics And Computer Science ${sem}`
+                              `Mathematics And Computer Science - ${sem}`
                             )
                           }
                         />
@@ -419,7 +420,7 @@ function Profile_Courses(props) {
                     {courses.map((val, key) => (
                       <li key={key} className="py-1">
                         {val?.startsWith("Mathematics And Computer Science")
-                          ? val.split("Mathematics And Computer Science")[1]
+                          ? val.split("-")[1]
                           : val}
                       </li>
                     ))}
