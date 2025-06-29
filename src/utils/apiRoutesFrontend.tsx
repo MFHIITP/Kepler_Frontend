@@ -218,7 +218,9 @@ export const RouterFrontend = (
               <Landing details={details} />
             </Suspense>
           ) : (
-            <></>
+            <>
+              <Login/>
+            </>
           ),
         },
         {
@@ -255,7 +257,7 @@ export const RouterFrontend = (
           path: "/library/resources",
           element: authenticated ? (
             <Suspense fallback={<div>Loading...</div>}>
-              <Library_main />
+              <Library_main details = {details}/>
             </Suspense>
           ) : (
             <></>

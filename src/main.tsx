@@ -2,6 +2,9 @@ import React, { createContext } from "react";
 import ReactDOM from "react-dom/client";
 import { Suspense } from "react";
 import "./index.css";
+import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
+
+const queryClient = new QueryClient();
 
 interface contextInterface {
     adminemails?: string[],
@@ -33,7 +36,9 @@ const rootElement = document.getElementById('root') as HTMLElement
 ReactDOM.createRoot(rootElement).render(
   <MyContext.Provider value={{ adminemails, executives }}>
     <Suspense>
-      <App />
+      <QueryClientProvider client={queryClient}>
+        <App />
+      </QueryClientProvider>
     </Suspense>
   </MyContext.Provider>
 );

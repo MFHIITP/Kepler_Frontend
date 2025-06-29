@@ -1,54 +1,69 @@
-import React, { useEffect, useState } from "react";
-import { librarylist } from "../lists";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import api from "../utils/api";
+import apiRoutes from "../utils/Routes/apiRoutes";
+import { useQuery } from "@tanstack/react-query";
 
-function Library_main() {
-  const [search, setSearch] = useState<string>("");
-  const navigate = useNavigate();
-  const filteredlist = librarylist.filter((val) => {
-    return val.toLowerCase().includes(search.toLowerCase());
+const getLibraryList = async (email: string) => {
+  const { data } = await api.post(apiRoutes.library.getCourses, {
+    emailId: email,
   });
+  return data.data;
+};
+
+function Library_main(props) {
+  const [search, setSearch] = useState<string>("");
+
+  const { data: libraryList, isLoading, error } = useQuery({
+    queryKey: ["libraryCourses", props.details.email],
+    queryFn: () => getLibraryList(props.details.email),
+    staleTime: 30 * 60 * 1000,
+  });
+
+  const navigate = useNavigate();
+
+  const filteredlist = libraryList ? libraryList.filter((val) =>val.toLowerCase().includes(search.toLowerCase())) : [];
+
   const handleclick = (course: string) => {
     navigate(`/library/resources/${course}`);
   };
+
   return (
-    <div className="libbd h-[90vh]">
-      <div className="mx-12 py-12">
-        <div className="flex justify-center items-center text-3xl">
-          Find your Course
-        </div>
-        <div className="flex flex-row gap-x-3 w-fit my-4">
-          <div className="text-xl my-auto">Search</div>
+    <div className="min-h-screen bg-gradient-to-r from-indigo-50 to-blue-100 py-12 px-6">
+      <div className="max-w-6xl mx-auto">
+        <h1 className="text-center text-4xl font-bold text-indigo-900 mb-8">
+          Explore Your Library
+        </h1>
+
+        <div className="flex justify-center mb-10">
           <input
-            className="px-2 py-2 border border-black bg-indigo-300 rounded-lg shadow-md placeholder-white"
+            className="px-4 py-3 border border-gray-300 rounded-lg shadow focus:outline-none focus:ring-2 focus:ring-indigo-400 w-full max-w-md transition"
             type="text"
-            placeholder="Type course name"
+            placeholder="Search for your course"
             value={search}
             onChange={(e) => {
               setSearch(e.target.value);
             }}
           />
         </div>
-        <div className="grid grid-cols-2 gap-x-12 gap-y-6 p-2">
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {filteredlist.map((val, index) => (
             <div
               key={index}
-              className="border border-red-700 rounded-lg p-4 cursor-pointer flex justify-center h-40 text-4xl bg-gray-800 text-white opacity-80 hover:shadow-blue-950 hover:shadow-2xl shadow-lg transition-transform hover:scale-105 items-center"
-              onClick={() => {
-                handleclick(val);
-              }}
+              onClick={() => handleclick(val)}
+              className="cursor-pointer rounded-lg p-6 bg-white shadow hover:shadow-xl transition hover:scale-105 border border-indigo-300 flex items-center justify-center text-2xl font-medium text-indigo-800"
             >
-              <div className="">{val}</div>
+              {val}
             </div>
           ))}
         </div>
+
         <div
-          className="block mx-auto my-4 bg-gray-800 text-white transition-transform hover:scale-105 cursor-pointer items-center border border-red-700 p-4 w-fit rounded-lg"
-          onClick={() => {
-            handleclick("executives");
-          }}
+          onClick={() => handleclick("executives")}
+          className="block mx-auto mt-10 px-6 py-4 rounded-lg bg-indigo-700 text-white text-xl font-semibold text-center w-fit shadow hover:bg-indigo-800 transition cursor-pointer"
         >
-          Executives
+          Explore Executive Courses
         </div>
       </div>
     </div>

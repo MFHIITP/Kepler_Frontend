@@ -134,8 +134,6 @@ export const syllabus = {
   jee: [],
 };
 
-export const librarylist = ["JEE", "CAT", "GATE", "College"];
-
 export const playlist = {
   college: [
     {

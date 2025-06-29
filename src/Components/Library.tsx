@@ -4,30 +4,46 @@ import PdfPreview from "./PdfPreview";
 import { useNavigate, useParams } from "react-router-dom";
 import api from "../utils/api";
 import apiRoutes from "../utils/Routes/apiRoutes";
+import { useMutation, useQuery } from "@tanstack/react-query";
+
+const getLibraryBooks = async (course: string) => {
+  const { data } = await api.post(apiRoutes.library.getBooks, {
+    course: course,
+  });
+  return data;
+};
 
 function Library(props) {
-  const {course} = useParams()
-  const [loading, setLoading] = useState(false)
+  const { course } = useParams();
+  const [loading, setLoading] = useState(false);
+  const [bookSearching, setBookSearching] = useState(false);
   const [search, setSearch] = useState("");
-  const [title, setTitle] = useState('');
-  const [Author, setAuthor] = useState('Jadavpur Mathematics Society');
+  const [title, setTitle] = useState("");
+  const [Author, setAuthor] = useState("Kepler");
   const [pdfFile, setPdfFile] = useState(null);
   const [uploadStatus, setUploadStatus] = useState("");
-  const context = useContext(MyContext);
-  const adminemails = context?.adminemails
   const [books, setBooks] = useState([]);
-  const serve_addr = import.meta.env.VITE_SERV_ADDR
+  const context = useContext(MyContext);
+  const adminemails = context?.adminemails;
   const navigate = useNavigate();
 
+  const { mutate: GetBookMutation } = useMutation({
+    mutationFn: () => getLibraryBooks(course ?? ""),
+    onSuccess: (data) => {
+      setBooks(data);
+      setBookSearching(false);
+    },
+    onMutate: () => {
+      setBookSearching(true);
+    },
+    onError: () => {
+      setBookSearching(false);
+    },
+  });
+
   useEffect(() => {
-    const getbooks = async () => {
-      const { data } = await api.post(apiRoutes.library.getBooks, {
-        course: course
-      });
-      setBooks(data); // Ensure to set the fetched books in state
-    };
-    getbooks();
-  }, [serve_addr]);
+    GetBookMutation();
+  }, []);
 
   const handleFileChange = async (event) => {
     const file = event.target.files[0];
@@ -39,15 +55,15 @@ function Library(props) {
     }
   };
 
-  const handleReadBook = async(bookurl)=>{
-    const listed = bookurl.split('/');
+  const handleReadBook = async (bookurl) => {
+    const listed = bookurl.split("/");
     const newurl = listed[listed.length - 1];
-    localStorage.setItem('before_url', 'image/upload/v1735395980')
+    localStorage.setItem("before_url", "image/upload/v1735395980");
     navigate(`/readbook/${newurl}`);
-  }
+  };
 
   const handleSubmit = async (event) => {
-    setLoading(true)
+    setLoading(true);
     event.preventDefault();
     if (pdfFile && title && Author) {
       let bookurl;
@@ -58,113 +74,139 @@ function Library(props) {
         const { data } = await api.post(apiRoutes.imagePosting, formData);
         console.log(data);
         if (data.url) {
-          bookurl = data.url; 
+          bookurl = data.url;
         } else {
-          setLoading(false)
+          setLoading(false);
           setUploadStatus("Upload failed, no URL returned.");
           return;
         }
       } catch (error) {
         console.error("Upload failed:", error);
-        setLoading(false)
+        setLoading(false);
         setUploadStatus("Upload failed. Please try again.");
         return;
       }
 
       const response = await api.post(apiRoutes.library.postBooks, {
-          course: course,
-          title: title,
-          author: Author,
-          url: bookurl
-        });
+        course: course,
+        title: title,
+        author: Author,
+        url: bookurl,
+      });
 
       if (response.status === 200) {
-        setLoading(false)
-        setUploadStatus("Upload successful!"); 
+        setLoading(false);
+        setUploadStatus("Upload successful!");
         window.location.reload();
       } else {
-        setLoading(false)
+        setLoading(false);
         alert("Failed to upload");
       }
     }
   };
+  console.log(books);
 
-  const filteredBooks = books.filter((book) => {
-    return (book.title.toLowerCase().includes(search.toLowerCase()) && book.course.toLowerCase() == course.toLowerCase());
-  });
+  const filteredBooks =
+    books && books.length > 0
+      ? books.filter((book) => {
+          return book.title.toLowerCase().includes(search.toLowerCase());
+        })
+      : [];
 
   return (
-    <div className="relative h-[90vh] libbd">
-    <div className="bg-gray-300">
-      <section className="container mx-auto p-6 rounded-lg shadow-md">
-        <div className="text-center mb-6">
-          <h1 className="text-3xl font-bold">Find Your Book</h1>
-          <p className="mt-2">
-            Search from a plethora of books concerning {course == 'College' ? 'College Semester' : course} available in our library.
+    <div className="min-h-screen bg-gradient-to-r from-indigo-50 to-blue-100 py-10">
+      <section className="container mx-auto px-6">
+        <div className="text-center mb-8">
+          <h1 className="text-4xl font-bold text-indigo-900">Browse Books</h1>
+          <p className="text-indigo-700 mt-2">
+            Explore a curated collection for{" "}
+            {course === "College" ? "College Semester" : course}.
           </p>
         </div>
-        <div className="flex justify-center mb-4">
+
+        <div className="flex justify-center mb-10">
           <input
             type="text"
-            placeholder="Search for any content item available here"
-            className="w-2/3 md:w-1/2 p-2 rounded-lg border border-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray-600"
+            placeholder="Search books by title"
+            className="w-full max-w-lg px-4 py-3 border border-gray-300 rounded-lg shadow focus:outline-none focus:ring-2 focus:ring-indigo-400 placeholder-gray-500 transition"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
         </div>
-      </section>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 my-6 pb-6 px-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
           {filteredBooks.length > 0 ? (
             filteredBooks.map((book, index) => (
               <div
                 key={index}
-                className="bg-white p-4 rounded-lg hover:shadow-green-500 hover:shadow-xl transition duration-200 ease-in-out w-4/5"
+                className="bg-white rounded-xl shadow hover:shadow-xl border border-indigo-200 transition duration-200 hover:scale-105 p-4 flex flex-col"
               >
-                <div onClick={()=>{handleReadBook(book.url)}} className="cursor-pointer flex justify-between gap-8">
-                  <PdfPreview pdfUrl={book.url} className = "w-full h-full"/>
-                  <div className="block"> 
-                    <h2 className="text-xl font-semibold">{book.title}</h2>
-                    <p className="">{book.author}</p>
+                <div
+                  onClick={() => handleReadBook(book.url)}
+                  className="cursor-pointer flex flex-col justify-between gap-4"
+                >
+                  <PdfPreview pdfUrl={book.url} className="w-full rounded-md" />
+                  <div className="text-center">
+                    <h2 className="text-xl font-semibold text-indigo-800">
+                      {book.title}
+                    </h2>
+                    <p className="text-gray-700">{book.author}</p>
                   </div>
                 </div>
               </div>
             ))
           ) : (
-            <p className="text-center text-gray-800 col-span-full">
-              No books found
+            <p className="text-center text-gray-800 col-span-full text-lg font-medium">
+              {bookSearching ? "Searching..." : "No books found"}
             </p>
           )}
         </div>
-      <div className={`${adminemails?.includes(props.details.email) ? "none" : "hidden"} absolute bottom-2 right-2 text-white bg-gray-700 p-1 rounded-lg`}>
-        <div className="pdf-uploader flex flex-col">
-          <h2 className="flex justify-center m-1 p-1 text-3xl ">Upload PDF File</h2>
-          <label className=" text-2xl m-1 p-1">Title</label>
-          <input
-            type="text"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)} // Update title state
-            className="mb-2 p-2 rounded-lg border border-gray-600 text-white bg-slate-800"
-          />
-          <label className=" text-2xl m-1 p-1">Author</label>
-          <input
-            type="text"
-            value={Author}
-            onChange={(e) => setAuthor(e.target.value)}
-            className="mb-2 p-2 rounded-lg border border-gray-600 text-white bg-slate-800"
-            disabled = {adminemails?.includes(props.details.email) ? false : true}
-          />
-          <input
-            type="file"
-            accept="application/pdf"
-            className="rounded-lg w-fill m-2"
-            onChange={handleFileChange}
-          />
-          <button onClick={handleSubmit} className="w-fill bg-blue-900 rounded-lg m-1 p-1 " disabled = {loading}>Upload PDF</button>
-          {uploadStatus && <p>{uploadStatus}</p>}
-        </div>
-      </div>
-    </div>
+
+        {/* Upload box for admins */}
+        {adminemails?.includes(props.details.email) && (
+          <div className="fixed bottom-4 right-4 bg-white shadow-xl rounded-xl p-4 w-full max-w-md border border-indigo-300">
+            <h2 className="text-xl font-bold text-indigo-800 mb-3 text-center">
+              Upload PDF
+            </h2>
+            <form onSubmit={handleSubmit} className="flex flex-col gap-3">
+              <input
+                type="text"
+                placeholder="Book Title"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                className="p-2 rounded-lg border border-gray-400"
+                required
+              />
+              <input
+                type="text"
+                placeholder="Author"
+                value={Author}
+                onChange={(e) => setAuthor(e.target.value)}
+                className="p-2 rounded-lg border border-gray-400"
+                required
+              />
+              <input
+                type="file"
+                accept="application/pdf"
+                onChange={handleFileChange}
+                className="rounded-lg border border-gray-400"
+              />
+              <button
+                type="submit"
+                disabled={loading}
+                className="bg-indigo-700 text-white py-2 rounded-lg hover:bg-indigo-800 transition"
+              >
+                {loading ? "Uploading..." : "Upload PDF"}
+              </button>
+              {uploadStatus && (
+                <p className="text-center text-sm text-indigo-700">
+                  {uploadStatus}
+                </p>
+              )}
+            </form>
+          </div>
+        )}
+      </section>
     </div>
   );
 }
