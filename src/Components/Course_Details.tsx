@@ -213,7 +213,7 @@ function Course_Details() {
               <CheckCircleOutlineIcon sx={{ color: "blue" }} />
               <div className="">Live & recorded online classes</div>
             </div>
-            <div className="text-xlflex gap-x-2">
+            <div className="text-xl flex gap-x-2">
               <CheckCircleOutlineIcon sx={{ color: "blue" }} />
               <div className="">Curated by best educators</div>
             </div>
