@@ -1,0 +1,22 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+  
+.bright-image{
+    filter: brightness(1)
+}
+
+::-webkit-scrollbar-thumb{
+    border-radius: '100% !imortant';
+}
+::-webkit-scrollbar-track{
+    border-radius: '100% !important;'
+}
+
+.wp_body{
+    background-image: url('../../Images/Whatsapp_background.jpg'); 
+}
+
+.libbd{
+    background-image: url('../../Images/WP_BG.png')
+}
