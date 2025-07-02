@@ -113,7 +113,7 @@ function ReferCode(props) {
             </div>
           </div>
         </div>
-        <img src={"../../../Images/Referral_Image.png"} alt="" />
+        <img src={"/Images/Referral_Image.png"} alt="" />
       </div>
     </div>
   );

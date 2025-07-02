@@ -175,7 +175,7 @@ export const playlist = {
       id: 6,
       link: "https://drive.google.com/file/d/1KodGtJcCvcnWGtynCndoktXsOb1P5VQf/preview",
       type: "drive",
-      image: "../../../Images/Mentorship.webp",
+      image: "/Images/Mentorship.webp",
       name: "Drive Image",
     },
   ],

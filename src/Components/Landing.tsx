@@ -30,7 +30,7 @@ function Landing(props) {
               >
                 <div className="flex ml-3 gap-14"> 
                   <div className="flex gap-2">
-                    <img src="../../../Images/Home_Icon.png" alt="" />
+                    <img src="/Images/Home_Icon.png" alt="" />
                     <div>Dashboard</div>
                   </div>
                 </div>
@@ -47,7 +47,7 @@ function Landing(props) {
               >
                 <div className="flex ml-3 gap-[4rem]">
                   <div className="flex gap-2">
-                    <img src="../../../Images/Payments_Icon.png" alt="" />
+                    <img src="/Images/Payments_Icon.png" alt="" />
                     <div>Courses</div>
                   </div>
                 </div>
@@ -64,7 +64,7 @@ function Landing(props) {
               >
                 <div className="flex ml-3 gap-[4rem]">
                   <div className="flex gap-2">
-                    <img src="../../../Images/Option_Icon.png" alt="" />
+                    <img src="/Images/Option_Icon.png" alt="" />
                     <div>Profile</div>
                   </div>
                 </div>
@@ -88,7 +88,7 @@ function Landing(props) {
               >
                 <div className="flex ml-3 gap-14"> 
                   <div className="flex gap-2">
-                    <img src="../../../Images/Notification_Icon.png" alt="" />
+                    <img src="/Images/Notification_Icon.png" alt="" />
                     <div>Notification</div>
                   </div>
                 </div>
@@ -105,7 +105,7 @@ function Landing(props) {
               >
                 <div className="flex ml-3 gap-[4rem]">
                   <div className="flex gap-2">
-                    <img src="../../../Images/settings_Icon.png" alt="" />
+                    <img src="/Images/settings_Icon.png" alt="" />
                     <div>Settings</div>
                   </div>
                 </div>
@@ -122,7 +122,7 @@ function Landing(props) {
               >
                 <div className="flex ml-3 gap-[4rem]">
                   <div className="flex gap-2">
-                    <img src="../../../Images/FAQ_Icon.png" alt="" />
+                    <img src="/Images/FAQ_Icon.png" alt="" />
                     <div>FAQ</div>
                   </div>
                 </div>

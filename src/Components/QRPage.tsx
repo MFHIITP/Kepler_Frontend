@@ -12,7 +12,7 @@ function DonateQR() {
           Scan the QR code below to make your donation.
         </p>
         <img
-          src="../../../Images/QR_Code.jpg"
+          src="/Images/QR_Code.jpg"
           alt="QR Code"
           className="mx-auto mb-6"
         />

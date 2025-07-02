@@ -6,22 +6,22 @@ function Part2() {
   
   const [exams, setExams] = useState([
     {
-      image: "../../../Images/JEE_Prep.webp",
+      image: "/Images/JEE_Prep.webp",
       name: "2 Year JEE Preparation",
       exam: "jee",
     },
     {
-      image: "../../../Images/CAT_Prep.webp",
+      image: "/Images/CAT_Prep.webp",
       name: "CAT Exam Preparation",
       exam: "cat",
     },
     {
-      image: "../../../Images/GATE_Prep.webp",
+      image: "/Images/GATE_Prep.webp",
       name: "GATE Exam Preparation",
       exam: "gate",
     },
     {
-      image: "../../../Images/College_Prep.webp",
+      image: "/Images/College_Prep.webp",
       name: "College Exams Preparation",
       exam: "college",
     },
@@ -30,37 +30,37 @@ function Part2() {
 
   const [Goals, setGoals] = useState([
     {
-      image: "../../../Images/Live_Classes.webp",
+      image: "/Images/Live_Classes.webp",
       name: "Live Classes",
       description:
         "Chat with educators, ask questions, answer live polls, and get your doubts cleared - all while the class is going on",
     },
     {
-      image: "../../../Images/Mentorship.webp",
+      image: "/Images/Mentorship.webp",
       name: "Mentorship Facilities",
       description:
         "Connect with seasoned mentors who are here to nurture your talent and help you navigate your journey. Gain invaluable insights and grow both personally and professionally.",
     },
     {
-      image: "../../../Images/Practive_Revise.webp",
+      image: "/Images/Practive_Revise.webp",
       name: "Practice and Revise",
       description:
         "Learning isn't just limited to classes with our practice section, mock tests and lecture notes shared as PDFs for your revision",
     },
     {
-      image: "../../../Images/Comminity_Networks.webp",
+      image: "/Images/Comminity_Networks.webp",
       name: "Community and Networking",
       description:
         "Build Connections That Last! Join a vibrant community of like-minded individuals. Collaborate, share ideas, and build lifelong friendships that will enrich your college experience.",
     },
     {
-      image: "../../../Images/Learn_anywhere.webp",
+      image: "/Images/Learn_anywhere.webp",
       name: "Learn anytime, anywhere",
       description:
         "One subscription gets you access to all our live and recorded classes to watch from the comfort of any of your devices",
     },
     {
-      image: "../../../Images/Monitoring.webp",
+      image: "/Images/Monitoring.webp",
       name: "Regular Monitoring through Tests",
       description:
         "Test Modules, carefully curated by our seasoned educators to help the students in tracking their progress.",

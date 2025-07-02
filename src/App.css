@@ -14,9 +14,9 @@
 }
 
 .wp_body{
-    background-image: url('../../Images/Whatsapp_background.jpg'); 
+    background-image: url('/Images/Whatsapp_background.jpg'); 
 }
 
 .libbd{
-    background-image: url('../../Images/WP_BG.png')
+    background-image: url('/Images/WP_BG.png')
 }

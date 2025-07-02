@@ -26,7 +26,7 @@ const Group_Members = (props) => {
         {props.groupname}
       </div>
       <img
-        src="../../../Images/Monitoring.webp"
+        src="/Images/Monitoring.webp"
         alt="Image not found"
         className="w-32 h-32 mx-auto mt-4 rounded-full transition-transform hover:scale-110"
       />
