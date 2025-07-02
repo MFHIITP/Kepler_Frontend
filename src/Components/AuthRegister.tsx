@@ -29,7 +29,6 @@ function AuthRegister() {
   });
 
   const [loading, setLoading] = useState(false);
-  const serv_addr = import.meta.env.VITE_SERV_ADDR;
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
