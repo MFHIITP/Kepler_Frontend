@@ -103,7 +103,7 @@ function User_Details(props) {
                 {val.copy && (
                   <div>
                     <img
-                      src="../../../Images/Copy_Icon.png"
+                      src="/Images/Copy_Icon.png"
                       alt=""
                       className="cursor-pointer"
                       onClick={() => handlecopyclick(val.value)}
@@ -140,7 +140,7 @@ function User_Details(props) {
                       {val.copy && (
                         <div>
                           <img
-                            src="../../../Images/Copy_Icon.png"
+                            src="/Images/Copy_Icon.png"
                             alt=""
                             className="cursor-pointer ml-[10px]"
                             onClick={() => handlecopyclick(val.value)}
@@ -176,7 +176,7 @@ function User_Details(props) {
                         {val.copy && (
                           <div>
                             <img
-                              src="../../../Images/Copy_Icon.png"
+                              src="/Images/Copy_Icon.png"
                               alt=""
                               className="cursor-pointer ml-[10px]"
                               onClick={() => handlecopyclick(val.value)}
@@ -216,7 +216,7 @@ function User_Details(props) {
                       {val.copy && (
                         <div>
                           <img
-                            src="../../../Images/Copy_Icon.png"
+                            src="/Images/Copy_Icon.png"
                             alt=""
                             className="cursor-pointer ml-[10px]"
                             onClick={() => handlecopyclick(val.value)}
@@ -267,7 +267,7 @@ function User_Details(props) {
                       {val.copy && (
                         <div>
                           <img
-                            src="../../../Images/Copy_Icon.png"
+                            src="/Images/Copy_Icon.png"
                             alt=""
                             className="cursor-pointer ml-[8px]"
                             onClick={() => handlecopyclick(val.value)}

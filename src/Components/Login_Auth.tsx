@@ -34,7 +34,7 @@ function Login_Auth() {
     Your credentials have been verified successfully. 
     <div>You are going to be directed to the website shortly.</div> Please wait patiently.
 
-    <img src="../../../Images/milky-way-shooting-star.webp" alt="" height={600} width={600} className="mt-6 rounded-lg"/>
+    <img src="/Images/milky-way-shooting-star.webp" alt="" height={600} width={600} className="mt-6 rounded-lg"/>
   </div>;
 }
 

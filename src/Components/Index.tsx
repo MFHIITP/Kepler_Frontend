@@ -50,7 +50,7 @@ const Index: FC<componentPropsInterface> = ({ auth, details }) => {
         {/* Logo and Title Section */}
         <div className="flex items-center cursor-pointer">
           <img
-            src="../../Images/Kepler_Logo.png"
+            src="/Images/Kepler_Logo.png"
             alt="JMS Logo"
             height={80}
             width={80}
@@ -342,7 +342,7 @@ const Index: FC<componentPropsInterface> = ({ auth, details }) => {
         {/* Logo and Title Section */}
         <div className="flex justify-between w-full cursor-pointer">
           <img
-            src="../../Images/JMS_Logo(1).png"
+            src="/Images/JMS_Logo(1).png"
             alt="JMS Logo"
             height={80}
             width={80}
