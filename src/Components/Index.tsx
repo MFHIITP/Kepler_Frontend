@@ -33,16 +33,13 @@ const Index: FC<componentPropsInterface> = ({ auth, details }) => {
       });
     if (response.status == 200) {
       Cookies.remove("AccessToken", {
-        path: '/',
-        domain: window.location.hostname
+        path: '/'
       })
       Cookies.remove("RefreshToken", {
-        path: '/',
-        domain: window.location.hostname
+        path: '/'
       })
       Cookies.remove("ProfileInfo", {
-        path: '/',
-        domain: window.location.hostname
+        path: '/'
       })
       localStorage.setItem("toast_message", "Logout Successful!");
       setLoading(false);

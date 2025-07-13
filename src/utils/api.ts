@@ -43,10 +43,13 @@ api.interceptors.response.use(
         if(error.response.status == 401){
             const data = await getNewAccessToken(refreshToken ?? "");
             Cookies.remove("AccessToken", {
-                path: '/',
-                domain: window.location.hostname
+                path: '/'
             });
-            document.cookie = `AccessToken=${data.accessToken}; path=/; domain=${window.location.hostname}; secure=true; sameSite=None;`;
+            Cookies.set("AccessToken", data.accessToken, {
+                path: '/',
+                secure: true,
+                sameSite: 'None'
+            })
             originalRequest.headers.AuthorizationAccessToken = `Bearer ${data.accessToken}`;
             return api(originalRequest);
         }
@@ -58,16 +61,13 @@ api.interceptors.response.use(
             const response = await logoutRequest(email);
             if(response.status == 200){
                 Cookies.remove("AccessToken", {
-                    path: '/',
-                    domain: window.location.hostname
+                    path: '/'
                 });
                 Cookies.remove("RefreshToken", {
-                    path: '/',
-                    domain: window.location.hostname
+                    path: '/'
                 })
                 Cookies.remove("ProfileInfo", {
-                    path: '/',
-                    domain: window.location.hostname
+                    path: '/'
                 });
                 localStorage.setItem("toast_message", "Logout Successful!");
                 window.location.href = "/";
