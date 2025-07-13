@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import api from "../utils/api";
 import apiRoutes from "../utils/Routes/apiRoutes";
 import { useNavigate } from "react-router-dom";
+import Cookies from "js-cookie";
 
 function Student_Details(props) {
   const [newname, setNewname] = useState("");
@@ -32,11 +33,11 @@ function Student_Details(props) {
       });
     if (response.status === 200) {
       const data = await response.data;
-      document.cookie = `ProfileInfo=${encodeURIComponent(
-        "j:" + JSON.stringify(data.profileinfo)
-      )}; path=/; domain=${
-        window.location.hostname
-      }; secure=true; sameSite=None;`;
+      Cookies.set("ProfileInfo", JSON.stringify(data.profileinfo), {
+        secure: true,
+        path: '/',
+        sameSite: 'None'
+      })
       window.location.reload();
     } else {
       console.log("Internal Server Error");
@@ -49,8 +50,15 @@ function Student_Details(props) {
         email: props.details.email,
       });
     if (response.status === 200) {
-      document.cookie = `Token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=${window.location.hostname};`;
-      document.cookie = `ProfileInfo=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=${window.location.hostname};`;
+      Cookies.remove("AccessToken", {
+        domain: window.location.hostname
+      })
+      Cookies.remove("RefreshToken", {
+        domain: window.location.hostname
+      })
+      Cookies.remove("ProfileInfo", {
+        domain: window.location.hostname
+      })
       localStorage.setItem("toast_message", "Account Removed Successfully!");
       navigate("/");
     }
