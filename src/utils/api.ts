@@ -42,7 +42,10 @@ api.interceptors.response.use(
         const refreshToken = getToken("RefreshToken")
         if(error.response.status == 401){
             const data = await getNewAccessToken(refreshToken ?? "");
-            Cookies.remove("AccessToken");
+            Cookies.remove("AccessToken", {
+                path: '/',
+                domain: window.location.hostname
+            });
             document.cookie = `AccessToken=${data.accessToken}; path=/; domain=${window.location.hostname}; secure=true; sameSite=None;`;
             originalRequest.headers.AuthorizationAccessToken = `Bearer ${data.accessToken}`;
             return api(originalRequest);
@@ -54,9 +57,18 @@ api.interceptors.response.use(
             const email = profile.email
             const response = await logoutRequest(email);
             if(response.status == 200){
-                Cookies.remove("AccessToken");
-                Cookies.remove("RefreshToken")
-                Cookies.remove("ProfileInfo");
+                Cookies.remove("AccessToken", {
+                    path: '/',
+                    domain: window.location.hostname
+                });
+                Cookies.remove("RefreshToken", {
+                    path: '/',
+                    domain: window.location.hostname
+                })
+                Cookies.remove("ProfileInfo", {
+                    path: '/',
+                    domain: window.location.hostname
+                });
                 localStorage.setItem("toast_message", "Logout Successful!");
                 window.location.href = "/";
             }

@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import api from "../utils/api";
 import apiRoutes from "../utils/Routes/apiRoutes";
+import Cookies from "js-cookie";
 
 function Login_Auth() {
   const { email } = useParams();
@@ -10,15 +11,26 @@ function Login_Auth() {
     const loginfunction = async () => {
       const response = await api.post(apiRoutes.auth.login.authLogin, {
           email: email,
-          
         });
       if (response.status === 200) {
         const data = await response.data;
   
         if (data.accessToken != null && data.refreshToken != null) {
-          document.cookie = `AccessToken=${data.accessToken}; path=/; domain=${window.location.hostname}; secure=true; sameSite=None;`
-          document.cookie = `RefreshToken=${data.refreshToken}; path=/; domain=${window.location.hostname}; secure=true; sameSite=None;`
-          document.cookie = `ProfileInfo=${encodeURIComponent(`j:` + JSON.stringify(data.profileinfo))};  path=/; domain=${window.location.hostname}; secure=true; sameSite=None;`
+          Cookies.set("Access Token", data.accessToken, {
+            path: '/',
+            secure: true,
+            sameSite: 'None'
+          })
+          Cookies.set("Refresh Token", data.refreshToken, {
+            path: '/',
+            secure: true,
+            sameSite: 'None'
+          })
+          Cookies.set("ProfileInfo", data.profileinfo, {
+            path: '/',
+            secure: true,
+            sameSite: 'None'
+          })
           localStorage.setItem('toast_message', `Login Successful! Welcome to Kepler ${data.profileinfo.name}`)
           window.location.href = '/'
         }
