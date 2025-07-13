@@ -37,7 +37,7 @@ const Talk: FC<TalkInterface> = ({
   const [group, setGroup] = useState(groupNumber);
   const [opendetails, setOpendetails] = useState(false);
   const [message, setMessage] = useState("");
-  const [file, setFile] = useState({});
+  const [file, setFile] = useState<File | undefined>();
   const [allmessages, setAllmessages] = useState([]);
   const [Socket, setSocket] = useState<WebSocket | null>(null);
   const [loading, setLoading] = useState(true);
@@ -88,7 +88,7 @@ const Talk: FC<TalkInterface> = ({
     localStorage.setItem("before_url", "image/upload/v1735395980");
     navigate(`/readbook/${newurl}`);
   };
-  const handleSubmit = async (event) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement> | React.KeyboardEvent<HTMLTextAreaElement>) => {
     event.preventDefault(); // Prevents the page from refreshing
 
     if (Socket) {
@@ -101,7 +101,12 @@ const Talk: FC<TalkInterface> = ({
         const imageform = new FormData();
         imageform.append("name", details.name);
         imageform.append("image", file);
-        const response = await api.post(apiRoutes.imagePosting, imageform);
+        console.log(imageform);
+        const response = await api.post(apiRoutes.imagePosting, imageform, {
+          headers: {
+            "Content-Type": "multipart/form-data"
+          }
+        });
         console.log(response);
         const resp = await response.data;
         formdata.append("image", resp.url);
@@ -126,7 +131,7 @@ const Talk: FC<TalkInterface> = ({
       Socket.send(JSON.stringify(socketdata));
     }
     setMessage("");
-    setFile({});
+    setFile(undefined);
   };
 
   const handleDelete = async (posts, index) => {
@@ -298,11 +303,11 @@ const Talk: FC<TalkInterface> = ({
               <div className="relative flex items-center cursor-pointer w-full bg-blue-800 rounded-lg hover:bg-blue-700 transition duration-200">
                 <input
                   type="file"
-                  onChange={(e) => setFile(e.target.files[0])}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFile(e.target.files?.[0])}
                   className="absolute inset-0 opacity-0 cursor-pointer"
                 />
                 <div className="text-white py-2 px-1 text-center w-full cursor-pointer">
-                  {file.name ? (
+                  {file?.name ? (
                     <>{file.name}</>
                   ) : (
                     <>
