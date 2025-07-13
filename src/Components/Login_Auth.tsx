@@ -26,7 +26,7 @@ function Login_Auth() {
             secure: true,
             sameSite: 'None'
           })
-          Cookies.set("ProfileInfo", data.profileinfo, {
+          Cookies.set("ProfileInfo", JSON.stringify(data.profileinfo), {
             path: '/',
             secure: true,
             sameSite: 'None'

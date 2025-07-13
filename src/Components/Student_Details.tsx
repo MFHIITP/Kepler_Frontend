@@ -51,7 +51,7 @@ function Student_Details(props) {
     if (response.status === 200) {
       document.cookie = `Token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=${window.location.hostname};`;
       document.cookie = `ProfileInfo=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=${window.location.hostname};`;
-      localStorage.setItem("toast_message", "Account Removed Succfully!");
+      localStorage.setItem("toast_message", "Account Removed Successfully!");
       navigate("/");
     }
   };
