@@ -8,7 +8,7 @@ function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const serv_addr = import.meta.env.VITE_SERV_ADDR
+  const server_addr = import.meta.env.VITE_SERV_ADDR
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -20,7 +20,7 @@ function Login() {
     }
   }, []);
 
-  const handleSubmit = async (event) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setLoading(true);
     const response = await api.post(apiRoutes.auth.login.signInLogin, {
@@ -55,8 +55,8 @@ function Login() {
     }
   };
 
-  const handlegooglelogin = () => {
-    window.location.href = `${serv_addr}/auth/google`;
+  const handleGoogleLogin = () => {
+    window.location.href = `${server_addr}/auth/google`;
   };
 
   return (
@@ -122,7 +122,7 @@ function Login() {
         </div>
         <div className="mt-6">
           <button
-            onClick={handlegooglelogin}
+            onClick={handleGoogleLogin}
             className="flex items-center justify-center w-full py-2 space-x-2 font-semibold text-gray-50 bg-red-500 hover:bg-red-700 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
           >
             <span>Login with Google</span>

@@ -32,9 +32,18 @@ const Index: FC<componentPropsInterface> = ({ auth, details }) => {
         email: details?.email,
       });
     if (response.status == 200) {
-      Cookies.remove("AccessToken")
-      Cookies.remove("RefreshToken")
-      Cookies.remove("ProfileInfo")
+      Cookies.remove("AccessToken", {
+        path: '/',
+        domain: window.location.hostname
+      })
+      Cookies.remove("RefreshToken", {
+        path: '/',
+        domain: window.location.hostname
+      })
+      Cookies.remove("ProfileInfo", {
+        path: '/',
+        domain: window.location.hostname
+      })
       localStorage.setItem("toast_message", "Logout Successful!");
       setLoading(false);
       window.location.href = '/';

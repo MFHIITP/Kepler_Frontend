@@ -1,14 +1,13 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, ReactElement } from "react";
 import api from "../utils/api";
 import apiRoutes from "../utils/Routes/apiRoutes";
 import { useNavigate } from "react-router-dom";
 
 function Otpverify() {
-  const emailref = useRef(null)
+  const emailref = useRef<HTMLInputElement | null>(null)
   const [otp, setOtp] = useState("");
   const [data, setData] = useState({});
   const [loading, setLoading] = useState(false)
-  const serv_addr = import.meta.env.VITE_SERV_ADDR
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -26,7 +25,7 @@ function Otpverify() {
     emailref.current?.focus()
   }, []);
 
-  const handleSubmit = async (event) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     setLoading(true);
     event.preventDefault();
     try {
