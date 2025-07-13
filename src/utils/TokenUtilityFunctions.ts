@@ -10,7 +10,7 @@ const getToken = () => {
 const getProfileInfo = () => {
   const profile = Cookies.get("ProfileInfo");
   if (profile) {
-    const decodedProfile = decodeURIComponent(profile.substring(2));
+    const decodedProfile = decodeURIComponent(profile);
     return JSON.parse(decodedProfile);
   }
 };
