@@ -16,12 +16,12 @@ function Login_Auth() {
         const data = await response.data;
   
         if (data.accessToken != null && data.refreshToken != null) {
-          Cookies.set("Access Token", data.accessToken, {
+          Cookies.set("AccessToken", data.accessToken, {
             path: '/',
             secure: true,
             sameSite: 'None'
           })
-          Cookies.set("Refresh Token", data.refreshToken, {
+          Cookies.set("RefreshToken", data.refreshToken, {
             path: '/',
             secure: true,
             sameSite: 'None'
