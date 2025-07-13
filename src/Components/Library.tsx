@@ -71,7 +71,11 @@ function Library(props) {
       formData.append("image", pdfFile);
 
       try {
-        const { data } = await api.post(apiRoutes.imagePosting, formData);
+        const { data } = await api.post(apiRoutes.imagePosting, formData, {
+          headers: {
+            "Content-Type": "multipart/form-data"
+          }
+        });
         console.log(data);
         if (data.url) {
           bookurl = data.url;
