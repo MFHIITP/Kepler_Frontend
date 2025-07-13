@@ -50,15 +50,9 @@ function Student_Details(props) {
         email: props.details.email,
       });
     if (response.status === 200) {
-      Cookies.remove("AccessToken", {
-        domain: window.location.hostname
-      })
-      Cookies.remove("RefreshToken", {
-        domain: window.location.hostname
-      })
-      Cookies.remove("ProfileInfo", {
-        domain: window.location.hostname
-      })
+      Cookies.remove("AccessToken")
+      Cookies.remove("RefreshToken")
+      Cookies.remove("ProfileInfo")
       localStorage.setItem("toast_message", "Account Removed Successfully!");
       navigate("/");
     }
