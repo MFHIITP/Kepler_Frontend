@@ -5,6 +5,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import api from "../utils/api";
 import apiRoutes from "../utils/Routes/apiRoutes";
 import { useMutation, useQuery } from "@tanstack/react-query";
+import { componentPropsInterface } from "./Interfaces/ComponentProps.interface";
+import { libraryBookInterface } from "./Interfaces/LibraryBooks.interface";
 
 const getLibraryBooks = async (course: string) => {
   const { data } = await api.post(apiRoutes.library.getBooks, {
@@ -13,16 +15,16 @@ const getLibraryBooks = async (course: string) => {
   return data;
 };
 
-function Library(props) {
+function Library(props: componentPropsInterface) {
   const { course } = useParams();
   const [loading, setLoading] = useState(false);
   const [bookSearching, setBookSearching] = useState(false);
   const [search, setSearch] = useState("");
   const [title, setTitle] = useState("");
   const [Author, setAuthor] = useState("Kepler");
-  const [pdfFile, setPdfFile] = useState(null);
+  const [pdfFile, setPdfFile] = useState<File | null>(null);
   const [uploadStatus, setUploadStatus] = useState("");
-  const [books, setBooks] = useState([]);
+  const [books, setBooks] = useState<libraryBookInterface[]>([]);
   const context = useContext(MyContext);
   const adminemails = context?.adminemails;
   const navigate = useNavigate();
@@ -45,8 +47,8 @@ function Library(props) {
     GetBookMutation();
   }, []);
 
-  const handleFileChange = async (event) => {
-    const file = event.target.files[0];
+  const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
     if (file && file.type === "application/pdf") {
       setPdfFile(file);
       setUploadStatus("");
@@ -55,14 +57,14 @@ function Library(props) {
     }
   };
 
-  const handleReadBook = async (bookurl) => {
+  const handleReadBook = async (bookurl: string) => {
     const listed = bookurl.split("/");
     const newurl = listed[listed.length - 1];
     localStorage.setItem("before_url", "image/upload/v1735395980");
     navigate(`/readbook/${newurl}`);
   };
 
-  const handleSubmit = async (event) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     setLoading(true);
     event.preventDefault();
     if (pdfFile && title && Author) {
@@ -74,7 +76,8 @@ function Library(props) {
         const { data } = await api.post(apiRoutes.imagePosting, formData, {
           headers: {
             "Content-Type": "multipart/form-data"
-          }
+          },
+          timeout: 60_000
         });
         console.log(data);
         if (data.url) {
@@ -110,12 +113,9 @@ function Library(props) {
   };
   console.log(books);
 
-  const filteredBooks =
-    books && books.length > 0
-      ? books.filter((book) => {
-          return book.title.toLowerCase().includes(search.toLowerCase());
-        })
-      : [];
+  const filteredBooks: libraryBookInterface[] = books && books.length > 0 ? books.filter((book) => { 
+    return book.title.toLowerCase().includes(search.toLowerCase());
+  }) : [];
 
   return (
     <div className="min-h-screen bg-gradient-to-r from-indigo-50 to-blue-100 py-10">
@@ -149,7 +149,7 @@ function Library(props) {
                   onClick={() => handleReadBook(book.url)}
                   className="cursor-pointer flex flex-col justify-between gap-4"
                 >
-                  <PdfPreview pdfUrl={book.url} className="w-full rounded-md" />
+                  <PdfPreview pdfUrl={book.url} />
                   <div className="text-center">
                     <h2 className="text-xl font-semibold text-indigo-800">
                       {book.title}
@@ -167,7 +167,7 @@ function Library(props) {
         </div>
 
         {/* Upload box for admins */}
-        {adminemails?.includes(props.details.email) && (
+        {adminemails?.includes(props.details?.email ?? "") && (
           <div className="fixed bottom-4 right-4 bg-white shadow-xl rounded-xl p-4 w-full max-w-md border border-indigo-300">
             <h2 className="text-xl font-bold text-indigo-800 mb-3 text-center">
               Upload PDF
