@@ -11,22 +11,22 @@ function Rules() {
   const [listname, setListname] = useState("");
   const [exams, setExams] = useState([
     {
-      image: "../../../Images/JEE_Prep.webp",
+      image: "/Images/JEE_Prep.webp",
       name: "2 Year JEE Preparation",
       exam: "jee",
     },
     {
-      image: "../../../Images/CAT_Prep.webp",
+      image: "/Images/CAT_Prep.webp",
       name: "CAT Exam Preparation",
       exam: "cat",
     },
     {
-      image: "../../../Images/GATE_Prep.webp",
+      image: "/Images/GATE_Prep.webp",
       name: "GATE Exam Preparation",
       exam: "gate",
     },
     {
-      image: "../../../Images/College_Prep.webp",
+      image: "/Images/College_Prep.webp",
       name: "College Exams Preparation",
       exam: "college",
     },
@@ -34,55 +34,55 @@ function Rules() {
   const [images] = useState([
     {
       ind: 0,
-      img: "../../../Images/Live_Classes.webp",
+      img: "/Images/Live_Classes.webp",
     },
     {
       ind: 1,
-      img: "../../../Images/Comminity_Networks.webp",
+      img: "/Images/Comminity_Networks.webp",
     },
     {
       ind: 2,
-      img: "../../../Images/Mentorship.webp",
+      img: "/Images/Mentorship.webp",
     },
     {
       ind: 3,
-      img: "../../../Images/Monitoring.webp",
+      img: "/Images/Monitoring.webp",
     },
     {
       ind: 4,
-      img: "../../../Images/Practive_Revise.webp",
+      img: "/Images/Practive_Revise.webp",
     },
   ]);
 
   const [list, setList] = useState([
     {
       name: "Live Classes",
-      image: "../../../Images/Live_Image.png",
+      image: "/Images/Live_Image.png",
       desc: "Watch free online classes presented by our experienced educators.",
     },
     {
       name: "Courses",
-      image: "../../../Images/Courses.png",
+      image: "/Images/Courses.png",
       desc: "Learn varied topics in details from our best educators",
     },
     {
       name: "Batches",
-      image: "../../../Images/Batches.png",
+      image: "/Images/Batches.png",
       desc: "Handpicked batches to smothen the learning curve of our students",
     },
     {
       name: "Top Educators",
-      image: "../../../Images/Top_Educators.png",
+      image: "/Images/Top_Educators.png",
       desc: "Learn from our handpicked educators specifically suited for our students' needs",
     },
     {
       name: "Practice",
-      image: "../../../Images/Practice.png",
+      image: "/Images/Practice.png",
       desc: "Adaptive practice sets to strenthen our students exam preparation",
     },
     {
       name: "Doubts and Solutions",
-      image: "../../../Images/Doubts.png",
+      image: "/Images/Doubts.png",
       desc: "Clarify your doubts and get detailed solutions in no time",
     },
   ]);

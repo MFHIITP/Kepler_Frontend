@@ -32,9 +32,15 @@ const Index: FC<componentPropsInterface> = ({ auth, details }) => {
         email: details?.email,
       });
     if (response.status == 200) {
-      Cookies.remove("AccessToken")
-      Cookies.remove("RefreshToken")
-      Cookies.remove("ProfileInfo")
+      Cookies.remove("AccessToken", {
+        path: '/'
+      })
+      Cookies.remove("RefreshToken", {
+        path: '/'
+      })
+      Cookies.remove("ProfileInfo", {
+        path: '/'
+      })
       localStorage.setItem("toast_message", "Logout Successful!");
       setLoading(false);
       window.location.href = '/';
@@ -50,7 +56,7 @@ const Index: FC<componentPropsInterface> = ({ auth, details }) => {
         {/* Logo and Title Section */}
         <div className="flex items-center cursor-pointer">
           <img
-            src="../../Images/Kepler_Logo.png"
+            src="/Images/Kepler_Logo.png"
             alt="JMS Logo"
             height={80}
             width={80}
@@ -342,7 +348,7 @@ const Index: FC<componentPropsInterface> = ({ auth, details }) => {
         {/* Logo and Title Section */}
         <div className="flex justify-between w-full cursor-pointer">
           <img
-            src="../../Images/JMS_Logo(1).png"
+            src="/Images/JMS_Logo(1).png"
             alt="JMS Logo"
             height={80}
             width={80}

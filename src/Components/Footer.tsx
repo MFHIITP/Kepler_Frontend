@@ -121,7 +121,7 @@ function Footer() {
         <div className="text-center">
           <div className="flex flex-col sm:flex-row items-center justify-center my-6">
             <img
-              src="../../Images/Kepler_Logo.png"
+              src="/Images/Kepler_Logo.png"
               alt="Company Logo"
               height={100}
               width={100}

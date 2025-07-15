@@ -22,7 +22,7 @@ function Course_Schedules() {
       <div className="shadow-lg shadow-gray-400 bg-white p-4 h-[60vh] mx-24 my-12 rounded-lg">
         <div className="flex h-[75%]">
           <img
-            src="../../../Images/Monitoring.webp"
+            src="/Images/Monitoring.webp"
             alt=""
             className="w-[40%] rounded-lg"
           />

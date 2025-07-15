@@ -11,19 +11,19 @@ function Course_Details() {
     {
       id: 1,
       name: "Shubhayan Ghosal",
-      image: "../../../Images/Shubhayan_image.jpg",
+      image: "/Images/Shubhayan_image.jpg",
       description: `The teacher for <span class = "font-extrabold text-blue-950">Complex Analysis</span> with <span class = "font-extrabold text-blue-950">more than 2 years of experience</span>. Currently at <span class="font-extrabold text-blue-950">final year of Mathematics in Jadavpur University</span>`,
     },
     {
       id: 2,
       name: "Subhajit Fadikar",
-      image: "../../../Images/College_Prep.webp",
+      image: "/Images/College_Prep.webp",
       description: `The teacher for <span class="font-extrabold text-blue-950">Indefinite Integrals</span> with <span class = "font-extrabold text-blue-950">more than 3 years of experience</span>. Currently at <span class = "text-blue-950 font-extrabold">final year of Mechanical Engineering department of Jadavpur University</span>`,
     },
     {
       id: 3,
       name: "Sagnik Saha",
-      image: "../../../Images/College_Prep.webp",
+      image: "/Images/College_Prep.webp",
       description: `The teacher for <span class="font-extrabold text-blue-950">Convergence and Divergence</span> with <span class = "font-extrabold text-blue-950">more than 1 years of experience</span>. Currently at <span class = "text-blue-950 font-extrabold">final year of Mathematics department of Jadavpur University</span>`,
     },
   ]);
@@ -31,7 +31,7 @@ function Course_Details() {
     {
       id: 1,
       name: "Sagnik Saha",
-      image: "../../../Images/College_Prep.webp",
+      image: "/Images/College_Prep.webp",
       description: `The teacher for <span class="font-extrabold text-blue-950">Linear and Abstract Algebra</span> with <span class = "font-extrabold text-blue-950">more than 1 years of experience</span>. Currently at <span class = "text-blue-950 font-extrabold">final year of Mathematics department of Jadavpur University</span>`,
     },
   ]);
@@ -39,18 +39,18 @@ function Course_Details() {
     {
       id: 1,
       name: "Shirso Dey",
-      image: "../../../Images/College_Prep.webp",
+      image: "/Images/College_Prep.webp",
       description: `The teacher for <span class = "font-extrabold text-blue-950">Physics and Mathematics</span> with <span class = "font-extrabold text-blue-950">more than 2 years of experience</span>. Currently at <span class="font-extrabold text-blue-950">final year of Mathematics in Jadavpur University</span>`,
     },
     {
       id: 2,
-      image: "../../../Images/College_Prep.webp",
+      image: "/Images/College_Prep.webp",
       name: "Arijit Paul",
       description: `The teacher for <span class = "font-extrabold text-blue-950">Complex Analysis</span> with <span class = "font-extrabold text-blue-950">more than 2 years of experience</span>. Currently at <span class="font-extrabold text-blue-950">final year of Mathematics in Jadavpur University</span>`,
     },
   ]);
   const [collegewriteup, setCollegewriteup] = useState({
-    image: "../../../Images/Mentorship.webp",
+    image: "/Images/Mentorship.webp",
     name: "College Acers Batch 2025",
     line1: "Full upcoming college semester exam syllabus completion",
     line2: "Limitless syllabus notes",
@@ -213,7 +213,7 @@ function Course_Details() {
               <CheckCircleOutlineIcon sx={{ color: "blue" }} />
               <div className="">Live & recorded online classes</div>
             </div>
-            <div className="text-xlflex gap-x-2">
+            <div className="text-xl flex gap-x-2">
               <CheckCircleOutlineIcon sx={{ color: "blue" }} />
               <div className="">Curated by best educators</div>
             </div>
@@ -361,7 +361,7 @@ function Course_Details() {
             </div>
           </div>
           <img
-            src={"../../../Images/Referral_Image.png"}
+            src={"/Images/Referral_Image.png"}
             alt=""
             height={80}
             width={380}

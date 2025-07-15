@@ -57,7 +57,8 @@ const apiRoutes = {
     },
     library: {
         getBooks: `/library/books/getBook`,
-        postBooks: `/library/books/postBook`
+        postBooks: `/library/books/postBook`,
+        getCourses: '/library/courses/getCourses'
     },
     imagePosting: `/talks/imagestore`,
     querySending: `/api/sendquery`,

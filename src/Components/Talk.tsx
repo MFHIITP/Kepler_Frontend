@@ -15,6 +15,7 @@ import api from "../utils/api";
 import apiRoutes from "../utils/Routes/apiRoutes";
 import { userdetails } from "./Interfaces/Details.interface";
 import { useNavigate } from "react-router-dom";
+import { groupChatMessages } from "./Interfaces/GroupMessages.interface";
 
 interface TalkInterface {
   key: number;
@@ -37,13 +38,13 @@ const Talk: FC<TalkInterface> = ({
   const [group, setGroup] = useState(groupNumber);
   const [opendetails, setOpendetails] = useState(false);
   const [message, setMessage] = useState("");
-  const [file, setFile] = useState({});
-  const [allmessages, setAllmessages] = useState([]);
+  const [file, setFile] = useState<File | undefined>();
+  const [allmessages, setAllmessages] = useState<groupChatMessages[]>([]);
   const [Socket, setSocket] = useState<WebSocket | null>(null);
   const [loading, setLoading] = useState(true);
   const context = useContext(MyContext);
   const adminemails = context?.adminemails;
-  const serv_addr = import.meta.env.VITE_SERV_ADDR;
+  const server_addr = import.meta.env.VITE_SERV_ADDR;
   const webs_addr = import.meta.env.VITE_WEBS_ADDR;
   const navigate = useNavigate();
 
@@ -79,29 +80,35 @@ const Talk: FC<TalkInterface> = ({
       setLoading(false);  
     };
     getdata();
-  }, [serv_addr]);
+  }, [server_addr]);
 
-  const handlepdfclick = (bookurl) => {
-    console.log(bookurl);
-    const listed = bookurl.split("/");
-    const newurl = listed[listed.length - 1];
+  const handlePdfClick = (bookUrl: string) => {
+    console.log(bookUrl);
+    const listed = bookUrl.split("/");
+    const newUrl = listed[listed.length - 1];
     localStorage.setItem("before_url", "image/upload/v1735395980");
-    navigate(`/readbook/${newurl}`);
+    navigate(`/readbook/${newUrl}`);
   };
-  const handleSubmit = async (event) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement> | React.KeyboardEvent<HTMLTextAreaElement>) => {
     event.preventDefault(); // Prevents the page from refreshing
 
     if (Socket) {
       const formdata = new FormData();
       formdata.append("email", details.email);
-      formdata.append("group_id", group);
+      formdata.append("group_id", group as unknown as string);
       formdata.append("name", details.name);
       formdata.append("message", message);
       if (file) {
         const imageform = new FormData();
         imageform.append("name", details.name);
         imageform.append("image", file);
-        const response = await api.post(apiRoutes.imagePosting, imageform);
+        console.log(imageform);
+        const response = await api.post(apiRoutes.imagePosting, imageform, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+          timeout: 60_000
+        });
         console.log(response);
         const resp = await response.data;
         formdata.append("image", resp.url);
@@ -119,17 +126,17 @@ const Talk: FC<TalkInterface> = ({
         hour12: false,
       });
       formdata.append("date", formattedDate);
-      const socketdata = {};
+      const socketData: {[key: string]: string | number} = {};
       formdata.forEach((val, key) => {
-        socketdata[key] = val;
+        socketData[key] = val as string;
       });
-      Socket.send(JSON.stringify(socketdata));
+      Socket.send(JSON.stringify(socketData));
     }
     setMessage("");
-    setFile({});
+    setFile(undefined);
   };
 
-  const handleDelete = async (posts, index) => {
+  const handleDelete = async (posts: groupChatMessages, index: number) => {
     alert("Do you really want to delete this?");
     const response = await api.post(apiRoutes.chat.Talk.deleteMessage, {
       name: posts.name,
@@ -259,8 +266,8 @@ const Talk: FC<TalkInterface> = ({
                       src={`${post.image}`}
                       alt="File not found"
                       style={{ maxHeight: 300 }}
-                      onError={(e) => {
-                        e.target.style.display = "none"; // Hide image if not found
+                      onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+                        e.currentTarget.style.display = "none"; // Hide image if not found
                       }}
                     />
                   )}
@@ -268,12 +275,11 @@ const Talk: FC<TalkInterface> = ({
                     <div
                       className="relative cursor-pointer"
                       onClick={() => {
-                        handlepdfclick(post.image);
+                        handlePdfClick(post.image ?? "");
                       }}
                     >
                       <PdfPreview
                         pdfUrl={post.image}
-                        className="w-[40%] m-2 transition-transform hover:scale-105"
                       />
                       <div className="absolute bottom-0 h-20 opacity-85 w-fit bg-black text-white flex justify-center items-center font-xl  p-2 rounded-lg">
                         {post.image_title}
@@ -298,11 +304,11 @@ const Talk: FC<TalkInterface> = ({
               <div className="relative flex items-center cursor-pointer w-full bg-blue-800 rounded-lg hover:bg-blue-700 transition duration-200">
                 <input
                   type="file"
-                  onChange={(e) => setFile(e.target.files[0])}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFile(e.target.files?.[0])}
                   className="absolute inset-0 opacity-0 cursor-pointer"
                 />
                 <div className="text-white py-2 px-1 text-center w-full cursor-pointer">
-                  {file.name ? (
+                  {file?.name ? (
                     <>{file.name}</>
                   ) : (
                     <>

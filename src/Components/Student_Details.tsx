@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import api from "../utils/api";
 import apiRoutes from "../utils/Routes/apiRoutes";
 import { useNavigate } from "react-router-dom";
+import Cookies from "js-cookie";
 
 function Student_Details(props) {
   const [newname, setNewname] = useState("");
@@ -32,11 +33,11 @@ function Student_Details(props) {
       });
     if (response.status === 200) {
       const data = await response.data;
-      document.cookie = `ProfileInfo=${encodeURIComponent(
-        "j:" + JSON.stringify(data.profileinfo)
-      )}; path=/; domain=${
-        window.location.hostname
-      }; secure=true; sameSite=None;`;
+      Cookies.set("ProfileInfo", JSON.stringify(data.profileinfo), {
+        secure: true,
+        path: '/',
+        sameSite: 'None'
+      })
       window.location.reload();
     } else {
       console.log("Internal Server Error");
@@ -49,22 +50,23 @@ function Student_Details(props) {
         email: props.details.email,
       });
     if (response.status === 200) {
-      document.cookie = `Token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=${window.location.hostname};`;
-      document.cookie = `ProfileInfo=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=${window.location.hostname};`;
-      localStorage.setItem("toast_message", "Account Removed Succfully!");
+      Cookies.remove("AccessToken")
+      Cookies.remove("RefreshToken")
+      Cookies.remove("ProfileInfo")
+      localStorage.setItem("toast_message", "Account Removed Successfully!");
       navigate("/");
     }
   };
 
   return (
-    <div className="text-white rounded-lg shadow-lg shadow-gray-900 w-full max-w-4xl mx-auto ">
+    <div className="text-white w-full max-w-4xl mx-auto ">
       <h1 className="text-3xl font-bold my-4 pt-2 text-center text-black underline">
         Profile Details
       </h1>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 p-4">
         {/* Name */}
-        <div className="bg-gray-800 p-4 rounded-lg my-4">
+        <div className="bg-blue-950 p-4 rounded-lg my-4">
           <div className="flex justify-between">
             <p className="font-semibold">Name:</p>
             <span
@@ -95,13 +97,13 @@ function Student_Details(props) {
         </div>
 
         {/* Email */}
-        <div className="bg-gray-800 p-4 rounded-lg my-4">
+        <div className="bg-blue-950 p-4 rounded-lg my-4">
           <p className="font-semibold">Email:</p>
           <p className="mt-2 bg-gray-700 p-2 rounded">{props.details.email}</p>
         </div>
 
         {/* Password */}
-        <div className={`bg-gray-800 p-4 rounded-lg my-4 ${props.details.college_name === undefined && props.details.school_name === undefined ? '' : 'hidden'}`}>
+        <div className={`bg-blue-950 p-4 rounded-lg my-4 ${props.details.college_name === undefined && props.details.school_name === undefined ? '' : 'hidden'}`}>
           <div className="flex justify-between">
             <p className="font-semibold">Password:</p>
             <span
@@ -134,7 +136,7 @@ function Student_Details(props) {
         </div>
 
         {/* Phone */}
-        <div className="bg-gray-800 p-4 rounded-lg my-4">
+        <div className="bg-blue-950 p-4 rounded-lg my-4">
           <div className="flex justify-between">
             <p className="font-semibold">Phone:</p>
             <span
@@ -167,7 +169,7 @@ function Student_Details(props) {
         </div>
         {/* College */}
         <div
-          className={`bg-gray-800 p-4 rounded-lg my-4 ${
+          className={`bg-blue-950 p-4 rounded-lg my-4 ${
             props.details.school === undefined ? "" : "hidden"
           } `}
         >
@@ -203,7 +205,7 @@ function Student_Details(props) {
         </div>
         {/* College Stream */}
         <div
-          className={`bg-gray-800 p-4 rounded-lg my-4 ${
+          className={`bg-blue-950 p-4 rounded-lg my-4 ${
             props.details.school === undefined ? "" : "hidden"
           } `}
         >
@@ -245,7 +247,7 @@ function Student_Details(props) {
         </div>
         {/* College Year */}
         <div
-          className={`bg-gray-800 p-4 rounded-lg my-4 ${
+          className={`bg-blue-950 p-4 rounded-lg my-4 ${
             props.details.school === undefined &&
             props.details.college_stream !== "PhD"
               ? ""
@@ -298,7 +300,7 @@ function Student_Details(props) {
 
         {/* School */}
         <div
-          className={`bg-gray-800 p-4 rounded-lg my-4 ${
+          className={`bg-blue-950 p-4 rounded-lg my-4 ${
             props.details.college_name === undefined ? "" : "hidden"
           } `}
         >
@@ -334,7 +336,7 @@ function Student_Details(props) {
         </div>
         {/* School Year */}
         <div
-          className={`bg-gray-800 p-4 rounded-lg my-4 ${
+          className={`bg-blue-950 p-4 rounded-lg my-4 ${
             props.details.college_name === undefined ? "" : "hidden"
           } `}
         >

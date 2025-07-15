@@ -75,17 +75,17 @@ function Numbers() {
         <div className="flex justify-center">
           <div className="flex flex-col m-4 p-4 shadow-lg bg-indigo-400 rounded-lg">
             <div className="text-8xl ml-8">{startcourse}</div> {<div>courses we offer</div>}
-            <img src={"../../../Images/Courses.svg"} alt="" className={``}/>
+            <img src={"/Images/Courses.svg"} alt="" className={``}/>
           </div>
         </div>
         <div className="flex justify-evenly m-4 p-2">
           <div className="flex flex-col m-4 p-4 shadow-lg bg-indigo-400 rounded-lg">
           <div className="text-8xl ml-8">{startusers}</div> {<div>total live users</div>}
-            <img src={"../../../Images/Live Users.svg"} alt="" className={``}/>
+            <img src={"/Images/Live Users.svg"} alt="" className={``}/>
           </div>
           <div className="flex flex-col m-4 p-4 shadow-lg bg-indigo-400 rounded-lg">
           <div className="text-8xl ml-8">{startusers}</div> {<div>total live users</div>}
-            <img src={"../../../Images/Live Users.svg"} alt="" className={``}/>
+            <img src={"/Images/Live Users.svg"} alt="" className={``}/>
           </div>
         </div>
       </div>

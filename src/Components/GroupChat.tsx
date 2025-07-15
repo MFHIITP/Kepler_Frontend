@@ -125,7 +125,7 @@ function GroupChat(props) {
               } ${val.visibility}`}
             >
               <img
-                src={"../../../Images/Monitoring.webp"}
+                src={"/Images/Monitoring.webp"}
                 alt=""
                 className="rounded-full w-12"
               />
