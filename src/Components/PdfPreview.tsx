@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from "react";
 import * as pdfjsLib from "pdfjs-dist/legacy/build/pdf"; // Use legacy build
-import "pdfjs-dist/legacy/web/pdf_viewer.css"; // Optional: If you want PDF viewer styles
+import "pdfjs-dist/legacy/web/pdf_viewer.css"; 
 
 // Correct worker setup for Vite
 pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
 
-const PdfPreview = ({ pdfUrl, scale = 0.5 }) => {
-  const [previewSrc, setPreviewSrc] = useState(null);
-  const [error, setError] = useState(null);
+const PdfPreview = ({ pdfUrl, scale = 0.5 }: {pdfUrl: string, scale: number}) => {
+  const [previewSrc, setPreviewSrc] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const generatePreview = async () => {
@@ -19,10 +19,18 @@ const PdfPreview = ({ pdfUrl, scale = 0.5 }) => {
 
         const canvas = document.createElement("canvas");
         const context = canvas.getContext("2d");
+
         canvas.width = viewport.width;
         canvas.height = viewport.height;
 
-        await page.render({ canvasContext: context, viewport }).promise;
+        if(!context){
+          return;
+        }
+
+        await page.render({ 
+          canvasContext: context, 
+          viewport: viewport
+        }).promise;
 
         setPreviewSrc(canvas.toDataURL()); // Convert to base64 image
       } catch (err) {
