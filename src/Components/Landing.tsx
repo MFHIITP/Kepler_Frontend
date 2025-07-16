@@ -2,8 +2,9 @@ import React, { useState } from "react";
 import User_Details from './User_Details'
 import Profile_Courses from "./Profile_Courses.jsx";
 import Profile from "./Profile";
+import { componentPropsInterface } from "./Interfaces/ComponentProps.interface";
 
-function Landing(props) {
+const Landing: React.FC<componentPropsInterface> = (props) => {
   const [option, setOption] = useState("courses");
   return (
     <div className="flex h-[91vh] ">

@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
 import api from "../utils/api";
 import apiRoutes from "../utils/Routes/apiRoutes";
+import { componentPropsInterfacePaymentProfile } from "./Interfaces/ComponentProps.interface";
 
-function Profile_Courses(props) {
+const Profile_Courses: React.FC<componentPropsInterfacePaymentProfile> = (props) => {
   const [currentCourses, setCurrentCourses] = useState([]);
   const [choices, setChoices] = useState({
     JEE: [],
@@ -26,8 +27,8 @@ function Profile_Courses(props) {
       const response = await api.post(
         apiRoutes.courses.payment.currentCourses,
         {
-          email: props.details.email,
-          name: props.details.name,
+          email: props.details?.email,
+          name: props.details?.name,
         }
       );
       if (response.status == 201) {
@@ -84,8 +85,8 @@ function Profile_Courses(props) {
   const handleApplyCourses = async () => {
     const subjectList = courses.flatMap((category) => choices[category]);
     const response = await api.post(apiRoutes.courses.payment.appliedCourses, {
-      name: props.details.name,
-      email: props.details.email,
+      name: props.details?.name,
+      email: props.details?.email,
       selectedCourses: subjectList,
     });
     if (response.status == 200) {
