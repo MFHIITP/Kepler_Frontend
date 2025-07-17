@@ -269,7 +269,7 @@ const User_Details: React.FC<componentPropsInterfacePaymentProfile> = (props) =>
                     <div className="flex">
                       <div
                         className={`text-black font-semibold text-md ${
-                          val.color ? `${val.color}` : "text-gray-800"
+                          val.color ? `text-purple-900` : "text-gray-800"
                         }`}
                       >
                         {val.salutation} {val.value}
