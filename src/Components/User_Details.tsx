@@ -15,7 +15,7 @@ const User_Details: React.FC<componentPropsInterfacePaymentProfile> = (props) =>
 
   const handlecopyclick = async (val: string) => {
     await navigator.clipboard.writeText(val);
-    alert("Copied");
+    toast.success("Copied");
   };
 
   useEffect(() => {
@@ -102,7 +102,7 @@ const User_Details: React.FC<componentPropsInterfacePaymentProfile> = (props) =>
                 <div className="text-sm text-gray-600">{val.name}</div>
                 <div
                   className={`text-md font-semibold ${
-                    val.color ? `${val.color}` : "text-gray-800"
+                    val.color ? `text-green-700` : "text-gray-900"
                   }`}
                 >
                   {val?.salutation} {val.value}
@@ -288,7 +288,7 @@ const User_Details: React.FC<componentPropsInterfacePaymentProfile> = (props) =>
                   </div>
                 </div>
               ))}
-              <div className={`${userdetails?.amount.color}`}>{userdetails?.amount.name}: {userdetails?.amount.salutation} {userdetails?.amount.value}</div>
+              <div className={`${userdetails?.amount.color ? `${userdetails.amount.color}` : 'text-gray-950'}`}>{userdetails?.amount.name}: {userdetails?.amount.salutation} {userdetails?.amount.value as unknown as string}</div>
             </div>
           </div>
         </div>
