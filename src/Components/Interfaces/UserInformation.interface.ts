@@ -1,6 +1,6 @@
 interface combinedInterface {
-  copy: any;
-  color: any;
+  copy: Boolean;
+  color: String;
   name: String;
   salutation: String;
   value: String;
@@ -14,7 +14,7 @@ export interface userInformation {
   upcoming_payments: [combinedInterface],
   amount: {
     name: String,
-    value: number,
+    value: Number,
     salutation: String,
     color: String,
   },
