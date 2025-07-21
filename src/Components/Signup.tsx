@@ -2,10 +2,13 @@ import React, { useState } from "react";
 import api from "../utils/api";
 import apiRoutes from "../utils/Routes/apiRoutes";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { setEmail } from "../features/NewUser/NewUserSlice";
 
 function Register() {
 
   const navigate = useNavigate();
+  const dispatch = useDispatch(); 
 
   const [formData, setFormData] = useState({
     name: "",
@@ -22,9 +25,8 @@ function Register() {
   });
 
   const [loading, setLoading] = useState(false);
-  const serv_addr = import.meta.env.VITE_SERV_ADDR;
 
-  const handleChange = (e) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
     setFormData((prevData) => ({
       ...prevData,
@@ -32,7 +34,7 @@ function Register() {
     }));
   };
 
-  const handleSubmit = async (event) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setLoading(true);
 
@@ -43,6 +45,8 @@ function Register() {
     }
 
     try {
+      dispatch(setEmail(formData.email));
+
       const response = await api.post(apiRoutes.auth.register.signupRegister, {
           name: formData.name,
           email: formData.email,

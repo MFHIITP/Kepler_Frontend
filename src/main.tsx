@@ -2,13 +2,15 @@ import React, { createContext } from "react";
 import ReactDOM from "react-dom/client";
 import { Suspense } from "react";
 import "./index.css";
-import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { Provider } from "react-redux";
+import { store } from "./app/store";
 
 const queryClient = new QueryClient();
 
 interface contextInterface {
-    adminemails?: string[],
-    executives?: string[]
+  adminemails?: string[];
+  executives?: string[];
 }
 
 // Create the context
@@ -31,14 +33,16 @@ const adminemails: string[] = [
 // Lazy load the App component
 const App = React.lazy(() => import("./App.jsx"));
 
-const rootElement = document.getElementById('root') as HTMLElement
+const rootElement = document.getElementById("root") as HTMLElement;
 
 ReactDOM.createRoot(rootElement).render(
   <MyContext.Provider value={{ adminemails, executives }}>
-    <Suspense>
-      <QueryClientProvider client={queryClient}>
-        <App />
-      </QueryClientProvider>
-    </Suspense>
+    <Provider store={store}>
+      <Suspense>
+        <QueryClientProvider client={queryClient}>
+          <App />
+        </QueryClientProvider>
+      </Suspense>
+    </Provider>
   </MyContext.Provider>
 );

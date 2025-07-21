@@ -2,27 +2,20 @@ import React, { useEffect, useState, useRef, ReactElement } from "react";
 import api from "../utils/api";
 import apiRoutes from "../utils/Routes/apiRoutes";
 import { useNavigate } from "react-router-dom";
+import { UseSelector } from "react-redux";
+import { RootState } from "../app/store";
+import { useSelector } from "react-redux";
 
 function Otpverify() {
-  const emailref = useRef<HTMLInputElement | null>(null)
+  const emailId = useSelector((state: RootState) => state.newUser.email)
+
+  const otpref = useRef<HTMLInputElement | null>(null)
   const [otp, setOtp] = useState("");
-  const [data, setData] = useState({});
   const [loading, setLoading] = useState(false)
   const navigate = useNavigate();
 
   useEffect(() => {
-    const output = async () => {
-      const storedData = localStorage.getItem("registrationData");
-      if (storedData) {
-        const val = await JSON.parse(storedData);
-        setData(val);
-        console.log(val);
-      } else {
-        console.log("Absent");
-      }
-    };
-    output();
-    emailref.current?.focus()
+    otpref.current?.focus()
   }, []);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -30,8 +23,8 @@ function Otpverify() {
     event.preventDefault();
     try {
       const response = await api.post(apiRoutes.auth.otpVerify, {
+          email: emailId,
           otp: otp,
-          data: data,
         });
 
       if (!(response.status == 200)) {
@@ -57,7 +50,7 @@ function Otpverify() {
           <div>
             <label htmlFor="otp" className="block text-gray-700 font-semibold mb-2">Enter OTP:</label>
             <input
-              ref={emailref}
+              ref={otpref}
               type="text"
               id="otp"
               value={otp}
