@@ -1,5 +1,5 @@
 export interface groupChatMessages{
-    group_id: number,
+    group_name: string,
     name: string,
     email: string,
     message: string,

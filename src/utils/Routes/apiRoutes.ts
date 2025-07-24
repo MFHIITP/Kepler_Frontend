@@ -74,6 +74,13 @@ const apiRoutes = {
             createOrder: '/razorpay/create-order',
             verifyPayment: '/razorpay/verify-order'
         }
-    }
+    },
+    admins: {
+        userlist: '/users/admins',
+        removeUser: '/users/deleteuser',
+        getInformation: '/users/moreInformation',
+        removeUserCourse: '/users/removeCourse'
+    },
+    homePage: '/api/homePage'
 }
 export default apiRoutes

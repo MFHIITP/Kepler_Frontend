@@ -572,7 +572,7 @@ const Index: FC<componentPropsInterface> = ({ auth, details }) => {
                   }}
                 >
                   <Link
-                    href="/notice/notices"
+                    to = "/notice/notices"
                     className={`block px-4 py-2 text-sm text-gray-300 hover:text-white hover:bg-gray-700 transition ${
                       auth ? "" : "hidden"
                     }`}
@@ -580,13 +580,13 @@ const Index: FC<componentPropsInterface> = ({ auth, details }) => {
                     Notice and Circulars
                   </Link>
                   <Link
-                    href="/notice/merchandise"
+                    to = "/notice/merchandise"
                     className="block px-4 py-2 text-sm text-gray-300 hover:text-white hover:bg-gray-700 transition"
                   >
                     Merchandise
                   </Link>
                   <Link
-                    href="/notice/donation"
+                    to = "/notice/donation"
                     className="block px-4 py-2 text-sm text-gray-300 hover:text-white hover:bg-gray-700 transition"
                   >
                     Donate Us

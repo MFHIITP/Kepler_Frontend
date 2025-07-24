@@ -1,17 +1,31 @@
 import React, { useState, useEffect, useRef } from "react";
 import api from "../utils/api";
 import apiRoutes from "../utils/Routes/apiRoutes";
+import { useQuery } from "@tanstack/react-query";
+
+interface responseInterface {
+  users: number;
+  courses: number;
+}
+const getUserNumbers = async () => {
+  const { data } = await api.get<responseInterface>(apiRoutes.homePage);
+  return data;
+};
 
 function Numbers() {
-  const serv_addr = import.meta.env.VITE_SERV_ADDR
-  const [userNumber, setUserNumber] = useState(6);
-  const [courseNumber, setCourseNumber] = useState(8);
+  const [userNumber, setUserNumber] = useState<number>(0);
+  const [courseNumber, setCourseNumber] = useState<number>(0);
 
   const [startusers, setStartusers] = useState(0);
   const [startcourse, setStartcourse] = useState(0);
 
   const [visible, setVisible] = useState(false);
   const numberRef = useRef(null);
+
+  const { data, isLoading, error } = useQuery({
+    queryKey: ["userNumbers"],
+    queryFn: getUserNumbers,
+  });
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -29,29 +43,20 @@ function Numbers() {
   }, []);
 
   useEffect(() => {
-    const servercall = async()=>{
-      const response = await api.get(apiRoutes.user.live.numberOfUsers)
-      const usernum = await response.data
-      console.log(usernum)
-      setUserNumber(usernum)
-    }
     if (!visible) {
       return;
     }
-    let interval_user;
-    const func = async()=>{
-      await servercall();
-      interval_user = setInterval(() => {
-        if (startusers < userNumber) {
-          setStartusers((startusers) =>
-            startusers < userNumber ? startusers + 1 : startusers
-          );
-        } else {
-          clearInterval(interval_user);
-        }
-      }, 100);
-    }
-    func();
+    setUserNumber(data?.users ?? -1);
+    setCourseNumber(data?.courses ?? -1);
+    const interval_user = setInterval(() => {
+      if (startusers < userNumber) {
+        setStartusers((startusers) =>
+          startusers < userNumber ? startusers + 1 : startusers
+        );
+      } else {
+        clearInterval(interval_user);
+      }
+    }, 100);
 
     const interval_course = setInterval(() => {
       if (startcourse < courseNumber) {
@@ -74,18 +79,21 @@ function Numbers() {
       <div className="flex flex-col gap-4 text-2xl">
         <div className="flex justify-center">
           <div className="flex flex-col m-4 p-4 shadow-lg bg-indigo-400 rounded-lg">
-            <div className="text-8xl ml-8">{startcourse}</div> {<div>courses we offer</div>}
-            <img src={"/Images/Courses.svg"} alt="" className={``}/>
+            <div className="text-8xl ml-8">{startcourse}</div>{" "}
+            {<div>courses we offer</div>}
+            <img src={"/Images/Courses.svg"} alt="" className={``} />
           </div>
         </div>
         <div className="flex justify-evenly m-4 p-2">
           <div className="flex flex-col m-4 p-4 shadow-lg bg-indigo-400 rounded-lg">
-          <div className="text-8xl ml-8">{startusers}</div> {<div>total live users</div>}
-            <img src={"/Images/Live Users.svg"} alt="" className={``}/>
+            <div className="text-8xl ml-8">{startusers}</div>{" "}
+            {<div>total live users</div>}
+            <img src={"/Images/Live Users.svg"} alt="" className={``} />
           </div>
           <div className="flex flex-col m-4 p-4 shadow-lg bg-indigo-400 rounded-lg">
-          <div className="text-8xl ml-8">{startusers}</div> {<div>total live users</div>}
-            <img src={"/Images/Live Users.svg"} alt="" className={``}/>
+            <div className="text-8xl ml-8">{startusers}</div>{" "}
+            {<div>total live users</div>}
+            <img src={"/Images/Live Users.svg"} alt="" className={``} />
           </div>
         </div>
       </div>

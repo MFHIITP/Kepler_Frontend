@@ -1,11 +1,4 @@
-import React, {
-  useEffect,
-  useState,
-  useContext,
-  useRef,
-  FC,
-  MutableRefObject,
-} from "react";
+import React, {useEffect, useState, useContext, useRef, FC, MutableRefObject} from "react";
 import { MyContext } from "../main";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrashAlt } from "@fortawesome/free-solid-svg-icons";
@@ -16,37 +9,72 @@ import apiRoutes from "../utils/Routes/apiRoutes";
 import { userdetails } from "./Interfaces/Details.interface";
 import { useNavigate } from "react-router-dom";
 import { groupChatMessages } from "./Interfaces/GroupMessages.interface";
+import { useMutation } from "@tanstack/react-query";
+import {confirmAlert} from "react-confirm-alert"
+import 'react-confirm-alert/src/react-confirm-alert.css'
+import toast from "react-hot-toast";
 
 interface TalkInterface {
-  key: number;
+  key: string | null;
   details: userdetails;
-  groupNumber: number;
-  groupName: string;
+  groupName: string | null;
   ref: MutableRefObject<HTMLDivElement | null>;
   groupDescription: string;
 }
 
-const Talk: FC<TalkInterface> = ({
-  key,
-  details,
-  groupNumber,
-  groupName,
-  ref,
-  groupDescription,
-}) => {
+const getChats = async(groupName: string) => {
+  const { data } = await api.post(apiRoutes.chat.Talk.getPastChats, {
+    groupName: groupName,
+  })
+  return data;
+}
+
+const deleteMessage = async({removerEmail, groupName, dateToDelete, removedEmail}: {removerEmail: string, groupName: string, dateToDelete: string, removedEmail: string}) => {
+  const { data } = await api.post(apiRoutes.chat.Talk.deleteMessage, {
+    removerEmail: removerEmail,
+    groupName: groupName,
+    dateToDelete: dateToDelete,
+    removedEmail: removedEmail
+  }) 
+  return data;
+}
+
+const Talk: FC<TalkInterface> = ({key, details, groupName, ref, groupDescription}) => {
   const scrollref = useRef<HTMLDivElement | null>(null);
-  const [group, setGroup] = useState(groupNumber);
+  const [group, setGroup] = useState(groupName);
   const [opendetails, setOpendetails] = useState(false);
   const [message, setMessage] = useState("");
   const [file, setFile] = useState<File | undefined>();
   const [allmessages, setAllmessages] = useState<groupChatMessages[]>([]);
   const [Socket, setSocket] = useState<WebSocket | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const context = useContext(MyContext);
   const adminemails = context?.adminemails;
-  const server_addr = import.meta.env.VITE_SERV_ADDR;
   const webs_addr = import.meta.env.VITE_WEBS_ADDR;
   const navigate = useNavigate();
+
+  const {mutate: getChatsMutation} = useMutation({
+    mutationFn: (groupName: string) => getChats(groupName),
+    onMutate: ()=>setLoading(true),
+    onSuccess: (data) => {
+      setLoading(false);
+      setAllmessages(data);
+    },
+    onError: ()=>{
+      setLoading(false);
+      console.log("No Messages Found")
+    }
+  })
+
+  const { mutate: deleteMessageMutation } = useMutation({
+    mutationFn: ({removerEmail, groupName, dateToDelete, removedEmail}: {removerEmail: string, groupName: string, dateToDelete: string, removedEmail: string}) => deleteMessage({removerEmail, groupName, dateToDelete, removedEmail}),
+    onSuccess: () => {
+      toast.success("Message Deleted Successfully");
+    },
+    onError: ()=>{
+      toast.error("Failed to Delete Message")
+    }
+  })
 
   useEffect(() => {
     if (scrollref.current) {
@@ -67,20 +95,10 @@ const Talk: FC<TalkInterface> = ({
   }, [webs_addr]);
 
   useEffect(() => {
-    const getdata = async () => {
-      if (groupNumber != -1) {
-        const response = await api.post(apiRoutes.chat.Talk.getPastChats, {
-          groupNumber: groupNumber
-        });
-        if (response.status == 200) {
-          const data = await response.data;
-          setAllmessages(data);
-        }
-      }
-      setLoading(false);  
-    };
-    getdata();
-  }, [server_addr]);
+    if(group){
+      getChatsMutation(group);
+    }
+  }, []);
 
   const handlePdfClick = (bookUrl: string) => {
     console.log(bookUrl);
@@ -94,8 +112,9 @@ const Talk: FC<TalkInterface> = ({
 
     if (Socket) {
       const formdata = new FormData();
+      formdata.append("format", "GroupChat");
       formdata.append("email", details.email);
-      formdata.append("group_id", group as unknown as string);
+      formdata.append("group_name", group as unknown as string);
       formdata.append("name", details.name);
       formdata.append("message", message);
       if (file) {
@@ -137,19 +156,27 @@ const Talk: FC<TalkInterface> = ({
   };
 
   const handleDelete = async (posts: groupChatMessages, index: number) => {
-    alert("Do you really want to delete this?");
-    const response = await api.post(apiRoutes.chat.Talk.deleteMessage, {
-      name: posts.name,
-      message: posts.message,
-      image: posts.image,
-    });
-    if (response.status == 200) {
-      setAllmessages((prevMessages) =>
-        prevMessages.filter((_, i) => i !== index)
-      );
-    } else {
-      console.log(response.status);
-    }
+    confirmAlert({
+      title: 'Confirmation To Delete Message',
+      message: 'Do you want to Delete this Message from this Group ?',
+      buttons: [
+        {
+          label: 'Yes',
+          onClick: () => {
+            deleteMessageMutation({removerEmail: details.email, groupName: group!, dateToDelete: posts.date, removedEmail: posts.email});
+            setAllmessages((prevMessages) =>
+              prevMessages.filter((_, i) => i !== index)
+            );
+          }
+        },
+        {
+          label: 'No',
+          onClick: () => {
+            toast.error("Deletion Cancelled");
+          }
+        }
+      ]
+    })
   };
 
   if (loading) {
@@ -159,7 +186,7 @@ const Talk: FC<TalkInterface> = ({
       </div>
     );
   }
-  if (group == -1) {
+  if (groupName == null) {
     return (
       <div
         className="flex flex-col bg-gray-900 w-full h-[90vh] justify-center items-center text-4xl overflow-y-auto wp_body rounded-lg shadow-md scrollbar-thin text-white"
@@ -234,7 +261,7 @@ const Talk: FC<TalkInterface> = ({
                   details.email === post.email
                     ? "ml-auto bg-blue-600 hover:bg-blue-800 text-white border-black"
                     : "mr-auto ml-4 bg-gray-300 hover:bg-gray-400 border-black"
-                } w-1/3 ${post.group_id == group ? "" : "hidden"}`}
+                } w-1/3`}
               >
                 <div className="absolute left-[-22px] top-[2px] flex items-center justify-center w-8 h-8 rounded-full bg-orange-300 text-black font-bold">
                   {post.name[0].toUpperCase()}
@@ -242,7 +269,7 @@ const Talk: FC<TalkInterface> = ({
                 <button
                   onClick={() => handleDelete(post, index)}
                   className={`absolute top-2 right-1 text-white hover:text-red-500 transition ${
-                    details.name === post.name ||
+                    details.email === post.email ||
                     adminemails?.includes(details.email)
                       ? ""
                       : "hidden"
@@ -367,12 +394,10 @@ const Talk: FC<TalkInterface> = ({
       </div>
       {opendetails && (
         <Group_Members
-          key={groupNumber}
-          groupnumber={groupNumber}
-          groupname={groupName}
+          key={groupName!}
+          groupName={groupName!}
           details={details}
-          groupdescription={groupDescription}
-          className="transition-transform"
+          groupDescription={groupDescription}
         />
       )}
     </div>
