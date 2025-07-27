@@ -2,10 +2,45 @@ import React, { useEffect, useState } from "react";
 import api from "../utils/api";
 import apiRoutes from "../utils/Routes/apiRoutes";
 import { componentPropsInterfacePaymentProfile } from "./Interfaces/ComponentProps.interface";
+import { useMutation } from "@tanstack/react-query";
+import toast from "react-hot-toast";
+
+interface CourseInterface {
+  name: string;
+  salutation: string;
+  value: number;
+}
+interface courseDetailsInterface {
+  admittedCourses: [string];
+  selectedCourses: [CourseInterface];
+  preventedCourses: [string]
+}
+
+const getAllCourses = async (emailId: string) => {
+  const { data } = await api.post<courseDetailsInterface>( apiRoutes.courses.payment.currentCourses, {
+    email: emailId,
+  });
+  return data;
+};
 
 const Profile_Courses: React.FC<componentPropsInterfacePaymentProfile> = (props) => {
-  const [currentCourses, setCurrentCourses] = useState([]);
-  const [choices, setChoices] = useState({
+  const [admittedCourses, setAdmittedCourses] = useState<{
+    JEE: string[];
+    CAT: string[];
+    GATE: string[];
+    "Mathematics And Computer Science": string[];
+  }>({
+    JEE: [],
+    CAT: [],
+    GATE: [],
+    "Mathematics And Computer Science": [],
+  });
+  const [choices, setChoices] = useState<{
+    JEE: string[];
+    CAT: string[];
+    GATE: string[];
+    "Mathematics And Computer Science": string[];
+  }>({
     JEE: [],
     CAT: [],
     GATE: [],
@@ -22,42 +57,37 @@ const Profile_Courses: React.FC<componentPropsInterfacePaymentProfile> = (props)
     GATE_2: false,
     "Mathematics And Computer Science": false,
   });
-  useEffect(() => {
-    const fetchCurrentCourses = async () => {
-      const response = await api.post(
-        apiRoutes.courses.payment.currentCourses,
-        {
-          email: props.details?.email,
-          name: props.details?.name,
-        }
-      );
-      if (response.status == 201) {
-        const resp = await response.data;
-        console.log(resp);
-        setCurrentCourses(resp.data);
-        const filteredChoices = {
-          JEE: resp.data
-            .filter((val) => String(val.name).startsWith("JEE"))
-            .map((val) => val.name),
-          CAT: resp.data
-            .filter((val) => String(val.name).startsWith("CAT"))
-            .map((val) => val.name),
-          GATE: resp.data
-            .filter((val) => String(val.name).startsWith("GATE"))
-            .map((val) => val.name),
-          "Mathematics And Computer Science": resp.data
-            .filter((val) =>
-              String(val.name).startsWith("Mathematics And Computer Science")
-            )
-            .map((val) => val.name),
-        };
 
-        setChoices(filteredChoices);
-      } else {
-        alert("Failed to Fetch Recourses");
-      }
-    };
-    fetchCurrentCourses();
+  const [preventedCourses, setPreventedCourses] = useState<string[]>([]);
+
+  const { mutate: getCoursesMutation } = useMutation({
+    mutationFn: (emailId: string) => getAllCourses(emailId),
+    onSuccess: (data) => {
+      const admittedCourses = data.admittedCourses;
+      const filteredAdmittedCourses = {
+        JEE: admittedCourses.filter((val) => String(val).startsWith("JEE")),
+        CAT: admittedCourses.filter((val) => String(val).startsWith("CAT")),
+        GATE: admittedCourses.filter((val) => String(val).startsWith("GATE")),
+        "Mathematics And Computer Science": admittedCourses.filter((val) => String(val).startsWith("Mathematics And Computer Science")),
+      };
+      setAdmittedCourses(filteredAdmittedCourses);
+      const selectedCourses = data.selectedCourses;
+      const filteredChoices = {
+        JEE: selectedCourses.filter((val) => String(val.name).startsWith("JEE")).map((val) => val.name),
+        CAT: selectedCourses.filter((val) => String(val.name).startsWith("CAT")).map((val) => val.name),
+        GATE: selectedCourses.filter((val) => String(val.name).startsWith("GATE")).map((val) => val.name),
+        "Mathematics And Computer Science": selectedCourses.filter((val) => String(val.name).startsWith("Mathematics And Computer Science")).map((val) => val.name),
+      };
+      setChoices(filteredChoices);
+      setPreventedCourses(data.preventedCourses)
+    },
+    onError: () => {
+      toast.error("Failed to fetch all the Courses");
+    },
+  });
+
+  useEffect(() => {
+    getCoursesMutation(props.details?.email ?? "");
   }, []);
 
   const [search, setsearch] = useState("");
@@ -91,7 +121,11 @@ const Profile_Courses: React.FC<componentPropsInterfacePaymentProfile> = (props)
     });
     if (response.status == 200) {
       props.goToPage("dashboard");
-    } else {
+    } 
+    else if(response.status == 303){
+      toast.error("Please Remove selection for courses you are admitted in whose deadline has not yet arrived")
+    }
+    else {
       alert(response.status);
     }
   };
@@ -102,7 +136,7 @@ const Profile_Courses: React.FC<componentPropsInterfacePaymentProfile> = (props)
 
   return (
     <div className="flex justify-between p-6">
-      <div className="w-[49%] max-w-3xl bg-white shadow-lg rounded-lg p-6">
+      <div className="w-[49%] max-w-3xl bg-white shadow-lg rounded-lg p-6 h-fit pb-12">
         <h1 className="text-2xl font-semibold text-gray-800 text-center mb-4 p-8">
           <div className="">Select Courses to Pursue</div>
         </h1>
@@ -168,10 +202,11 @@ const Profile_Courses: React.FC<componentPropsInterfacePaymentProfile> = (props)
                             <label className="flex items-center cursor-pointer p-4">
                               <input
                                 type="checkbox"
-                                className="form-checkbox text-blue-600 h-5 w-5 mr-3"
+                                className="form-checkbox text-blue-600 disabled:text-gray-400 h-5 w-5 mr-3"
                                 checked={choices[category].includes(
                                   `JEE ${course} - Class 11`
                                 )}
+                                disabled = {preventedCourses.includes(`JEE ${course} - Class 11`)}
                                 onChange={() =>
                                   handleChoiceChange(
                                     category,
@@ -206,10 +241,11 @@ const Profile_Courses: React.FC<componentPropsInterfacePaymentProfile> = (props)
                             <label className="flex items-center cursor-pointer p-4">
                               <input
                                 type="checkbox"
-                                className="form-checkbox text-blue-600 h-5 w-5 mr-3"
+                                className="form-checkbox disabled:text-gray-400 text-blue-600 h-5 w-5 mr-3"
                                 checked={choices[category].includes(
                                   `JEE ${course} - Class 12`
                                 )}
+                                disabled = {preventedCourses.includes(`JEE ${course} - Class 12`)}
                                 onChange={() =>
                                   handleChoiceChange(
                                     category,
@@ -236,10 +272,11 @@ const Profile_Courses: React.FC<componentPropsInterfacePaymentProfile> = (props)
                       <label className="flex items-center cursor-pointer p-4">
                         <input
                           type="checkbox"
-                          className="form-checkbox text-blue-600 h-5 w-5 mr-3"
+                          className="form-checkbox disabled:text-gray-400 text-blue-600 h-5 w-5 mr-3"
                           checked={choices[category].includes(
                             `CAT - ${course}`
                           )}
+                          disabled = {preventedCourses.includes(`CAT - ${course}`)}
                           onChange={() =>
                             handleChoiceChange(category, `CAT - ${course}`)
                           }
@@ -269,10 +306,11 @@ const Profile_Courses: React.FC<componentPropsInterfacePaymentProfile> = (props)
                       <label className="flex items-center cursor-pointer p-4">
                         <input
                           type="checkbox"
-                          className="form-checkbox text-blue-600 h-5 w-5 mr-3"
+                          className="form-checkbox disabled:text-gray-400 text-blue-600 h-5 w-5 mr-3"
                           checked={choices[category].includes(
                             `Mathematics And Computer Science - ${sem}`
                           )}
+                          disabled = {preventedCourses.includes(`Mathematics And Computer Science - ${sem}`)}
                           onChange={() =>
                             handleChoiceChange(
                               category,
@@ -313,10 +351,11 @@ const Profile_Courses: React.FC<componentPropsInterfacePaymentProfile> = (props)
                           <label className="flex items-center cursor-pointer p-4">
                             <input
                               type="checkbox"
-                              className="form-checkbox text-blue-600 h-5 w-5 mr-3"
+                              className="form-checkbox disabled:text-gray-400 text-blue-600 h-5 w-5 mr-3"
                               checked={choices[category].includes(
                                 `GATE - 2025 ${course}`
                               )}
+                              disabled = {preventedCourses.includes(`GATE - 2025 ${course}`)}
                               onChange={() =>
                                 handleChoiceChange(
                                   category,
@@ -354,10 +393,11 @@ const Profile_Courses: React.FC<componentPropsInterfacePaymentProfile> = (props)
                           <label className="flex items-center cursor-pointer p-4">
                             <input
                               type="checkbox"
-                              className="form-checkbox text-blue-600 h-5 w-5 mr-3"
+                              className="form-checkbox disabled:text-gray-400 text-blue-600 h-5 w-5 mr-3"
                               checked={choices[category].includes(
                                 `GATE - 2026 ${course}`
                               )}
+                              disabled = {preventedCourses.includes(`GATE - 2026 ${course}`)}
                               onChange={() =>
                                 handleChoiceChange(
                                   category,
@@ -404,40 +444,80 @@ const Profile_Courses: React.FC<componentPropsInterfacePaymentProfile> = (props)
           </button>
         </div>
       </div>
-      {/* Cart */}
-      <div className="w-[49%] max-w-3xl bg-white shadow-lg rounded-lg p-6 h-fit">
-        <h2 className="text-2xl font-bold text-gray-800 border-b pb-3 mb-4">
-          Selected Courses / Kart
-        </h2>
-        {Object.entries(choices).some(([_, courses]) => courses.length > 0) ? (
-          <div className="space-y-4">
-            {Object.entries(choices).map(([category, courses]) =>
-              courses.length > 0 ? (
-                <div key={category}>
-                  <h3 className="text-lg font-semibold text-gray-700 capitalize border-b pb-2 mb-2">
-                    {category.replace(/_/g, " ")}
-                  </h3>
-                  <ul className="list-disc pl-6 text-gray-600">
-                    {courses.map((val, key) => (
-                      <li key={key} className="py-1">
-                        {val?.startsWith("Mathematics And Computer Science")
-                          ? val.split("-")[1]
-                          : val}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              ) : null
-            )}
-          </div>
-        ) : (
-          <p className="text-gray-500 italic text-center mt-6">
-            No courses selected.
-          </p>
-        )}
+      <div className="flex flex-col gap-10 w-[49%] max-w-3xl h-fit">
+        {/* All Admitted Courses */}
+        <div className="bg-white rounded-lg shadow-lg p-6 ">
+          <h2 className="text-2xl font-bold text-gray-800 border-b pb-3 mb-4 ">
+            Admitted Courses
+          </h2>
+          {Object.entries(admittedCourses).some(
+            ([_, courses]) => courses.length > 0
+          ) ? (
+            <div className="space-y-4">
+              {Object.entries(admittedCourses).map(([category, courses]) =>
+                courses.length > 0 ? (
+                  <div key={category}>
+                    <h3 className="text-lg font-semibold text-gray-700 capitalize border-b pb-2 mb-2">
+                      {category.replace(/_/g, " ")}
+                    </h3>
+                    <ul className="list-disc pl-6 text-gray-600">
+                      {courses.map((val, key) => (
+                        <li key={key} className="py-1">
+                          {val?.startsWith("Mathematics And Computer Science")
+                            ? val.split("-")[1]
+                            : val}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ) : null
+              )}
+            </div>
+          ) : (
+            <p className="text-gray-500 italic text-center mt-6">
+              Not admitted in any courses.
+            </p>
+          )}
+        </div>
+        {/* Cart */}
+        <div className="bg-white rounded-lg shadow-lg p-6">
+          <h2 className="text-2xl font-bold text-gray-800 border-b pb-3 mb-4">
+            Selected Courses Kart
+          </h2>
+          {Object.entries(choices).some(
+            ([_, courses]) => courses.length > 0
+          ) ? (
+            <div className="space-y-4">
+              {Object.entries(choices).map(([category, courses]) =>
+                courses.length > 0 ? (
+                  <div key={category}>
+                    <h3 className="text-lg font-semibold text-gray-700 capitalize border-b pb-2 mb-2">
+                      {category.replace(/_/g, " ")}
+                    </h3>
+                    <ul className="list-disc pl-6 text-gray-600">
+                      {courses.map((val, key) => (
+                        <li key={key} className="py-1">
+                          {val?.startsWith("Mathematics And Computer Science")
+                            ? val.split("-")[1]
+                            : val}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ) : null
+              )}
+              <div className="text-gray-600 text-sm mt-4 border-t border-gray-300 pt-4">The items in this cart is temporary, and shall not be reflected as the final list of your selected courses. Please click the Apply button to ensure that these courses are deemed as final. You may modify your selection of selected courses here.
+              </div>
+            </div>
+          ) : (
+            <p className="text-gray-500 italic text-center mt-6">
+              No courses selected.
+            </p>
+          )}
+        </div>
       </div>
     </div>
   );
-}
+};
 
 export default Profile_Courses;

@@ -8,7 +8,14 @@ interface combinedInterface {
 
 export interface userInformation {
   transaction_details: [combinedInterface];
-  course_details: [combinedInterface];
+  course_details: [{
+    name: String,
+    coursePaymentDate: String,
+    upcomingPaymentDate: String,
+    lastDateToPay: String,
+    validity: String,
+    color: String
+  }];
   applied_course_details: [combinedInterface];
   payment_details: [combinedInterface];
   upcoming_payments: [combinedInterface],
@@ -23,6 +30,5 @@ export interface userInformation {
     value1: String,
     value2: String,
     value3: String
-  }],
-  paidForMonth: Boolean
+  }]
 }

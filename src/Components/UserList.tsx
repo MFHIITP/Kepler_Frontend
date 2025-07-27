@@ -240,7 +240,21 @@ const UsersTable: React.FC<componentPropsInterface> = (props) => {
                         </div>
                         <Box pl={4}>
                           {userMoreInformation.admittedCourses.map((val, i) => (
-                            <div key={i} className="flex gap-2">• {val} <Trash2 className="w-4 cursor-pointer hover:text-red-800 hover:scale-105"onClick={()=>{handleRemoveAdmittedCourse(val, userMoreInformation.email)}}/></div>
+                            <div key={i} className="mb-3">
+                              <div className="flex gap-2 items-center font-semibold">
+                                • {val.name} 
+                                <Trash2 
+                                  className="w-4 cursor-pointer hover:text-red-800 hover:scale-105"
+                                  onClick={() => handleRemoveAdmittedCourse(val.name, userMoreInformation.email)}
+                                />
+                              </div>
+                              <div className="pl-4 text-sm text-gray-800">
+                                <div><b>Course Payment Date:</b> {val.coursePaymentDate ? new Date(val.coursePaymentDate).toLocaleDateString() : "N/A"}</div>
+                                <div><b>Upcoming Payment Date:</b> {val.upcomingPaymentDate ? new Date(val.upcomingPaymentDate).toLocaleDateString() : "N/A"}</div>
+                                <div><b>Last Date to Pay:</b> {val.lastDateToPay ? new Date(val.lastDateToPay).toLocaleDateString() : "N/A"}</div>
+                                <div><b>Validity:</b> {val.validity ? new Date(val.validity).toLocaleDateString() : "N/A"}</div>
+                              </div>
+                            </div>
                           ))}
                         </Box>
 

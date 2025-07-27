@@ -82,6 +82,8 @@ const GroupChat: React.FC<componentPropsInterface> = (props) => {
       event.target.disabled = false;
       toast.success("New Group Added Successfully");
       getGroupsMutation(props.details?.email ?? "");
+      setNewGroupName("")
+      setNewDescription("");
     } else {
       event.target.disabled = false;
       toast.error("Failed to add New Group");

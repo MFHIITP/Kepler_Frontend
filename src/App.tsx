@@ -5,6 +5,9 @@ import "./App.css";
 import { userdetails } from "./Components/Interfaces/Details.interface";
 import { RouterFrontend } from "./utils/apiRoutesFrontend";
 import { getProfileInfo, getToken } from "./utils/TokenUtilityFunctions";
+import { useSelector } from "react-redux";
+import { RootState } from "./app/store";
+import Swal from "sweetalert2";
 
 declare global {
   interface Window {
@@ -17,6 +20,8 @@ function App() {
   const [authenticated, setAuthenticated] = useState<boolean>(false);
   const [scrollAtTop, setScrollAtTop] = useState<boolean>(true)
   const scrollRef = useRef<HTMLDivElement | null>(null)
+
+  const lastDate: string = useSelector((state: RootState) => state.loginMessage.message)
 
   useEffect(() => {
     const fetchData = async () => {
@@ -57,6 +62,19 @@ function App() {
       setScrollAtTop(scrolltop == 0)
     }
   }
+
+  useEffect(() => {
+    if(lastDate.length > 0){
+      const courses: string[] = JSON.parse(localStorage.getItem("pendingCourses")!) || [];
+      Swal.fire({
+      title: 'Payment Pending',
+      text: `The Deadline for the courses ${courses.length > 0 ? courses.map((val) => val) : ''} is coming to an end. Positively make the payment before the deadline to ensure smooth continuation of these courses. Failure to make payment before deadline will result in getting these courses removed from your account`,
+      icon: 'info',
+      confirmButtonText: 'OK'
+    })
+    }
+  }, [])
+  
 
 
   return (

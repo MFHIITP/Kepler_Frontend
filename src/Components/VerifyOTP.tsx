@@ -2,9 +2,10 @@ import React, { useEffect, useState, useRef, ReactElement } from "react";
 import api from "../utils/api";
 import apiRoutes from "../utils/Routes/apiRoutes";
 import { useNavigate } from "react-router-dom";
-import { UseSelector } from "react-redux";
 import { RootState } from "../app/store";
 import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import { clearEmail } from "../features/NewUser/NewUserSlice";
 
 function Otpverify() {
   const emailId = useSelector((state: RootState) => state.newUser.email)
@@ -13,6 +14,7 @@ function Otpverify() {
   const [otp, setOtp] = useState("");
   const [loading, setLoading] = useState(false)
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     otpref.current?.focus()
@@ -33,6 +35,7 @@ function Otpverify() {
       localStorage.clear();
       setLoading(false)
       localStorage.setItem('registration_toast', 'Successfully Registered! Thank you for Registering')
+      dispatch(clearEmail());
       navigate("/login");
     } catch (error) {
       localStorage.clear();

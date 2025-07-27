@@ -24,7 +24,13 @@ export interface userMoreInformationInterface {
     name: string,
     visibleGroups: string[],
     selectedCourses: string[],
-    admittedCourses: string[],
+    admittedCourses: [{
+        name: string, 
+        coursePaymentDate: string,
+        upcomingPaymentDate: Date,
+        lastDateToPay: Date,
+        validity: Date
+    }],
     lastDate: string,
     log_details: [{
         name: string,

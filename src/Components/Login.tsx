@@ -4,6 +4,8 @@ import api from "../utils/api";
 import apiRoutes from "../utils/Routes/apiRoutes";
 import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
+import { useDispatch } from "react-redux";
+import { setLoginMessage } from "../features/LoginInfo/LoginInfo";
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -11,6 +13,8 @@ function Login() {
   const [loading, setLoading] = useState(false);
   const server_addr = import.meta.env.VITE_SERV_ADDR;
   const navigate = useNavigate();
+
+  const dispatch = useDispatch()
 
   useEffect(() => {
     if (localStorage.getItem("registration_toast")) {
@@ -49,10 +53,11 @@ function Login() {
           secure: true,
           sameSite: "None",
         });
-        localStorage.setItem(
-          "toast_message",
-          `Login Successful! Welcome to Kepler ${data.profileinfo.name}`
-        );
+        localStorage.setItem("toast_message", `Login Successful! Welcome to Kepler ${data.profileinfo.name}`);
+        if(data.sendAlert){
+          dispatch(setLoginMessage(data.lastDate))
+          localStorage.setItem("pendingCourses", JSON.stringify(data.courses))
+        }
         window.location.href = "/";
       }
     } else {
