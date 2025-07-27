@@ -11,9 +11,9 @@ export interface userInformation {
   course_details: [{
     name: String,
     coursePaymentDate: String,
-    upcomingPaymentDate: String,
-    lastDateToPay: String,
-    validity: String,
+    upcomingPaymentDate: Date,
+    lastDateToPay: Date,
+    validity: Date,
     color: String
   }];
   applied_course_details: [combinedInterface];

@@ -205,9 +205,9 @@ const User_Details: React.FC<componentPropsInterfacePaymentProfile> = (
                     <div className={`text-black font-semibold text-md ${val.color ? `${val.color}` : "text-gray-800"} grid grid-cols-5`}>
                       <div className="text-gray-600 text-sm">{val.name}</div>
                       <div className="text-gray-600 text-sm">{val.coursePaymentDate}</div>
-                      <div className="text-gray-600 text-sm">{val.validity}</div>
-                      <div className="text-gray-600 text-sm">{val.upcomingPaymentDate}</div>
-                      <div className="text-gray-600 text-sm">{val.lastDateToPay}</div>
+                      <div className="text-gray-600 text-sm">{new Date(val.validity).toLocaleDateString("en-IN")}</div>
+                      <div className="text-gray-600 text-sm">{new Date(val.upcomingPaymentDate).toLocaleDateString("en-IN")}</div>
+                      <div className="text-gray-600 text-sm">{new Date(val.lastDateToPay).toLocaleDateString("en-IN")}</div>
                     </div>
                   </div>
                 ))}

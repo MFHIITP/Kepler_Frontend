@@ -249,7 +249,7 @@ const UsersTable: React.FC<componentPropsInterface> = (props) => {
                                 />
                               </div>
                               <div className="pl-4 text-sm text-gray-800">
-                                <div><b>Course Payment Date:</b> {val.coursePaymentDate ? new Date(val.coursePaymentDate).toLocaleDateString() : "N/A"}</div>
+                                <div><b>Course Payment Date:</b> {val.coursePaymentDate ? val.coursePaymentDate : "N/A"}</div>
                                 <div><b>Upcoming Payment Date:</b> {val.upcomingPaymentDate ? new Date(val.upcomingPaymentDate).toLocaleDateString() : "N/A"}</div>
                                 <div><b>Last Date to Pay:</b> {val.lastDateToPay ? new Date(val.lastDateToPay).toLocaleDateString() : "N/A"}</div>
                                 <div><b>Validity:</b> {val.validity ? new Date(val.validity).toLocaleDateString() : "N/A"}</div>
