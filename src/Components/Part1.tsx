@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import toast from 'react-hot-toast'
+import Swal from "sweetalert2";
 
 function Part1() {
   useEffect(() => {
@@ -7,7 +8,26 @@ function Part1() {
       const value = localStorage.getItem('toast_message')
       toast.success(value)
     }
-    localStorage.clear()
+    localStorage.removeItem('toast_message')
+  }, [])
+
+  useEffect(() => {
+    (async () => {
+      if (localStorage.getItem("sendAlert")) {
+        const courses: string[] = JSON.parse(localStorage.getItem("pendingCourses")!) || [];
+        const lastDate = localStorage.getItem("paymentLastDate")!
+        await Swal.fire({
+          title: "Payment Pending",
+          text: `The Deadline for the courses ${courses.length > 0 ? courses.join(", ") : ""} is ${lastDate}. Positively make the payment before the deadline to ensure smooth continuation of these courses. Failure to make payment before deadline will result in getting these courses removed from your account`,
+          icon: "info",
+          allowOutsideClick: false,
+          confirmButtonText: "OK",
+        });
+        localStorage.removeItem("sendAlert");
+        localStorage.removeItem("pendingCourses");
+        localStorage.removeItem("paymentLastDate")
+      }
+    })();
   }, [])
   
 

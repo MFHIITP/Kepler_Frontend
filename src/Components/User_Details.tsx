@@ -8,13 +8,20 @@ import { componentPropsInterfacePaymentProfile } from "./Interfaces/ComponentPro
 import { userInformation } from "./Interfaces/UserInformation.interface";
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
+import { useMutation } from "@tanstack/react-query";
 const razorpayKeyId = import.meta.env.VITE_RAZORPAY_KEY_ID;
 
 const MySwal = withReactContent(Swal)
 
-const User_Details: React.FC<componentPropsInterfacePaymentProfile> = (
-  props
-) => {
+const getUserDetails = async({emailId, name}: {emailId: string, name: string}) => {
+  const { data } = await api.post(apiRoutes.courses.payment.userInformation,{
+    email: emailId,
+    name: name,
+  })
+  return data;
+}
+
+const User_Details: React.FC<componentPropsInterfacePaymentProfile> = (props) => {
   const navigate = useNavigate();
   const [userdetails, setUserdetails] = useState<userInformation | null>(null);
   const [loading, setLoading] = useState(true);
@@ -24,25 +31,21 @@ const User_Details: React.FC<componentPropsInterfacePaymentProfile> = (
     toast.success("Copied");
   };
 
+  const {mutate: getUserDetailsMutation} = useMutation({
+    mutationFn: ({emailId, name}: {emailId: string, name: string}) => getUserDetails({emailId: emailId, name: name}),
+    onMutate: () => setLoading(true),
+    onSuccess: (data) => {
+      setLoading(false);
+      setUserdetails(data.data);
+    },
+    onError: () => {
+      setLoading(false);
+      toast.error("Failed to load User Data")
+    }
+  })
+
   useEffect(() => {
-    const fetchUserDetails = async () => {
-      const response = await api.post(
-        apiRoutes.courses.payment.userInformation,
-        {
-          email: props.details?.email,
-          name: props.details?.name,
-        }
-      );
-      if (response.status == 200) {
-        const resp = await response.data;
-        console.log(resp);
-        setUserdetails(resp.data);
-        setLoading(false);
-      } else {
-        console.log("Falied to Load User Details");
-      }
-    };
-    fetchUserDetails();
+    getUserDetailsMutation({emailId: props.details?.email ?? "", name: props.details?.name ?? ""})
   }, []);
 
   const handleRazorpayPayment = async () => {
@@ -185,7 +188,7 @@ const User_Details: React.FC<componentPropsInterfacePaymentProfile> = (
                 Persuing Courses:
               </div>
               <div className="border border-gray-300 w-full"></div>
-              <div className="flex flex-col pr-12 gap-4 mt-4">
+              <div className="flex flex-col pr-12 gap-4 mt-4 overflow-x-auto">
                 {userdetails?.course_details &&
                 userdetails.course_details.length < 1 ? (
                   <div className="text-green-950">
@@ -202,12 +205,12 @@ const User_Details: React.FC<componentPropsInterfacePaymentProfile> = (
                 )}
                 {userdetails?.course_details.map((val, key) => (
                   <div key={key}>
-                    <div className={`text-black font-semibold text-md ${val.color ? `${val.color}` : "text-gray-800"} grid grid-cols-5`}>
-                      <div className="text-gray-600 text-sm">{val.name}</div>
-                      <div className="text-gray-600 text-sm">{val.coursePaymentDate}</div>
-                      <div className="text-gray-600 text-sm">{new Date(val.validity).toLocaleDateString("en-IN")}</div>
-                      <div className="text-gray-600 text-sm">{new Date(val.upcomingPaymentDate).toLocaleDateString("en-IN")}</div>
-                      <div className="text-gray-600 text-sm">{new Date(val.lastDateToPay).toLocaleDateString("en-IN")}</div>
+                    <div className={`font-semibold text-md ${val.color ? `text-red-800` : "text-gray-800"} grid grid-cols-5`}>
+                      <div className="text-sm">{val.name}</div>
+                      <div className="text-sm">{val.coursePaymentDate}</div>
+                      <div className="text-sm">{new Date(val.validity).toLocaleDateString("en-IN")}</div>
+                      <div className="text-sm">{new Date(val.upcomingPaymentDate).toLocaleDateString("en-IN")}</div>
+                      <div className="text-sm">{new Date(val.lastDateToPay).toLocaleDateString("en-IN")}</div>
                     </div>
                   </div>
                 ))}
@@ -302,12 +305,13 @@ const User_Details: React.FC<componentPropsInterfacePaymentProfile> = (
             <div className="flex flex-col w-[49%] bg-white rounded-lg p-6 my-8 h-fit pb-12">
               <div className="text-lg text-black font-semibold flex justify-between items-center">
                 <div className="">Upcoming Payment Details:</div>
-                <div
+                <button
                   onClick={handlePayment}
-                  className={`text-white p-2 w-[20%] mb-2 rounded-lg flex justify-center items-center bg-blue-700 hover:bg-blue-900 cursor-pointer hover:shadow-md hover:shadow-blue-300`}
+                  disabled = {userdetails?.amount.value == 0}
+                  className={`text-white p-2 w-[20%] mb-2 rounded-lg flex justify-center items-center hover:shadow-md hover:shadow-blue-300 ${userdetails?.amount.value == 0 ? 'bg-gray-300 cursor-not-allowed' : 'bg-blue-700 hover:bg-blue-900 cursor-pointer '}`}
                 >
                   Pay Now
-                </div>
+                </button>
               </div>
               <div className="border border-gray-300 w-full"></div>
               <div className="grid grid-cols-2 gap-x-10 gap-y-6 mt-4">

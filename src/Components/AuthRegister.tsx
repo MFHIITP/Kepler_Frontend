@@ -10,9 +10,7 @@ function AuthRegister() {
 
   useEffect(() => {
     if (localStorage.getItem("authfail")) {
-      toast.success(
-        "Almost there. Please fill the following details for finer verification"
-      );
+      toast.success("Almost there. Please fill the following details for finer verification");
       localStorage.removeItem("authfail");
     }
   }, []);
@@ -68,10 +66,7 @@ function AuthRegister() {
       });
 
       if (response.status === 200) {
-        localStorage.setItem(
-          "registration_toast",
-          "Congratulations, your account has been created. Please Login Again."
-        );
+        localStorage.setItem("registration_toast","Congratulations, your account has been created. Please Login Again.");
         navigate("/login");
       } else {
         alert(

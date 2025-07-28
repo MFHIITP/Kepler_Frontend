@@ -2,19 +2,22 @@ import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import api from "../utils/api";
 import apiRoutes from "../utils/Routes/apiRoutes";
-import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
-import { useDispatch } from "react-redux";
-import { setLoginMessage } from "../features/LoginInfo/LoginInfo";
+import { useMutation } from "@tanstack/react-query";
+
+const handleLogin = async({email, password}: {email: string, password: string}) => {
+  const { data } = await api.post(apiRoutes.auth.login.signInLogin, {
+    email: email,
+    password: password,
+  })
+  return data;
+}
 
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const server_addr = import.meta.env.VITE_SERV_ADDR;
-  const navigate = useNavigate();
-
-  const dispatch = useDispatch()
 
   useEffect(() => {
     if (localStorage.getItem("registration_toast")) {
@@ -25,18 +28,11 @@ function Login() {
     }
   }, []);
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    setLoading(true);
-    const response = await api.post(apiRoutes.auth.login.signInLogin, {
-      email: email,
-      password: password,
-    });
-
-    if (response.status === 200) {
-      const data = await response.data;
-
-      if (data.accessToken != null && data.refreshToken != null) {
+  const { mutate: handleLoginMutation } = useMutation({
+    mutationFn: ({email, password}: {email: string, password: string}) => handleLogin({email: email, password: password}),
+    onMutate: () => setLoading(true),
+    onSuccess: async(data) => {
+      if(data.accessToken != null && data.refreshToken != null){
         setLoading(false);
         Cookies.set("AccessToken", data.accessToken, {
           path: "/",
@@ -54,19 +50,22 @@ function Login() {
           sameSite: "None",
         });
         localStorage.setItem("toast_message", `Login Successful! Welcome to Kepler ${data.profileinfo.name}`);
-        if(data.sendAlert){
-          dispatch(setLoginMessage(data.lastDate))
-          localStorage.setItem("pendingCourses", JSON.stringify(data.courses))
-        }
+        localStorage.setItem("sendAlert", data.sendAlert);
+        localStorage.setItem("paymentLastDate", data.lastDate)
+        localStorage.setItem("pendingCourses", JSON.stringify(data.courses))
         window.location.href = "/";
       }
-    } else {
+    },
+    onError: async(data) => {
       setLoading(false);
       setEmail("");
-      setPassword("");
-      const data = await response.data;
       toast.error(data.message);
     }
+  })
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    handleLoginMutation({email, password});
   };
 
   const handleGoogleLogin = () => {
