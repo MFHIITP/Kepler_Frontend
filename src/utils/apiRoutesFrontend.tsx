@@ -18,16 +18,9 @@ const About = lazy(() => import("../Components/About"));
 const Courses = lazy(() => import("../Components/Courses"));
 const ReadBook = lazy(() => import("../Components/ReadBook"));
 const Popping = lazy(() => import("../Components/Popping"));
-const ExecutiveTeam = lazy(() => import("../Components/Teams/ExecutiveTeam"));
-const DevelopmentTeam = lazy(
-  () => import("../Components/Teams/DevelopmentTeam")
-);
 const PayPal = lazy(() => import("../Components/PayPalComponent"));
 const QRPage = lazy(() => import("../Components/QRPage"));
-const CoreTeam = lazy(() => import("../Components/Teams/CoreTeam"));
 const ContentTeam = lazy(() => import("../Components/Teams/ContentTeam"));
-const PRTeam = lazy(() => import("../Components/Teams/PRTeam"));
-const Treasury = lazy(() => import("../Components/Teams/Treasury"));
 const LiveUsers = lazy(() => import("../Components/Live_Usere"));
 const HistoryUsers = lazy(() => import("../Components/History_Users"));
 const DonateUs = lazy(() => import("../Components/DonateUs"));
@@ -41,10 +34,7 @@ const Login_Auth = lazy(() => import("../Components/Login_Auth"));
 const AuthRegister = lazy(() => import("../Components/AuthRegister"));
 const Footer = lazy(() => import("../Components/Footer"));
 
-export const RouterFrontend = (
-  authenticated: boolean,
-  details: userdetails | undefined
-) => {
+export const RouterFrontend = (authenticated: boolean,details: userdetails | undefined) => {
   console.log(authenticated);
   return createBrowserRouter([
     {
@@ -117,7 +107,7 @@ export const RouterFrontend = (
           path: "/admins/coreteam/executivecommittee",
           element: (
             <Suspense fallback={<div>Loading...</div>}>
-              <ExecutiveTeam details={details} />
+              <ContentTeam details={details} teamName = {"ExecutiveCommittee"}/>
             </Suspense>
           ),
         },
@@ -141,7 +131,7 @@ export const RouterFrontend = (
           path: "/admins/coreteam/developmentteam",
           element: (
             <Suspense fallback={<div>Loading...</div>}>
-              <DevelopmentTeam details={details} />
+              <ContentTeam details={details} teamName = {"DevelopmentTeam"}/>
             </Suspense>
           ),
         },
@@ -149,7 +139,7 @@ export const RouterFrontend = (
           path: "/admins/coreteam/educatorsteam",
           element: (
             <Suspense fallback={<div>Loading...</div>}>
-              <ContentTeam details={details} />
+              <ContentTeam details={details} teamName = {"EducatorsTeam"}/>
             </Suspense>
           ),
         },
@@ -157,7 +147,7 @@ export const RouterFrontend = (
           path: "/admins/coreteam/prteam",
           element: (
             <Suspense fallback={<div>Loading...</div>}>
-              <PRTeam details={details} />
+              <ContentTeam details={details} teamName = {"PrTeam"}/>
             </Suspense>
           ),
         },
@@ -165,7 +155,7 @@ export const RouterFrontend = (
           path: "/admins/coreteam/corecommittee",
           element: (
             <Suspense fallback={<div>Loading...</div>}>
-              <CoreTeam details={details} />
+              <ContentTeam details={details} teamName = {"CoreCommittee"}/>
             </Suspense>
           ),
         },
@@ -181,7 +171,7 @@ export const RouterFrontend = (
           path: "/admins/coreteam/treasurycommittee",
           element: (
             <Suspense fallback={<div>Loading...</div>}>
-              <Treasury details={details} />
+              <ContentTeam details={details} teamName = {"TreasuryCommittee"}/>
             </Suspense>
           ),
         },

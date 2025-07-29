@@ -1,12 +1,33 @@
 import React, { useEffect, useState, useContext, FC } from "react";
 import { MyContext } from "../../main";
-import { componentPropsInterface } from "../Interfaces/ComponentProps.interface";
-import { teamDetails } from "../Interfaces/Details.interface";
+import { teamDetails, userdetails } from "../Interfaces/Details.interface";
 import api from "../../utils/api";
 import apiRoutes from "../../utils/Routes/apiRoutes";
+import { useMutation } from "@tanstack/react-query";
+import toast from "react-hot-toast";
 
-const ContentTeam: FC<componentPropsInterface> = ({ details }) => {
-  const [team, setTeam] = useState<teamDetails[]>([]);
+interface addPersonInterface {
+  teamName: string, 
+  position: string,
+  name: string, 
+  phoneNumber: string, 
+  emailId: string,
+  degree: string, 
+  linkedIn: string
+}
+
+const getAllTeamMembers = async(teamName: string): Promise<teamDetails[]> => {
+  const { data } = await api.get<teamDetails[]>(`${apiRoutes.teams.teamInfo.getTeam}/${teamName}`);
+  return data;
+}
+
+const addTeamMember = async(values: addPersonInterface) => {
+  const {data} = await api.post(apiRoutes.teams.teamUpdates.addPerson, values);
+  return data;
+}
+
+const ContentTeam: FC<{details: userdetails | undefined, teamName: string}> = ({ details, teamName }) => {
+  const [team, setTeam] = useState<teamDetails[]>([])
   const [position, setPosition] = useState("");
   const [name, setName] = useState("");
   const [Phone, setPhone] = useState("");
@@ -15,25 +36,6 @@ const ContentTeam: FC<componentPropsInterface> = ({ details }) => {
   const [linkedIn, setLinkedIn] = useState("");
   const context = useContext(MyContext);
   const adminemails = context?.adminemails ?? [];
-  const serv_addr = import.meta.env.VITE_SERV_ADDR;
-
-  useEffect(() => {
-    const devteamcall = async () => {
-      const { data } = await api.get(apiRoutes.teams.teamInfo.content);
-      setTeam(data);
-      const priorityOrder = [
-        "Team Convenor",
-        "Assistant Convenor",
-        "Coordinator",
-      ];
-      data.sort((a: teamDetails, b: teamDetails) => {
-        return (
-          priorityOrder.indexOf(a.position) - priorityOrder.indexOf(b.position)
-        );
-      });
-    };
-    devteamcall();
-  }, [serv_addr]);
 
   const resetForm = () => {
     setPosition("");
@@ -44,40 +46,50 @@ const ContentTeam: FC<componentPropsInterface> = ({ details }) => {
     setLinkedIn("");
   };
 
-  const handleSubmit = async () => {
-    const response = await api.post(
-      apiRoutes.teams.teamUpdates.contentAddition,
-      {
-        position: position,
-        name: name,
-        phone_number: Phone,
-        email_id: email,
-        degree: Degree,
-        linkedin: linkedIn,
-      }
-    );
-    if (response.status === 200) {
-      setTeam((prevTeam) => [
-        ...prevTeam,
-        {
-          position: position,
-          name: name,
-          phone_number: Phone,
-          email_id: email,
-          degree: Degree,
-          linkedin: linkedIn,
-        },
-      ]);
-      resetForm();
-    } else {
-      alert("Upload failed");
+  const {mutate: getTeamMembersMutation} = useMutation({
+    mutationFn: (teamName) => getAllTeamMembers(teamName!),
+    onMutate: () => setTeam([]),
+    onSuccess: (data) => {
+      setTeam(data);
+    },
+    onError: () => {
+      toast.error("Failed to fetch Team Details")
     }
+  })
+
+  const {mutate: addTeamMemberMutation} = useMutation({
+    mutationFn: (data: addPersonInterface) => addTeamMember(data),
+    onSuccess: () => {
+      getTeamMembersMutation(teamName)
+      resetForm();
+    },
+    onError: () => {
+      toast.error("Upload failed")
+    }
+  })
+
+  useEffect(() => {
+    getTeamMembersMutation(teamName);
+  }, [teamName])
+  
+  const handleSubmit = async () => {
+    const data: addPersonInterface = {
+      teamName: teamName,
+      position: position,
+      name: name,
+      emailId: email,
+      phoneNumber: Phone,
+      degree: Degree,
+      linkedIn: linkedIn
+
+    }
+    addTeamMemberMutation(data);
   };
 
   return (
     <div className="min-h-screen bg-gray-100 py-10 px-6">
       <h2 className="text-4xl font-bold text-center mb-8 text-gray-800">
-        Educator's Team
+        {teamName.replace(/([a-z])([A-Z])/g, "$1 $2")}
       </h2>
 
       {/* Team Members */}
@@ -98,11 +110,11 @@ const ContentTeam: FC<componentPropsInterface> = ({ details }) => {
               </p>
               <p>
                 <strong>Phone:</strong>{" "}
-                <a href={`tel:${member.phone_number}`}>{member.phone_number}</a>
+                <a href={`tel:${member.phone_number}`}>{member.phoneNumber}</a>
               </p>
               <p>
                 <strong>Email:</strong>{" "}
-                <a href={`mailto:${member.email_id}`}>{member.email_id}</a>
+                <a href={`mailto:${member.email_id}`}>{member.emailId}</a>
               </p>
               <p>
                 <strong>Degree:</strong> {member.degree}

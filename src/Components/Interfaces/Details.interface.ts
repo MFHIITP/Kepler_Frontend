@@ -16,8 +16,8 @@ export interface userdetails {
 export interface teamDetails {
     position: string, 
     name: string, 
-    phone_number: string, 
+    phoneNumber: string, 
     degree: string,
-    email_id: string, 
+    emailId: string, 
     linkedin?: string
 }

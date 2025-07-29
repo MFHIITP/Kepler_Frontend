@@ -42,3 +42,6 @@ Currently, two official plugins are available:
  # Profile Page - Updation and removal of the profile information.
  # Settings - 
  # Announcements - 
+
+# Date of Birth - 
+# Job Designation - 

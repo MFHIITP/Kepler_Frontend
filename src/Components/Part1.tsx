@@ -13,7 +13,7 @@ function Part1() {
 
   useEffect(() => {
     (async () => {
-      if (localStorage.getItem("sendAlert")) {
+      if (localStorage.getItem("sendAlert") == "true") {
         const courses: string[] = JSON.parse(localStorage.getItem("pendingCourses")!) || [];
         const lastDate = localStorage.getItem("paymentLastDate")!
         await Swal.fire({
@@ -23,10 +23,10 @@ function Part1() {
           allowOutsideClick: false,
           confirmButtonText: "OK",
         });
-        localStorage.removeItem("sendAlert");
-        localStorage.removeItem("pendingCourses");
-        localStorage.removeItem("paymentLastDate")
       }
+      localStorage.removeItem("sendAlert");
+      localStorage.removeItem("pendingCourses");
+      localStorage.removeItem("paymentLastDate")
     })();
   }, [])
   

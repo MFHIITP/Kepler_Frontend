@@ -1,20 +1,10 @@
 const apiRoutes = {
     teams: {
         teamInfo: {
-            content: `/contentteam/getcontentteamdata`,
-            core: `/coreteam/getcoreteamdata`,
-            dev: `/devteam/getdevteamdata`,
-            executive: `/executiveteam/getexecutiveteamdata`,
-            pr: `/prteam/getprteamdat`,
-            treasury: `/treasuryteam/gettreasuryteamdata`
+            getTeam: `/team/getTeam`,
         },
         teamUpdates: {
-            contentAddition: `/contentteam/addcontentperson`,
-            coreAddition: `/coreteam/addcoreperson`,
-            devAddition: `/devteam/adddevperson`,
-            executiveAddition: `/executiveteam/addexecutiveperson`,
-            prAddition: `/prteam/addprperson`,
-            treasuryAddition: `/treasuryteam/addtreasuryperson`
+            addPerson: `/team/addPerson`,
         },
     },
     auth: {
