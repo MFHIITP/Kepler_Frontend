@@ -224,3 +224,36 @@ export const playlist = {
     },
   ],
 };
+
+export const defaultCodes: Record<string, string> = {
+  cpp: `#include<bits/stdc++.h>
+using namespace std;
+  
+int main(){
+  ios::sync_with_stdio(false);
+  cin.tie(NULL);
+  // Write your code here
+
+  return 0;
+}`,
+  java: `public class Main{
+  public static void main(String args[]){
+    // Write your code here
+
+  }
+}`,
+  c: `#include<stdio.h>
+int main(){
+  // Write your code here
+
+  return 0;
+}`,
+  python: `// Write your code here`,
+  javascript: `// Write your code here`,
+  typescript: `// Write your code here`,
+  go: `package main
+import "fmt"
+func main(){
+  // Write your code here
+}`
+}

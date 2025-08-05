@@ -1,6 +1,7 @@
 import { lazy, ReactElement, ReactInstance, Suspense } from "react";
 import { userdetails } from "../Components/Interfaces/Details.interface";
 import { createBrowserRouter, Navigate } from "react-router-dom";
+import DailyProblemsPage from "../Components/DailyProblems/DailyProblemsPage";
 
 const MainLayout = lazy(()=>import("./MainLayout"))
 const Login = lazy(() => import("../Components/Login"));
@@ -34,7 +35,7 @@ const Login_Auth = lazy(() => import("../Components/Login_Auth"));
 const AuthRegister = lazy(() => import("../Components/AuthRegister"));
 const Footer = lazy(() => import("../Components/Footer"));
 
-export const RouterFrontend = (authenticated: boolean,details: userdetails | undefined) => {
+export const RouterFrontend = (authenticated: boolean, details: userdetails | undefined) => {
   console.log(authenticated);
   return createBrowserRouter([
     {
@@ -317,6 +318,14 @@ export const RouterFrontend = (authenticated: boolean,details: userdetails | und
             </>
           ),
         },
+        {
+          path: "/problems/dailyProblems",
+          element: (
+            <>
+              <DailyProblemsPage details = {details}/>
+            </>
+          )
+        }
       ],
     },
   ]);

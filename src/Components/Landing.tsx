@@ -3,6 +3,8 @@ import User_Details from './User_Details'
 import Profile_Courses from "./Profile_Courses.jsx";
 import Profile from "./Profile";
 import { componentPropsInterface } from "./Interfaces/ComponentProps.interface";
+import CodingDetails from "./CodingDetails";
+import Leaderboard from "./Leaderboard";
 
 const Landing: React.FC<componentPropsInterface> = (props) => {
   const [option, setOption] = useState("courses");
@@ -79,18 +81,18 @@ const Landing: React.FC<componentPropsInterface> = (props) => {
             <div className="flex flex-col mt-2">
               <div
                 className={`flex w-full cursor-pointer py-3 ${
-                  option == "notification"
+                  option == "keplerBoard"
                     ? "bg-[linear-gradient(to_right,#70BCFD_2%,#303750_4%)]"
                     : ""
                 }`}
                 onClick={() => {
-                  setOption("notification");
+                  setOption("keplerBoard");
                 }}
               >
                 <div className="flex ml-3 gap-14"> 
                   <div className="flex gap-2">
                     <img src="/Images/Notification_Icon.png" alt="" />
-                    <div>Notification</div>
+                    <div>Kepler Board</div>
                   </div>
                 </div>
               </div>
@@ -113,18 +115,18 @@ const Landing: React.FC<componentPropsInterface> = (props) => {
               </div>
               <div
                 className={`flex w-full cursor-pointer py-3 ${
-                  option == "faq"
+                  option == "leaderboard"
                     ? "bg-[linear-gradient(to_right,#70BCFD_2%,#303750_4%)]"
                     : ""
                 }`}
                 onClick={() => {
-                  setOption("faq");
+                  setOption("leaderboard");
                 }}
               >
                 <div className="flex ml-3 gap-[4rem]">
                   <div className="flex gap-2">
                     <img src="/Images/FAQ_Icon.png" alt="" />
-                    <div>FAQ</div>
+                    <div>Leaderboard</div>
                   </div>
                 </div>
               </div>
@@ -140,7 +142,9 @@ const Landing: React.FC<componentPropsInterface> = (props) => {
       </div>
       {option == "dashboard" && <div className="w-[86%] h-full overflow-x-hidden scrollbar-thin"><User_Details details = {props.details} goToPage = {setOption}/></div>}
       {option == "courses" && <div className="w-[86%] h-full overflow-x-hidden scrollbar-thin bg-gray-100"><Profile_Courses details = {props.details} goToPage = {setOption}/></div>}
-    {option == "profile" && <div className="w-[86%] h-full overflow-x-hidden scrollbar-thin bg-gray-100"><Profile details = {props.details} goToPage = {setOption}/></div>}
+      {option == "profile" && <div className="w-[86%] h-full overflow-x-hidden scrollbar-thin bg-gray-100"><Profile details = {props.details} goToPage = {setOption}/></div>}
+      {option == 'keplerBoard' && <div className="w-[86%] h-full overflow-x-hidden scrollbar-thin bg-gray-100"><CodingDetails details = {props.details} goToPage = {setOption}/></div>}
+      {option == 'leaderboard' && <div className="w-[86%] h-full overflow-x-hidden scrollbar-thin bg-gray-100"><Leaderboard details = {props.details} goToPage = {setOption}/></div>}
     </div>
   );
 }

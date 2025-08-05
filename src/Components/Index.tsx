@@ -42,6 +42,7 @@ const Index: FC<componentPropsInterface> = ({ auth, details }) => {
         path: '/'
       })
       localStorage.setItem("toast_message", "Logout Successful!");
+      localStorage.removeItem("userCode");
       setLoading(false);
       window.location.href = '/';
     } else {
@@ -207,7 +208,7 @@ const Index: FC<componentPropsInterface> = ({ auth, details }) => {
                   Resources
                 </Link>
                 <Link
-                  to="/library/problems"
+                  to="/problems/dailyProblems"
                   className="block px-4 py-2 text-sm text-black hover:text-white hover:bg-black transition"
                 >
                   Daily Problems
@@ -514,7 +515,7 @@ const Index: FC<componentPropsInterface> = ({ auth, details }) => {
                     Resources
                   </Link>
                   <Link
-                    to="/library/problems"
+                    to="/problems/dailyProblems"
                     className="block px-4 py-2 text-sm text-gray-300 hover:text-white hover:bg-gray-700 transition"
                   >
                     Daily Problems

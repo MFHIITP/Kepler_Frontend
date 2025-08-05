@@ -71,6 +71,13 @@ const apiRoutes = {
         getInformation: '/users/moreInformation',
         removeUserCourse: '/users/removeCourse'
     },
-    homePage: '/api/homePage'
+    homePage: '/api/homePage',
+    problems: {
+        getProblem: '/problems/getTodayProblem',
+        runProblem: '/problems/runProblem' ,
+        submitCode: '/problems/submitCode',
+        codingProfile: '/problems/codingProfile',
+        leaderboard: '/problems/leaderboard'
+    }
 }
 export default apiRoutes
