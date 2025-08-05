@@ -77,7 +77,8 @@ const apiRoutes = {
         runProblem: '/problems/runProblem' ,
         submitCode: '/problems/submitCode',
         codingProfile: '/problems/codingProfile',
-        leaderboard: '/problems/leaderboard'
+        leaderboard: '/problems/leaderboard',
+        getComments: '/problems/getComments',
     }
 }
 export default apiRoutes

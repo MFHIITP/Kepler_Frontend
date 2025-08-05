@@ -155,7 +155,7 @@ const CodingDetails: React.FC<CodingDetailsInterface> = ({ details, goToPage }) 
                     </span>
                   </td>
                   <td className="p-3">
-                    {new Date(submission.date).toLocaleString()}
+                    {new Date(submission.date).toLocaleString("en-IN")}
                   </td>
                 </tr>
               ))}

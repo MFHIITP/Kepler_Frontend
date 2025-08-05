@@ -1,114 +1,226 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { componentPropsInterface } from "../Interfaces/ComponentProps.interface";
 import api from "../../utils/api";
 import apiRoutes from "../../utils/Routes/apiRoutes";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { problemInterface } from "../Interfaces/problem.interface";
 import IDEPage from "./IDEPage";
+import { commentDataInterface } from "../Interfaces/CommentData.interface";
+import toast from "react-hot-toast";
+const webSocketAddress = import.meta.env.VITE_WEBS_ADDR
 
 const getProblem = async (): Promise<problemInterface> => {
-  const { data } = await api.get<problemInterface>(apiRoutes.problems.getProblem);
+  const { data } = await api.get<problemInterface>(
+    apiRoutes.problems.getProblem
+  );
   return data;
 };
 
+const fetchComments = async(problem_name: string) => {
+  const { data } = await api.post(apiRoutes.problems.getComments, {
+    problem_name: problem_name,
+  });
+  return data;
+}
+
 const DailyProblemsPage: React.FC<componentPropsInterface> = ({ details }) => {
+  const [format, setFormat] = useState<"problem" | "comment">("problem");
+  const [commentData, setCommentData] = useState<commentDataInterface[] | []>([])
+  const [comment, setComment] = useState("");
+  const [socket, setSocket] = useState<WebSocket | null>(null)
+  const [loading, setLoading] = useState(false);
+
   const {data: problem, isLoading, isError} = useQuery({
     queryKey: ["dailyProblem"],
     queryFn: getProblem,
   });
 
-  if(isLoading){
-    return (
-      <div className="justify-center">
-        Loading
-      </div>
-    )
+  useEffect(() => {
+    const ws = new WebSocket(webSocketAddress);
+    setSocket(ws);
+    ws.onmessage = async(event) => {
+      const data = await JSON.parse(event.data);
+      setCommentData((prevComments) => [data, ...prevComments]);
+    }
+    return () => {
+      ws.close();
+    }
+  }, [webSocketAddress])
+
+  const {mutate: getCommentsMutation} = useMutation({
+    mutationFn: (problem_name: string) => fetchComments(problem_name),
+    onMutate: () => setLoading(true),
+    onSuccess: (data) => {
+      setLoading(false);
+      setCommentData(data);
+    }
+  })
+
+  const handlePostClick = () => {
+    if(comment == ""){
+      return;
+    }
+    if(socket){
+      const postData = {
+        format: 'commentPost',
+        problem_name: problem?.name,
+        name: details?.name,
+        date: new Date().toLocaleString("en-IN"),
+        message: comment,
+        email: details?.email
+      }
+      socket.send(JSON.stringify(postData));
+    }
+    setComment("");
+  }
+
+  if (isLoading) {
+    return <div className="justify-center">Loading</div>;
   }
 
   return (
     <div className="h-[88vh] bg-gray-50 p-4">
       <div className="flex flex-col lg:flex-row gap-4">
-        <div className="lg:w-[35%] bg-white shadow-md rounded-xl p-4 relative overflow-y-auto h-[88vh] scrollbar-thin">
-          <div
-            className={`absolute top-4 left-2 py-1 px-2 rounded-md text-sm font-semibold ${
-              problem?.difficulty == "Easy"
-                ? "bg-green-200 text-green-800"
-                : "hidden"
-            }`}
-          >
-            {problem?.difficulty}
-          </div>
-          <div
-            className={`absolute top-4 left-2 py-1 px-2 rounded-md text-sm font-semibold ${
-              problem?.difficulty == "Medium"
-                ? " bg-yellow-200 text-yellow-800"
-                : "hidden"
-            }`}
-          >
-            {problem?.difficulty}
-          </div>
-          <div
-            className={`absolute top-4 left-2 py-1 px-2 rounded-md text-sm font-semibold ${
-              problem?.difficulty == "Hard"
-                ? "bg-red-200 text-red-800"
-                : "hidden"
-            }`}
-          >
-            {problem?.difficulty}
-          </div>
+        {/* Left Panel */}
+        <div className="lg:w-[35%] bg-white shadow-md rounded-xl h-[88vh] overflow-y-auto scrollbar-thin">
+          {/* Top Bar with Tabs and Difficulty */}
+          <div className="flex items-center justify-between p-4 border-b">
+            {/* Difficulty Tag */}
+            {["Easy", "Medium", "Hard"].map((level) => (
+              <span
+                key={level}
+                className={`py-1 px-2 rounded-md text-sm font-semibold ${
+                  problem?.difficulty === level
+                    ? level === "Easy"
+                      ? "bg-green-200 text-green-800"
+                      : level === "Medium"
+                      ? "bg-yellow-200 text-yellow-800"
+                      : "bg-red-200 text-red-800"
+                    : "hidden"
+                }`}
+              >
+                {problem?.difficulty}
+              </span>
+            ))}
 
-          <div className="mt-10 space-y-4">
-            <h1 className="text-2xl font-bold text-gray-800 text-center">
-              {problem?.name}
-            </h1>
-
-            <p className="text-gray-700 whitespace-pre-wrap">
-              {problem?.description}
-            </p>
-
-            <div className="text-gray-800">
-              <h2 className="font-semibold text-lg">Input Format</h2>
-              <p>{problem?.inputFormat}</p>
+            {/* Tabs */}
+            <div className="flex space-x-6">
+              <button
+                onClick={() => setFormat("problem")}
+                className={`text-sm font-medium border-b-2 pb-1 ${
+                  format === "problem"
+                    ? "border-blue-500 text-blue-600"
+                    : "border-transparent text-gray-500 hover:text-gray-700"
+                }`}
+              >
+                Problem
+              </button>
+              <button
+                onClick={() => {setFormat("comment"); getCommentsMutation(problem?.name ?? "")}}
+                className={`text-sm font-medium border-b-2 pb-1 ${
+                  format === "comment"
+                    ? "border-blue-500 text-blue-600"
+                    : "border-transparent text-gray-500 hover:text-gray-700"
+                }`}
+              >
+                Comments
+              </button>
             </div>
+          </div>
 
-            <div className="text-gray-800">
-              <h2 className="font-semibold text-lg">Output Format</h2>
-              <p>{problem?.outputFormat}</p>
+          {/* Problem Content */}
+          {format === "problem" && (
+            <div className="p-4 space-y-4">
+              <h1 className="text-2xl font-bold text-gray-800 text-center">
+                {problem?.name}
+              </h1>
+
+              <p className="text-gray-700 whitespace-pre-wrap">
+                {problem?.description}
+              </p>
+
+              <div className="text-gray-800">
+                <h2 className="font-semibold text-lg">Input Format</h2>
+                <p>{problem?.inputFormat}</p>
+              </div>
+
+              <div className="text-gray-800">
+                <h2 className="font-semibold text-lg">Output Format</h2>
+                <p>{problem?.outputFormat}</p>
+              </div>
+
+              <div className="text-gray-800">
+                <h2 className="font-semibold text-lg">Constraints</h2>
+                <p>Time: {problem?.constraintsTime}</p>
+                <p>Space: {problem?.constraintsSpace}</p>
+              </div>
+
+              <div className="space-y-2">
+                <h2 className="font-semibold text-lg">Test Cases</h2>
+                {problem?.displayTestCases.map((test, key) => (
+                  <div
+                    key={key}
+                    className="bg-gray-100 border rounded-lg p-3 text-md"
+                  >
+                    <p>
+                      <span className="font-semibold">Input:</span>{" "}
+                      {Object.entries(test.input).map(([key, val]) => (
+                        <div key={key}>
+                          {key}: {val}
+                        </div>
+                      ))}
+                    </p>
+                    <p>
+                      <span className="font-semibold">Output:</span>{" "}
+                      {test.outputReal}
+                    </p>
+                  </div>
+                ))}
+              </div>
             </div>
+          )}
 
-            <div className="text-gray-800">
-              <h2 className="font-semibold text-lg">Constraints</h2>
-              <p>Time: {problem?.constraintsTime}</p>
-              <p>Space: {problem?.constraintsSpace}</p>
-            </div>
-
-            <div className="space-y-2">
-              <h2 className="font-semibold text-lg">Test Cases</h2>
-              {problem?.displayTestCases.map((test, key) => (
-                <div
-                  key={key}
-                  className="bg-gray-100 border rounded-lg p-3 text-md"
-                >
-                  <p>
-                    <span className="font-semibold">Input:</span>{" "}
-                    {Object.entries(test.input).map(([key, val]) => (
-                      <div key={key}>
-                        {key}: {val}
+          {/* Comments Placeholder */}
+          {format === "comment" && (
+            <div className="h-[88%] flex flex-col">
+              <div className="flex-1 overflow-auto scrollbar-thin border-b border-gray-300 p-4 text-gray-700 text-center">
+                {commentData.length > 0 ? (
+                  commentData.map((comment, index) => (
+                    <div key={index} className="bg-gray-100 px-2 py-2 my-3 rounded-md flex flex-col gap-2">
+                      <div className="flex justify-between text-sm">
+                        <div className="">{comment.name}</div>
+                        <div className="">{comment.date}</div>
                       </div>
-                    ))}
-                  </p>
-                  <p>
-                    <span className="font-semibold">Output:</span>{" "}
-                    {test.outputReal}
-                  </p>
-                </div>
-              ))}
+                      <div className="text-left text-black whitespace-pre-wrap">{comment.message}</div>
+                    </div>
+                  ))
+                ) : (
+                  "💬 No comments yet. Be the first one to write!"
+                )}
+              </div>
+
+              <div className="flex items-center gap-4 px-4 py-3 bg-gray-50">
+                <textarea
+                  name="commentText"
+                  value = {comment}
+                  placeholder="Write your comment..."
+                  className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                  onChange={(e) => setComment(e.target.value)}
+                />
+                <button className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition" onClick={handlePostClick}>
+                  Post
+                </button>
+              </div>
             </div>
-          </div>
+          )}
+
         </div>
 
-        <div className="lg:w-[70%] bg-white shadow-md rounded-xl p-2 ">
-          {!isLoading && <IDEPage problem={problem} email = {details?.email} name={details?.name}/>}
+        {/* Right Panel - IDE */}
+        <div className="lg:w-[70%] bg-white shadow-md rounded-xl p-2">
+          {!isLoading && (
+            <IDEPage problem={problem} email={details?.email} name={details?.name}/>
+          )}
         </div>
       </div>
     </div>
@@ -116,3 +228,7 @@ const DailyProblemsPage: React.FC<componentPropsInterface> = ({ details }) => {
 };
 
 export default DailyProblemsPage;
+function onError(error: Error, variables: string, context: any): unknown {
+  throw new Error("Function not implemented.");
+}
+

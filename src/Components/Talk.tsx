@@ -135,15 +135,7 @@ const Talk: FC<TalkInterface> = ({key, details, groupName, ref, groupDescription
       } else {
         formdata.append("image", "");
       }
-      const formattedDate = new Date().toLocaleString("en-US", {
-        year: "numeric",
-        month: "2-digit",
-        day: "2-digit",
-        hour: "2-digit",
-        minute: "2-digit",
-        second: "2-digit",
-        hour12: false,
-      });
+      const formattedDate = new Date().toLocaleString("en-IN");
       formdata.append("date", formattedDate);
       const socketData: {[key: string]: string | number} = {};
       formdata.forEach((val, key) => {
