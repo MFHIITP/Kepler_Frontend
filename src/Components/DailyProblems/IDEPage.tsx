@@ -89,7 +89,9 @@ const IDEPage: React.FC<IDEPageInterface> = ({ problem, email, name }) => {
     onMutate: () => setSubmissionLoading(true),
     onSuccess: async(data) => {
       setSubmissionLoading(false);
+      localStorage.setItem("dailyProblemDate", JSON.stringify(new Date()))
       if(data.error == false){
+        localStorage.setItem("dailyProblemStatus", "Accepted")
         await Swal.fire({
           title: 'Congratulations!',
           html: `
@@ -111,6 +113,9 @@ const IDEPage: React.FC<IDEPageInterface> = ({ problem, email, name }) => {
         })
       }
       else{
+        if(!localStorage.getItem("dailyProblemStatus") || !(localStorage.getItem("dailyProblemStatus") == "Accepted")){
+          localStorage.setItem("dailyProblemStatus", "Rejected")
+        }
         await Swal.fire({
           title: 'Code Execution Failed',
           html: `

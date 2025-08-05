@@ -9,6 +9,15 @@ import { commentDataInterface } from "../Interfaces/CommentData.interface";
 import toast from "react-hot-toast";
 const webSocketAddress = import.meta.env.VITE_WEBS_ADDR
 
+const todayIsSameDay = (givenDate: Date) => {
+    const PastDate = new Date(givenDate);
+    const today = new Date();
+    PastDate.setHours(0, 0, 0, 0);
+    today.setHours(0, 0, 0, 0);
+
+    return PastDate.getTime() == today.getTime();
+};
+
 const getProblem = async (): Promise<problemInterface> => {
   const { data } = await api.get<problemInterface>(
     apiRoutes.problems.getProblem
@@ -29,11 +38,26 @@ const DailyProblemsPage: React.FC<componentPropsInterface> = ({ details }) => {
   const [comment, setComment] = useState("");
   const [socket, setSocket] = useState<WebSocket | null>(null)
   const [loading, setLoading] = useState(false);
+  const [dailyProblemStatus, setDailyProblemStatus] = useState<string>("");
 
   const {data: problem, isLoading, isError} = useQuery({
     queryKey: ["dailyProblem"],
     queryFn: getProblem,
   });
+
+  useEffect(() => {
+    if(localStorage.getItem("dailyProblemDate")){
+      const solutionDate = JSON.parse(localStorage.getItem("dailyProblemDate") ?? "");
+      if(todayIsSameDay(solutionDate)){
+        setDailyProblemStatus(localStorage.getItem("dailyProblemStatus") ?? "");
+      }
+      else{
+        localStorage.removeItem("dailyProblemDate");
+        localStorage.removeItem("dailyProblemStatus");
+      }
+    }
+  }, [])
+  
 
   useEffect(() => {
     const ws = new WebSocket(webSocketAddress);
@@ -90,13 +114,7 @@ const DailyProblemsPage: React.FC<componentPropsInterface> = ({ details }) => {
               <span
                 key={level}
                 className={`py-1 px-2 rounded-md text-sm font-semibold ${
-                  problem?.difficulty === level
-                    ? level === "Easy"
-                      ? "bg-green-200 text-green-800"
-                      : level === "Medium"
-                      ? "bg-yellow-200 text-yellow-800"
-                      : "bg-red-200 text-red-800"
-                    : "hidden"
+                  problem?.difficulty === level ? level === "Easy" ? "bg-green-200 text-green-800" : level === "Medium" ? "bg-yellow-200 text-yellow-800" : "bg-red-200 text-red-800" : "hidden"
                 }`}
               >
                 {problem?.difficulty}
@@ -105,6 +123,19 @@ const DailyProblemsPage: React.FC<componentPropsInterface> = ({ details }) => {
 
             {/* Tabs */}
             <div className="flex space-x-6">
+              <div className="">
+                {dailyProblemStatus !== "" && (
+                  <span
+                    className={`px-2 py-1 text-sm font-semibold rounded-md ${
+                      dailyProblemStatus === "Accepted"
+                        ? "bg-green-100 text-green-700"
+                        : "bg-red-100 text-red-700"
+                    }`}
+                  >
+                    {dailyProblemStatus}
+                  </span>
+                )}
+              </div>
               <button
                 onClick={() => setFormat("problem")}
                 className={`text-sm font-medium border-b-2 pb-1 ${
