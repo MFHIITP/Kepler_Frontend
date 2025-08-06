@@ -81,9 +81,6 @@ const Profile_Courses: React.FC<componentPropsInterfacePaymentProfile> = (props)
       setChoices(filteredChoices);
       setPreventedCourses(data.preventedCourses)
     },
-    onError: () => {
-      toast.error("Failed to fetch all the Courses");
-    },
   });
 
   useEffect(() => {

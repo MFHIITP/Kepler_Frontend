@@ -101,12 +101,12 @@ const DailyProblemsPage: React.FC<componentPropsInterface> = ({ details }) => {
   if (isLoading) {
     return <div className="justify-center">Loading</div>;
   }
-
+ 
   return (
-    <div className="h-[88vh] bg-gray-50 p-4">
-      <div className="flex flex-col lg:flex-row gap-4">
+    <div className="h-fit p-4 font-mono bg-blue-500">
+      <div className="flex flex-col lg:flex-row gap-4 ">
         {/* Left Panel */}
-        <div className="lg:w-[35%] bg-white shadow-md rounded-xl h-[88vh] overflow-y-auto scrollbar-thin">
+        <div className="lg:w-[35%] bg-indigo-950 shadow-md rounded-xl h-[88vh] overflow-y-auto scrollbar-thin text-gray-100">
           {/* Top Bar with Tabs and Difficulty */}
           <div className="flex items-center justify-between p-4 border-b">
             {/* Difficulty Tag */}
@@ -140,8 +140,8 @@ const DailyProblemsPage: React.FC<componentPropsInterface> = ({ details }) => {
                 onClick={() => setFormat("problem")}
                 className={`text-sm font-medium border-b-2 pb-1 ${
                   format === "problem"
-                    ? "border-blue-500 text-blue-600"
-                    : "border-transparent text-gray-500 hover:text-gray-700"
+                    ? "border-blue-100 text-blue-100"
+                    : "border-transparent text-gray-300 hover:text-gray-300"
                 }`}
               >
                 Problem
@@ -150,8 +150,8 @@ const DailyProblemsPage: React.FC<componentPropsInterface> = ({ details }) => {
                 onClick={() => {setFormat("comment"); getCommentsMutation(problem?.name ?? "")}}
                 className={`text-sm font-medium border-b-2 pb-1 ${
                   format === "comment"
-                    ? "border-blue-500 text-blue-600"
-                    : "border-transparent text-gray-500 hover:text-gray-700"
+                    ? "border-blue-100 text-blue-100"
+                    : "border-transparent text-gray-100 hover:text-gray-300"
                 }`}
               >
                 Comments
@@ -162,25 +162,25 @@ const DailyProblemsPage: React.FC<componentPropsInterface> = ({ details }) => {
           {/* Problem Content */}
           {format === "problem" && (
             <div className="p-4 space-y-4">
-              <h1 className="text-2xl font-bold text-gray-800 text-center">
+              <h1 className="text-2xl font-bold text-gray-100 text-center">
                 {problem?.name}
               </h1>
 
-              <p className="text-gray-700 whitespace-pre-wrap">
+              <p className="text-gray-100 whitespace-pre-wrap">
                 {problem?.description}
               </p>
 
-              <div className="text-gray-800">
+              <div className="text-gray-100">
                 <h2 className="font-semibold text-lg">Input Format</h2>
                 <p>{problem?.inputFormat}</p>
               </div>
 
-              <div className="text-gray-800">
+              <div className="text-gray-100">
                 <h2 className="font-semibold text-lg">Output Format</h2>
                 <p>{problem?.outputFormat}</p>
               </div>
 
-              <div className="text-gray-800">
+              <div className="text-gray-100">
                 <h2 className="font-semibold text-lg">Constraints</h2>
                 <p>Time: {problem?.constraintsTime}</p>
                 <p>Space: {problem?.constraintsSpace}</p>
@@ -191,7 +191,7 @@ const DailyProblemsPage: React.FC<componentPropsInterface> = ({ details }) => {
                 {problem?.displayTestCases.map((test, key) => (
                   <div
                     key={key}
-                    className="bg-gray-100 border rounded-lg p-3 text-md"
+                    className="bg-green-300 hover:bg-green-400 text-black border rounded-lg p-3 text-md"
                   >
                     <p>
                       <span className="font-semibold">Input:</span>{" "}
@@ -216,8 +216,8 @@ const DailyProblemsPage: React.FC<componentPropsInterface> = ({ details }) => {
             <div className="h-[88%] flex flex-col">
               <div className="flex-1 overflow-auto scrollbar-thin border-b border-gray-300 p-4 text-gray-700 text-center">
                 {commentData.length > 0 ? (
-                  commentData.map((comment, index) => (
-                    <div key={index} className="bg-gray-100 px-2 py-2 my-3 rounded-md flex flex-col gap-2">
+                  commentData.map((comment, index) => ( 
+                    <div key={index} className="bg-pink-200 hover:bg-pink-400 px-2 py-2 my-3 rounded-md flex flex-col gap-2">
                       <div className="flex justify-between text-sm">
                         <div className="">{comment.name}</div>
                         <div className="">{comment.date}</div>
@@ -226,11 +226,11 @@ const DailyProblemsPage: React.FC<componentPropsInterface> = ({ details }) => {
                     </div>
                   ))
                 ) : (
-                  "💬 No comments yet. Be the first one to write!"
+                  <div className="text-gray-300">💬 No comments yet. Be the first one to write!</div>
                 )}
               </div>
 
-              <div className="flex items-center gap-4 px-4 py-3 bg-gray-50">
+              <div className="flex items-center gap-4 px-4 py-3 bg-indigo-950">
                 <textarea
                   name="commentText"
                   value = {comment}
@@ -248,7 +248,7 @@ const DailyProblemsPage: React.FC<componentPropsInterface> = ({ details }) => {
         </div>
 
         {/* Right Panel - IDE */}
-        <div className="lg:w-[70%] bg-white shadow-md rounded-xl p-2">
+        <div className="lg:w-[70%] bg-blue-500 shadow-md p-2">
           {!isLoading && (
             <IDEPage problem={problem} email={details?.email} name={details?.name}/>
           )}

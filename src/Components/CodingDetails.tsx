@@ -4,7 +4,7 @@ import apiRoutes from "../utils/Routes/apiRoutes";
 import { useMutation } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import { userdetails } from "./Interfaces/Details.interface";
-import { Link } from "react-router-dom"; // Assuming you're using React Router
+import { Link } from "react-router-dom";
 
 interface CodingDetailsInterface {
   details: userdetails | undefined;
@@ -63,7 +63,7 @@ const CodingDetails: React.FC<CodingDetailsInterface> = ({ details, goToPage }) 
   }, []);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-200 p-6">
+    <div className="min-h-screen bg-blue-100 p-6">
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-bold text-gray-800">📊 Code Tracker</h1>
@@ -73,7 +73,7 @@ const CodingDetails: React.FC<CodingDetailsInterface> = ({ details, goToPage }) 
       </div>
 
       {/* Profile Info */}
-      <div className="bg-white rounded-2xl shadow-md p-6 text-center mb-6">
+      <div className="bg-gray-200 rounded-2xl shadow-md p-6 text-center mb-6">
         <h2 className="text-3xl font-bold text-gray-800">
           {codingDetails?.name}
         </h2>
@@ -82,19 +82,19 @@ const CodingDetails: React.FC<CodingDetailsInterface> = ({ details, goToPage }) 
 
       {/* Stats */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6 h-[20vh]">
-        <div className="bg-white rounded-2xl shadow-lg p-5 flex flex-col items-center justify-center">
+        <div className="bg-blue-200 rounded-2xl shadow-lg p-5 flex flex-col items-center justify-center">
           <p className="text-gray-500">🔥 Current Streak</p>
           <p className="text-2xl font-bold text-orange-500">
             {codingDetails?.streak} Days
           </p>
         </div>
-        <div className="bg-white rounded-2xl shadow-lg p-5 flex flex-col items-center justify-center">
+        <div className="bg-blue-200 rounded-2xl shadow-lg p-5 flex flex-col items-center justify-center">
           <p className="text-gray-500">🏆 Highest Streak</p>
           <p className="text-2xl font-bold text-green-600">
             {codingDetails?.highestStreak} Days
           </p>
         </div>
-        <div className="bg-white rounded-2xl shadow-lg p-5 flex flex-col items-center justify-center">
+        <div className="bg-blue-200 rounded-2xl shadow-lg p-5 flex flex-col items-center justify-center">
           <p className="text-gray-500">💡 Kepler Bits</p>
           <p className="text-2xl font-bold text-purple-600">
             {codingDetails?.keplerBits}
@@ -107,7 +107,7 @@ const CodingDetails: React.FC<CodingDetailsInterface> = ({ details, goToPage }) 
         <h2 className="text-xl font-semibold mb-4 text-gray-800">
           📄 Submission History
         </h2>
-        <div className="overflow-x-auto">
+        <div className="overflow-x-auto h-[60vh] overflow-y-auto scrollbar-thin">
           <table className="min-w-full text-sm text-left">
             <thead>
               <tr className="text-gray-600 border-b bg-gray-50">
@@ -119,7 +119,7 @@ const CodingDetails: React.FC<CodingDetailsInterface> = ({ details, goToPage }) 
               </tr>
             </thead>
             <tbody>
-              {codingDetails?.submissions.map((submission, index) => (
+              {codingDetails?.submissions && codingDetails?.submissions.map((submission, index) => (
                 <tr
                   key={index}
                   className={`border-b ${

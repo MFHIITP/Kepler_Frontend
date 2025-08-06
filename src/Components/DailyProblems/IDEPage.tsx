@@ -40,7 +40,7 @@ const submitCode = async({code, language, email, name}: {code: string, language:
 
 const IDEPage: React.FC<IDEPageInterface> = ({ problem, email, name }) => {
   const [language, setLanguage] = useState('cpp')
-  const [inputs, setInputs] = useState(problem.realTestCases)
+  const [inputs, setInputs] = useState(problem?.realTestCases)
   const [currentNumber, setCurrentNumber] = useState(0)
   const [isOpen, setIsOpen] = useState(false)
   const [code, setCode] = useState(localStorage.getItem('userCode') ? localStorage.getItem('userCode') : defaultCodes[language])
@@ -104,6 +104,7 @@ const IDEPage: React.FC<IDEPageInterface> = ({ problem, email, name }) => {
           icon: 'success',
           confirmButtonText: 'OK',
           allowOutsideClick: true,
+          background: '#DBEAFE',
           backdrop: `
             rgba(255, 255, 255, 0.9)
           `,
@@ -127,6 +128,7 @@ const IDEPage: React.FC<IDEPageInterface> = ({ problem, email, name }) => {
           icon: 'error',
           confirmButtonText: 'OK',
           allowOutsideClick: true,
+          background: '#FCA5A5',
           customClass: {
             popup: 'rounded-lg p-4',
             title: 'text-red-700 text-lg',
@@ -162,13 +164,13 @@ const IDEPage: React.FC<IDEPageInterface> = ({ problem, email, name }) => {
   }
 
   return (
-    <div className="bg-black">
+    <div className="bg-black rounded-lg">
       <div className="p-6 space-y-4">
         <div className="flex justify-between items-center">
           <select
             value={language}
             onChange={handleLanguageChange}
-            className="p-2 border rounded cursor-pointer bg-white text-black"
+            className="p-2 border rounded cursor-pointer bg-yellow-200 text-black"
           >
             {['c++', 'python', 'javascript', 'java', 'c', 'typescript', 'go', 'C#'].map((lang) => (
               <option key={lang} value={lang}>{lang.toUpperCase()}</option>
@@ -239,7 +241,7 @@ const IDEPage: React.FC<IDEPageInterface> = ({ problem, email, name }) => {
             </div>
 
             <div className="flex gap-4">
-              {inputs.map((val, index) => (
+              {inputs && inputs.map((val, index) => (
                 <div key={index} className="w-full">
                   <div className={`cursor-pointer px-4 py-2 rounded-t-md text-sm font-semibold ${currentNumber === index ? 'bg-gray-300 text-black' : 'bg-gray-600 text-white'}`}
                     onClick={() => setCurrentNumber(index)}>
@@ -251,12 +253,12 @@ const IDEPage: React.FC<IDEPageInterface> = ({ problem, email, name }) => {
                     </div>
                   </div>
                   {content == 'input' && (
-                    <div className={`bg-gray-100 p-3 rounded-b-md ${currentNumber === index ? '' : 'hidden'}`}>
-                      <input type="text" value={val.input} className='w-full' onChange={(e) => handleUpdateInput(e.target.value, index)}/>
+                    <div className={`bg-gray-400 p-3 rounded-b-md ${currentNumber === index ? '' : 'hidden'}`}>
+                      <input type="text" value={val.input} className='w-full bg-gray-400' onChange={(e) => handleUpdateInput(e.target.value, index)}/>
                     </div>
                   )}
                   {!Loading && content == 'output' && (
-                    <div className={`bg-gray-100 text-black p-3 rounded-b-md ${currentNumber === index ? '' : 'hidden'}`}>
+                    <div className={`bg-gray-400 text-black p-3 rounded-b-md ${currentNumber === index ? '' : 'hidden'}`}>
                       <div className="flex justify-between">
                         <div className="">
                           <span className='text-black font-semibold mr-2'>Expected Output: </span>{val.output}

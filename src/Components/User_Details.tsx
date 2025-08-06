@@ -40,7 +40,6 @@ const User_Details: React.FC<componentPropsInterfacePaymentProfile> = (props) =>
     },
     onError: () => {
       setLoading(false);
-      toast.error("Failed to load User Data")
     }
   })
 
