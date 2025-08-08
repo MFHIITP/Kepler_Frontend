@@ -23,6 +23,42 @@ const getAllCourses = async (emailId: string) => {
   return data;
 };
 
+// Icon components for better visual hierarchy
+const ChevronDownIcon = ({ isOpen, className = "" }) => (
+  <svg 
+    className={`w-5 h-5 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''} ${className}`} 
+    fill="none" 
+    stroke="currentColor" 
+    viewBox="0 0 24 24"
+  >
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+  </svg>
+);
+
+const SearchIcon = () => (
+  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+  </svg>
+);
+
+const BookOpenIcon = () => (
+  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+  </svg>
+);
+
+const ShoppingCartIcon = () => (
+  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.5 5M7 13l2.5 5m0 0h7M12 21a2 2 0 100-4 2 2 0 000 4z" />
+  </svg>
+);
+
+const CheckIcon = () => (
+  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+  </svg>
+);
+
 const Profile_Courses: React.FC<componentPropsInterfacePaymentProfile> = (props) => {
   const [admittedCourses, setAdmittedCourses] = useState<{
     JEE: string[];
@@ -131,386 +167,517 @@ const Profile_Courses: React.FC<componentPropsInterfacePaymentProfile> = (props)
     console.log(choices);
   }, []);
 
+  const getTotalSelectedCourses = () => {
+    return Object.values(choices).flat().length;
+  };
+
+  const getTotalPrice = () => {
+    let total = 0;
+    Object.entries(choices).forEach(([category, courseList]) => {
+      courseList.forEach(course => {
+        if (course.includes('CAT')) total += 3000;
+        else total += 1000;
+      });
+    });
+    return total;
+  };
+
   return (
-    <div className="flex justify-between p-6">
-      <div className="w-[49%] max-w-3xl bg-white shadow-lg rounded-lg p-6 h-fit pb-12">
-        <h1 className="text-2xl font-semibold text-gray-800 text-center mb-4 p-8">
-          <div className="">Select Courses to Pursue</div>
-        </h1>
-        <div className="flex gap-0">
-          <input
-            type="text"
-            value={search}
-            onChange={(e) => {
-              setsearch(e.target.value);
-              setDropdowns((prev) => ({
-                ...prev,
-                AllCourses: true,
-              }));
-            }}
-            placeholder="Search Your Course"
-            className="p-2 mb-4 text-black border border-black rounded-l-lg placeholder-gray-400 placeholder:italic bg-indigo-200"
-          />
-          <div
-            className="bg-blue-500 rounded-r-lg flex justify-center items-center p-4 h-[2.62rem] border border-black cursor-pointer"
-            onClick={() => {
-              setDropdowns((prev) => ({
-                ...prev,
-                AllCourses: !prev.AllCourses,
-              }));
-            }}
-          >
-            {dropdowns.AllCourses ? "▲" : "▼"}
-          </div>
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 p-4 lg:p-8">
+      <div className="max-w-7xl mx-auto">
+        {/* Header Section */}
+        <div className="text-center mb-10">
+          <h1 className="text-4xl lg:text-5xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent mb-4">
+            Course Selection Portal
+          </h1>
+          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+            Choose from our comprehensive range of courses designed to accelerate your career in technology and competitive exams
+          </p>
         </div>
-        {dropdowns.AllCourses && (
-          <div>
-            {applied_courses.map((category) => (
-              <div key={category} className="mb-6">
-                <h2
-                  className={`text-lg font-semibold text-gray-700 mb-3 bg-gray-50 p-4 rounded-lg flex justify-between px-8 cursor-pointer`}
+
+        <div className="flex flex-col xl:flex-row gap-8">
+          {/* Left Panel - Course Selection */}
+          <div className="flex-1 max-w-4xl">
+            <div className="bg-white/80 backdrop-blur-sm shadow-xl rounded-2xl border border-white/20 p-8">
+              <div className="flex items-center gap-3 mb-8">
+                <div className="p-3 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-xl">
+                  <BookOpenIcon />
+                </div>
+                <div>
+                  <h2 className="text-2xl font-bold text-gray-800">Select Your Courses</h2>
+                  <p className="text-gray-600">Build your learning path with our expert-curated curriculum</p>
+                </div>
+              </div>
+
+              {/* Enhanced Search Bar */}
+              <div className="relative mb-8">
+                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                  <SearchIcon />
+                </div>
+                <input
+                  type="text"
+                  value={search}
+                  onChange={(e) => {
+                    setsearch(e.target.value);
+                    setDropdowns((prev) => ({
+                      ...prev,
+                      AllCourses: true,
+                    }));
+                  }}
+                  placeholder="Search courses, subjects, or exam categories..."
+                  className="w-full pl-12 pr-16 py-4 text-gray-800 bg-gray-50 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:bg-white transition-all duration-200 placeholder-gray-500"
+                />
+                <button
+                  className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 text-white p-2 rounded-lg transition-all duration-200 hover:scale-105"
                   onClick={() => {
                     setDropdowns((prev) => ({
                       ...prev,
-                      [category]: !prev[category],
+                      AllCourses: !prev.AllCourses,
                     }));
                   }}
                 >
-                  <div className="">{category}</div>
-                  <div className="">{dropdowns[category] ? "▲" : "▼"}</div>
-                </h2>
-                <div className="bg-gray-50 rounded-lg shadow-sm">
-                  {category === "JEE" && dropdowns.JEE && (
-                    <div className="bg-gray-50 rounded-lg shadow-sm p-2">
-                      <h3
-                        className="cursor-pointer p-2 bg-gray-200 rounded-lg"
-                        onClick={() =>
+                  <ChevronDownIcon isOpen={dropdowns.AllCourses} />
+                </button>
+              </div>
+
+              {/* Course Categories */}
+              {dropdowns.AllCourses && (
+                <div className="space-y-6">
+                  {applied_courses.map((category) => (
+                    <div key={category} className="bg-gradient-to-r from-gray-50 to-gray-100 rounded-xl border border-gray-200 overflow-hidden">
+                      <div
+                        className="flex items-center justify-between p-6 cursor-pointer hover:bg-white/50 transition-all duration-200"
+                        onClick={() => {
                           setDropdowns((prev) => ({
                             ...prev,
-                            JEE_Class11: !prev.JEE_Class11,
-                          }))
-                        }
+                            [category]: !prev[category],
+                          }));
+                        }}
                       >
-                        Class 11 {dropdowns.JEE_Class11 ? "▲" : "▼"}
-                      </h3>
-                      {dropdowns.JEE_Class11 &&
-                        ["Physics", "Chemistry", "Mathematics"].map(
-                          (course) => (
-                            <label className="flex items-center cursor-pointer p-4">
-                              <input
-                                type="checkbox"
-                                className="form-checkbox text-blue-600 disabled:text-gray-400 h-5 w-5 mr-3"
-                                checked={choices[category].includes(
-                                  `JEE ${course} - Class 11`
-                                )}
-                                disabled = {preventedCourses.includes(`JEE ${course} - Class 11`)}
-                                onChange={() =>
-                                  handleChoiceChange(
-                                    category,
-                                    `JEE ${course} - Class 11`
-                                  )
-                                }
-                              />
-                              <span className="flex justify-between w-full">
-                                {course}
-                                <span className="text-green-600 font-medium">
-                                  {" "}
-                                  - INR {1000}
-                                </span>
-                              </span>
-                            </label>
-                          )
-                        )}
-                      <h3
-                        className="cursor-pointer p-2 bg-gray-200 rounded-lg mt-2"
-                        onClick={() =>
-                          setDropdowns((prev) => ({
-                            ...prev,
-                            JEE_Class12: !prev.JEE_Class12,
-                          }))
-                        }
-                      >
-                        Class 12 {dropdowns.JEE_Class12 ? "▲" : "▼"}
-                      </h3>
-                      {dropdowns.JEE_Class12 &&
-                        ["Physics", "Chemistry", "Mathematics"].map(
-                          (course) => (
-                            <label className="flex items-center cursor-pointer p-4">
-                              <input
-                                type="checkbox"
-                                className="form-checkbox disabled:text-gray-400 text-blue-600 h-5 w-5 mr-3"
-                                checked={choices[category].includes(
-                                  `JEE ${course} - Class 12`
-                                )}
-                                disabled = {preventedCourses.includes(`JEE ${course} - Class 12`)}
-                                onChange={() =>
-                                  handleChoiceChange(
-                                    category,
-                                    `JEE ${course} - Class 12`
-                                  )
-                                }
-                              />
-                              <span className="flex justify-between w-full">
-                                {course}
-                                <span className="text-green-600 font-medium">
-                                  {" "}
-                                  - INR {1000}
-                                </span>
-                              </span>
-                            </label>
-                          )
-                        )}
-                    </div>
-                  )}
+                        <div className="flex items-center gap-4">
+                          <div className={`w-3 h-3 rounded-full ${
+                            category === 'JEE' ? 'bg-red-500' :
+                            category === 'CAT' ? 'bg-orange-500' :
+                            category === 'GATE' ? 'bg-green-500' :
+                            'bg-purple-500'
+                          }`} />
+                          <h3 className="text-xl font-semibold text-gray-800">{category}</h3>
+                        </div>
+                        <ChevronDownIcon isOpen={dropdowns[category]} className="text-gray-600" />
+                      </div>
 
-                  {dropdowns.CAT &&
-                    category === "CAT" &&
-                    ["2025"].map((course) => (
-                      <label className="flex items-center cursor-pointer p-4">
-                        <input
-                          type="checkbox"
-                          className="form-checkbox disabled:text-gray-400 text-blue-600 h-5 w-5 mr-3"
-                          checked={choices[category].includes(
-                            `CAT - ${course}`
-                          )}
-                          disabled = {preventedCourses.includes(`CAT - ${course}`)}
-                          onChange={() =>
-                            handleChoiceChange(category, `CAT - ${course}`)
-                          }
-                        />
-                        <span className="flex justify-between w-full">
-                          CAT - {course}
-                          <span className="text-green-600 font-medium">
-                            {" "}
-                            - INR {3000}
-                          </span>
-                        </span>
-                      </label>
-                    ))}
-
-                  {dropdowns["Mathematics And Computer Science"] &&
-                    category === "Mathematics And Computer Science" &&
-                    [
-                      "Engineering Mathematics 1",
-                      "Engineering Mathematics 2",
-                      "Engineering Mathematics 3",
-                      "Engineering Mathematics 4",
-                      "Computer Languages",
-                      "Computer Science Fundamentals",
-                      "Data Structures And Algorithms",
-                      "Artificial Intelligence And Machine Learning",
-                    ].map((sem) => (
-                      <label className="flex items-center cursor-pointer p-4">
-                        <input
-                          type="checkbox"
-                          className="form-checkbox disabled:text-gray-400 text-blue-600 h-5 w-5 mr-3"
-                          checked={choices[category].includes(
-                            `Mathematics And Computer Science - ${sem}`
-                          )}
-                          disabled = {preventedCourses.includes(`Mathematics And Computer Science - ${sem}`)}
-                          onChange={() =>
-                            handleChoiceChange(
-                              category,
-                              `Mathematics And Computer Science - ${sem}`
-                            )
-                          }
-                        />
-                        <span className="flex justify-between w-full">
-                          {sem}
-                          <span className="text-green-600 font-medium">
-                            {" "}
-                            - INR {1000}
-                          </span>
-                        </span>
-                      </label>
-                    ))}
-
-                  {category === "GATE" && dropdowns.GATE && (
-                    <div className="bg-gray-50 rounded-lg shadow-sm p-2">
-                      <h3
-                        className="cursor-pointer p-2 bg-gray-200 rounded-lg"
-                        onClick={() =>
-                          setDropdowns((prev) => ({
-                            ...prev,
-                            GATE_1: !prev.GATE_1,
-                          }))
-                        }
-                      >
-                        GATE - 2025 {dropdowns.GATE_1 ? "▲" : "▼"}
-                      </h3>
-                      {dropdowns.GATE_1 &&
-                        [
-                          "Computer Science and Information Technology",
-                          "Electronics and Communication",
-                          "Electrical",
-                          "Instrumentation",
-                        ].map((course) => (
-                          <label className="flex items-center cursor-pointer p-4">
-                            <input
-                              type="checkbox"
-                              className="form-checkbox disabled:text-gray-400 text-blue-600 h-5 w-5 mr-3"
-                              checked={choices[category].includes(
-                                `GATE - 2025 ${course}`
-                              )}
-                              disabled = {preventedCourses.includes(`GATE - 2025 ${course}`)}
-                              onChange={() =>
-                                handleChoiceChange(
-                                  category,
-                                  `GATE - 2025 ${course}`
-                                )
+                      {/* Course Content */}
+                      {category === "JEE" && dropdowns.JEE && (
+                        <div className="px-6 pb-6 space-y-4">
+                          {/* Class 11 */}
+                          <div className="bg-white rounded-lg border border-gray-200">
+                            <div
+                              className="flex items-center justify-between p-4 cursor-pointer hover:bg-gray-50"
+                              onClick={() =>
+                                setDropdowns((prev) => ({
+                                  ...prev,
+                                  JEE_Class11: !prev.JEE_Class11,
+                                }))
                               }
-                            />
-                            <span className="flex justify-between w-full">
-                              {course}
-                              <span className="text-green-600 font-medium">
-                                {" "}
-                                - INR {1000}
-                              </span>
-                            </span>
-                          </label>
-                        ))}
-                      <h3
-                        className="cursor-pointer p-2 bg-gray-200 rounded-lg mt-2"
-                        onClick={() =>
-                          setDropdowns((prev) => ({
-                            ...prev,
-                            GATE_2: !prev.GATE_2,
-                          }))
-                        }
-                      >
-                        GATE - 2026 {dropdowns.GATE_2 ? "▲" : "▼"}
-                      </h3>
-                      {dropdowns.GATE_2 &&
-                        [
-                          "Computer Science and Information Technology",
-                          "Electronics and Communication",
-                          "Electrical",
-                          "Instrumentation",
-                        ].map((course) => (
-                          <label className="flex items-center cursor-pointer p-4">
-                            <input
-                              type="checkbox"
-                              className="form-checkbox disabled:text-gray-400 text-blue-600 h-5 w-5 mr-3"
-                              checked={choices[category].includes(
-                                `GATE - 2026 ${course}`
-                              )}
-                              disabled = {preventedCourses.includes(`GATE - 2026 ${course}`)}
-                              onChange={() =>
-                                handleChoiceChange(
-                                  category,
-                                  `GATE - 2026 ${course}`
-                                )
+                            >
+                              <span className="font-medium text-gray-700">Class 11 Foundation</span>
+                              <ChevronDownIcon isOpen={dropdowns.JEE_Class11} className="text-gray-500" />
+                            </div>
+                            {dropdowns.JEE_Class11 && (
+                              <div className="border-t border-gray-200">
+                                {["Physics", "Chemistry", "Mathematics"].map((course) => (
+                                  <label key={course} className="flex items-center justify-between p-4 hover:bg-blue-50 cursor-pointer border-b border-gray-100 last:border-b-0">
+                                    <div className="flex items-center gap-3">
+                                      <div className="relative">
+                                        <input
+                                          type="checkbox"
+                                          className="w-5 h-5 text-blue-600 border-2 border-gray-300 rounded focus:ring-blue-500 disabled:opacity-50"
+                                          checked={choices[category].includes(`JEE ${course} - Class 11`)}
+                                          disabled={preventedCourses.includes(`JEE ${course} - Class 11`)}
+                                          onChange={() => handleChoiceChange(category, `JEE ${course} - Class 11`)}
+                                        />
+                                        {choices[category].includes(`JEE ${course} - Class 11`) && (
+                                          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                                            <CheckIcon />
+                                          </div>
+                                        )}
+                                      </div>
+                                      <span className="text-gray-700 font-medium">{course}</span>
+                                    </div>
+                                    <span className="text-green-600 font-semibold">₹1,000</span>
+                                  </label>
+                                ))}
+                              </div>
+                            )}
+                          </div>
+
+                          {/* Class 12 */}
+                          <div className="bg-white rounded-lg border border-gray-200">
+                            <div
+                              className="flex items-center justify-between p-4 cursor-pointer hover:bg-gray-50"
+                              onClick={() =>
+                                setDropdowns((prev) => ({
+                                  ...prev,
+                                  JEE_Class12: !prev.JEE_Class12,
+                                }))
                               }
-                            />
-                            <span className="flex justify-between w-full">
-                              {course}
-                              <span className="text-green-600 font-medium">
-                                {" "}
-                                - INR {1000}
-                              </span>
-                            </span>
-                          </label>
-                        ))}
+                            >
+                              <span className="font-medium text-gray-700">Class 12 Advanced</span>
+                              <ChevronDownIcon isOpen={dropdowns.JEE_Class12} className="text-gray-500" />
+                            </div>
+                            {dropdowns.JEE_Class12 && (
+                              <div className="border-t border-gray-200">
+                                {["Physics", "Chemistry", "Mathematics"].map((course) => (
+                                  <label key={course} className="flex items-center justify-between p-4 hover:bg-blue-50 cursor-pointer border-b border-gray-100 last:border-b-0">
+                                    <div className="flex items-center gap-3">
+                                      <div className="relative">
+                                        <input
+                                          type="checkbox"
+                                          className="w-5 h-5 text-blue-600 border-2 border-gray-300 rounded focus:ring-blue-500 disabled:opacity-50"
+                                          checked={choices[category].includes(`JEE ${course} - Class 12`)}
+                                          disabled={preventedCourses.includes(`JEE ${course} - Class 12`)}
+                                          onChange={() => handleChoiceChange(category, `JEE ${course} - Class 12`)}
+                                        />
+                                        {choices[category].includes(`JEE ${course} - Class 12`) && (
+                                          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                                            <CheckIcon />
+                                          </div>
+                                        )}
+                                      </div>
+                                      <span className="text-gray-700 font-medium">{course}</span>
+                                    </div>
+                                    <span className="text-green-600 font-semibold">₹1,000</span>
+                                  </label>
+                                ))}
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      )}
+
+                      {dropdowns.CAT && category === "CAT" && (
+                        <div className="px-6 pb-6">
+                          <div className="bg-white rounded-lg border border-gray-200">
+                            {["2025"].map((course) => (
+                              <label key={course} className="flex items-center justify-between p-4 hover:bg-blue-50 cursor-pointer">
+                                <div className="flex items-center gap-3">
+                                  <div className="relative">
+                                    <input
+                                      type="checkbox"
+                                      className="w-5 h-5 text-blue-600 border-2 border-gray-300 rounded focus:ring-blue-500 disabled:opacity-50"
+                                      checked={choices[category].includes(`CAT - ${course}`)}
+                                      disabled={preventedCourses.includes(`CAT - ${course}`)}
+                                      onChange={() => handleChoiceChange(category, `CAT - ${course}`)}
+                                    />
+                                    {choices[category].includes(`CAT - ${course}`) && (
+                                      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                                        <CheckIcon />
+                                      </div>
+                                    )}
+                                  </div>
+                                  <span className="text-gray-700 font-medium">CAT - {course}</span>
+                                </div>
+                                <span className="text-green-600 font-semibold">₹3,000</span>
+                              </label>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+
+                      {dropdowns["Mathematics And Computer Science"] && category === "Mathematics And Computer Science" && (
+                        <div className="px-6 pb-6">
+                          <div className="bg-white rounded-lg border border-gray-200">
+                            {[
+                              "Engineering Mathematics 1",
+                              "Engineering Mathematics 2", 
+                              "Engineering Mathematics 3",
+                              "Engineering Mathematics 4",
+                              "Computer Languages",
+                              "Computer Science Fundamentals",
+                              "Data Structures And Algorithms",
+                              "Artificial Intelligence And Machine Learning",
+                            ].map((sem) => (
+                              <label key={sem} className="flex items-center justify-between p-4 hover:bg-blue-50 cursor-pointer border-b border-gray-100 last:border-b-0">
+                                <div className="flex items-center gap-3">
+                                  <div className="relative">
+                                    <input
+                                      type="checkbox"
+                                      className="w-5 h-5 text-blue-600 border-2 border-gray-300 rounded focus:ring-blue-500 disabled:opacity-50"
+                                      checked={choices[category].includes(`Mathematics And Computer Science - ${sem}`)}
+                                      disabled={preventedCourses.includes(`Mathematics And Computer Science - ${sem}`)}
+                                      onChange={() => handleChoiceChange(category, `Mathematics And Computer Science - ${sem}`)}
+                                    />
+                                    {choices[category].includes(`Mathematics And Computer Science - ${sem}`) && (
+                                      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                                        <CheckIcon />
+                                      </div>
+                                    )}
+                                  </div>
+                                  <span className="text-gray-700 font-medium">{sem}</span>
+                                </div>
+                                <span className="text-green-600 font-semibold">₹1,000</span>
+                              </label>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+
+                      {category === "GATE" && dropdowns.GATE && (
+                        <div className="px-6 pb-6 space-y-4">
+                          {/* GATE 2025 */}
+                          <div className="bg-white rounded-lg border border-gray-200">
+                            <div
+                              className="flex items-center justify-between p-4 cursor-pointer hover:bg-gray-50"
+                              onClick={() =>
+                                setDropdowns((prev) => ({
+                                  ...prev,
+                                  GATE_1: !prev.GATE_1,
+                                }))
+                              }
+                            >
+                              <span className="font-medium text-gray-700">GATE - 2025</span>
+                              <ChevronDownIcon isOpen={dropdowns.GATE_1} className="text-gray-500" />
+                            </div>
+                            {dropdowns.GATE_1 && (
+                              <div className="border-t border-gray-200">
+                                {[
+                                  "Computer Science and Information Technology",
+                                  "Electronics and Communication",
+                                  "Electrical",
+                                  "Instrumentation",
+                                ].map((course) => (
+                                  <label key={course} className="flex items-center justify-between p-4 hover:bg-blue-50 cursor-pointer border-b border-gray-100 last:border-b-0">
+                                    <div className="flex items-center gap-3">
+                                      <div className="relative">
+                                        <input
+                                          type="checkbox"
+                                          className="w-5 h-5 text-blue-600 border-2 border-gray-300 rounded focus:ring-blue-500 disabled:opacity-50"
+                                          checked={choices[category].includes(`GATE - 2025 ${course}`)}
+                                          disabled={preventedCourses.includes(`GATE - 2025 ${course}`)}
+                                          onChange={() => handleChoiceChange(category, `GATE - 2025 ${course}`)}
+                                        />
+                                        {choices[category].includes(`GATE - 2025 ${course}`) && (
+                                          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                                            <CheckIcon />
+                                          </div>
+                                        )}
+                                      </div>
+                                      <span className="text-gray-700 font-medium">{course}</span>
+                                    </div>
+                                    <span className="text-green-600 font-semibold">₹1,000</span>
+                                  </label>
+                                ))}
+                              </div>
+                            )}
+                          </div>
+
+                          {/* GATE 2026 */}
+                          <div className="bg-white rounded-lg border border-gray-200">
+                            <div
+                              className="flex items-center justify-between p-4 cursor-pointer hover:bg-gray-50"
+                              onClick={() =>
+                                setDropdowns((prev) => ({
+                                  ...prev,
+                                  GATE_2: !prev.GATE_2,
+                                }))
+                              }
+                            >
+                              <span className="font-medium text-gray-700">GATE - 2026</span>
+                              <ChevronDownIcon isOpen={dropdowns.GATE_2} className="text-gray-500" />
+                            </div>
+                            {dropdowns.GATE_2 && (
+                              <div className="border-t border-gray-200">
+                                {[
+                                  "Computer Science and Information Technology",
+                                  "Electronics and Communication", 
+                                  "Electrical",
+                                  "Instrumentation",
+                                ].map((course) => (
+                                  <label key={course} className="flex items-center justify-between p-4 hover:bg-blue-50 cursor-pointer border-b border-gray-100 last:border-b-0">
+                                    <div className="flex items-center gap-3">
+                                      <div className="relative">
+                                        <input
+                                          type="checkbox"
+                                          className="w-5 h-5 text-blue-600 border-2 border-gray-300 rounded focus:ring-blue-500 disabled:opacity-50"
+                                          checked={choices[category].includes(`GATE - 2026 ${course}`)}
+                                          disabled={preventedCourses.includes(`GATE - 2026 ${course}`)}
+                                          onChange={() => handleChoiceChange(category, `GATE - 2026 ${course}`)}
+                                        />
+                                        {choices[category].includes(`GATE - 2026 ${course}`) && (
+                                          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                                            <CheckIcon />
+                                          </div>
+                                        )}
+                                      </div>
+                                      <span className="text-gray-700 font-medium">{course}</span>
+                                    </div>
+                                    <span className="text-green-600 font-semibold">₹1,000</span>
+                                  </label>
+                                ))}
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      )}
                     </div>
+                  ))}
+                </div>
+              )}
+
+              {/* Action Buttons */}
+              <div className="flex flex-col sm:flex-row gap-4 mt-8">
+                <button
+                  className="flex-1 bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white font-semibold py-4 px-6 rounded-xl transition-all duration-200 hover:scale-105 hover:shadow-lg"
+                  onClick={() =>
+                    setChoices({
+                      CAT: [],
+                      JEE: [],
+                      "Mathematics And Computer Science": [],
+                      GATE: [],
+                    })
+                  }
+                >
+                  Clear Selection
+                </button>
+                <button
+                  className="flex-1 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold py-4 px-6 rounded-xl transition-all duration-200 hover:scale-105 hover:shadow-lg"
+                  onClick={handleApplyCourses}
+                >
+                  Apply & Continue
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {/* Right Panel - Summary Cards */}
+          <div className="w-full xl:w-96 space-y-6">
+            {/* Admitted Courses Card */}
+            <div className="bg-white/80 backdrop-blur-sm shadow-xl rounded-2xl border border-white/20 p-6">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="p-2 bg-gradient-to-r from-green-500 to-emerald-500 rounded-lg">
+                  <CheckIcon />
+                </div>
+                <h3 className="text-xl font-bold text-gray-800">Admitted Courses</h3>
+              </div>
+              
+              {Object.entries(admittedCourses).some(([_, courses]) => courses.length > 0) ? (
+                <div className="space-y-4">
+                  {Object.entries(admittedCourses).map(([category, courses]) =>
+                    courses.length > 0 ? (
+                      <div key={category} className="bg-green-50 rounded-lg p-4 border border-green-200">
+                        <h4 className="font-semibold text-green-800 mb-2 capitalize">
+                          {category.replace(/_/g, " ")}
+                        </h4>
+                        <ul className="space-y-1">
+                          {courses.map((val, key) => (
+                            <li key={key} className="text-sm text-green-700 flex items-center gap-2">
+                              <div className="w-1.5 h-1.5 bg-green-500 rounded-full" />
+                              {val?.startsWith("Mathematics And Computer Science")
+                                ? val.split("-")[1]
+                                : val}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    ) : null
                   )}
                 </div>
+              ) : (
+                <div className="text-center py-8">
+                  <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <BookOpenIcon />
+                  </div>
+                  <p className="text-gray-500">No admitted courses yet</p>
+                </div>
+              )}
+            </div>
+
+            {/* Course Cart */}
+            <div className="bg-white/80 backdrop-blur-sm shadow-xl rounded-2xl border border-white/20 p-6">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="p-2 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-lg">
+                  <ShoppingCartIcon />
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold text-gray-800">Course Cart</h3>
+                  <p className="text-sm text-gray-600">{getTotalSelectedCourses()} courses selected</p>
+                </div>
               </div>
-            ))}
+              
+              {Object.entries(choices).some(([_, courses]) => courses.length > 0) ? (
+                <div className="space-y-4">
+                  {Object.entries(choices).map(([category, courses]) =>
+                    courses.length > 0 ? (
+                      <div key={category} className="bg-blue-50 rounded-lg p-4 border border-blue-200">
+                        <h4 className="font-semibold text-blue-800 mb-2 capitalize">
+                          {category.replace(/_/g, " ")}
+                        </h4>
+                        <ul className="space-y-1">
+                          {courses.map((val, key) => (
+                            <li key={key} className="text-sm text-blue-700 flex items-center gap-2">
+                              <div className="w-1.5 h-1.5 bg-blue-500 rounded-full" />
+                              {val?.startsWith("Mathematics And Computer Science")
+                                ? val.split("-")[1]
+                                : val}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    ) : null
+                  )}
+                  
+                  {/* Price Summary */}
+                  <div className="bg-gradient-to-r from-indigo-50 to-blue-50 rounded-lg p-4 border-2 border-indigo-200">
+                    <div className="flex justify-between items-center mb-2">
+                      <span className="text-gray-700 font-medium">Total Courses:</span>
+                      <span className="font-semibold text-gray-800">{getTotalSelectedCourses()}</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-gray-700 font-medium">Total Amount:</span>
+                      <span className="text-2xl font-bold text-indigo-600">₹{getTotalPrice().toLocaleString()}</span>
+                    </div>
+                  </div>
+                  
+                  <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
+                    <div className="flex items-start gap-2">
+                      <svg className="w-5 h-5 text-amber-500 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.732-.833-2.5 0L4.268 19.5c-.77.833.192 2.5 1.732 2.5z" />
+                      </svg>
+                      <div>
+                        <p className="text-sm font-medium text-amber-800 mb-1">Important Notice</p>
+                        <p className="text-xs text-amber-700 leading-relaxed">
+                          Items in this cart are temporary selections. Click "Apply & Continue" to finalize your course enrollment. You can modify your selection before applying.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <div className="text-center py-8">
+                  <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <ShoppingCartIcon />
+                  </div>
+                  <p className="text-gray-500 mb-2">Your cart is empty</p>
+                  <p className="text-sm text-gray-400">Select courses from the left panel to get started</p>
+                </div>
+              )}
+            </div>
+
+            {/* Quick Stats Card */}
+            <div className="bg-gradient-to-r from-purple-500 to-pink-500 rounded-2xl p-6 text-white">
+              <h3 className="text-lg font-bold mb-4">Quick Stats</h3>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="text-center">
+                  <div className="text-2xl font-bold">{Object.values(admittedCourses).flat().length}</div>
+                  <div className="text-sm opacity-90">Admitted</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-2xl font-bold">{getTotalSelectedCourses()}</div>
+                  <div className="text-sm opacity-90">Selected</div>
+                </div>
+              </div>
+            </div>
           </div>
-        )}
-        {/* Clear and Applied */}
-        <div className="flex justify-between mt-4">
-          <button
-            className="bg-red-500 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-lg w-1/3"
-            onClick={() =>
-              setChoices({
-                CAT: [],
-                JEE: [],
-                "Mathematics And Computer Science": [],
-                GATE: [],
-              })
-            }
-          >
-            Clear
-          </button>
-          <button
-            className="bg-blue-600 hover:bg-blue-800 text-white font-semibold py-2 px-4 rounded-lg w-1/3"
-            onClick={handleApplyCourses}
-          >
-            Apply
-          </button>
-        </div>
-      </div>
-      <div className="flex flex-col gap-10 w-[49%] max-w-3xl h-fit">
-        {/* All Admitted Courses */}
-        <div className="bg-white rounded-lg shadow-lg p-6 ">
-          <h2 className="text-2xl font-bold text-gray-800 border-b pb-3 mb-4 ">
-            Admitted Courses
-          </h2>
-          {Object.entries(admittedCourses).some(
-            ([_, courses]) => courses.length > 0
-          ) ? (
-            <div className="space-y-4">
-              {Object.entries(admittedCourses).map(([category, courses]) =>
-                courses.length > 0 ? (
-                  <div key={category}>
-                    <h3 className="text-lg font-semibold text-gray-700 capitalize border-b pb-2 mb-2">
-                      {category.replace(/_/g, " ")}
-                    </h3>
-                    <ul className="list-disc pl-6 text-gray-600">
-                      {courses.map((val, key) => (
-                        <li key={key} className="py-1">
-                          {val?.startsWith("Mathematics And Computer Science")
-                            ? val.split("-")[1]
-                            : val}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                ) : null
-              )}
-            </div>
-          ) : (
-            <p className="text-gray-500 italic text-center mt-6">
-              Not admitted in any courses.
-            </p>
-          )}
-        </div>
-        {/* Cart */}
-        <div className="bg-white rounded-lg shadow-lg p-6">
-          <h2 className="text-2xl font-bold text-gray-800 border-b pb-3 mb-4">
-            Selected Courses Kart
-          </h2>
-          {Object.entries(choices).some(
-            ([_, courses]) => courses.length > 0
-          ) ? (
-            <div className="space-y-4">
-              {Object.entries(choices).map(([category, courses]) =>
-                courses.length > 0 ? (
-                  <div key={category}>
-                    <h3 className="text-lg font-semibold text-gray-700 capitalize border-b pb-2 mb-2">
-                      {category.replace(/_/g, " ")}
-                    </h3>
-                    <ul className="list-disc pl-6 text-gray-600">
-                      {courses.map((val, key) => (
-                        <li key={key} className="py-1">
-                          {val?.startsWith("Mathematics And Computer Science")
-                            ? val.split("-")[1]
-                            : val}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                ) : null
-              )}
-              <div className="text-gray-600 text-sm mt-4 border-t border-gray-300 pt-4">The items in this cart is temporary, and shall not be reflected as the final list of your selected courses. Please click the Apply button to ensure that these courses are deemed as final. You may modify your selection of selected courses here.
-              </div>
-            </div>
-          ) : (
-            <p className="text-gray-500 italic text-center mt-6">
-              No courses selected.
-            </p>
-          )}
         </div>
       </div>
     </div>

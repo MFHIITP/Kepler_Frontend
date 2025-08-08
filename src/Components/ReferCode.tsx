@@ -1,119 +1,238 @@
 import React, { useEffect, useState } from "react";
-import toast from "react-hot-toast";
 import {
-  FaWhatsapp,
-  FaFacebook,
-  FaEnvelope,
-  FaTwitter,
-  FaTimes,
-} from "react-icons/fa";
+  Share2,
+  Copy,
+  Gift,
+  Users,
+  MessageCircle,
+  Mail,
+  X,
+  Check,
+  Sparkles,
+  Trophy,
+  ArrowRight
+} from "lucide-react";
 
 function ReferCode(props) {
-  const [refercode, setRefercode] = useState(props.details.refercode);
+  const [refercode, setRefercode] = useState(props.details.refercode || "REFER2024");
   const [isopen, setIsopen] = useState(false);
+  const [copied, setCopied] = useState(false);
 
   const handlecopy = async () => {
-    await window.navigator.clipboard.writeText(refercode)
-    toast.success("Copied Successfully");
+    await window.navigator.clipboard.writeText(refercode);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+    // Replace with your toast implementation
+    console.log("Copied Successfully");
   };
+
   const toggle = () => {
     setIsopen(!isopen);
   };
   
   return (
-    <div>
-      <div className="flex bg-orange-200 shadow-lg m-4 p-2 rounded-lg">
-        <div className="flex flex-col m-12">
-          <div className="flex">
-            <div className="flex flex-col">
-              <div className="text-4xl text-brown-700  font-bold">
-                Refer Friends, Win Exciting Cashbacks
+    <div className="p-6">
+      <div className="relative overflow-hidden bg-gradient-to-br from-orange-50 via-amber-50 to-yellow-50 rounded-3xl shadow-xl border border-orange-200/50">
+        {/* Background Pattern */}
+        <div className="absolute inset-0 opacity-5">
+          <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-bl from-orange-400 to-yellow-400 rounded-full transform translate-x-48 -translate-y-48"></div>
+          <div className="absolute bottom-0 left-0 w-80 h-80 bg-gradient-to-tr from-amber-400 to-orange-400 rounded-full transform -translate-x-40 translate-y-40"></div>
+        </div>
+
+        <div className="relative flex flex-col lg:flex-row items-center justify-between p-8 lg:p-12">
+          {/* Content Section */}
+          <div className="flex-1 lg:mr-12 mb-8 lg:mb-0">
+            {/* Header with Icon */}
+            <div className="flex items-center mb-6">
+              <div className="p-3 bg-gradient-to-r from-orange-500 to-amber-500 rounded-2xl mr-4">
+                <Gift className="w-8 h-8 text-white" />
               </div>
-              <div className="text-2xl  text-brown-700 my-8">
-                For every successful referral you can win exciting cashbacks
+              <div className="flex items-center">
+                <Trophy className="w-6 h-6 text-orange-600 mr-2" />
+                <span className="text-orange-600 font-semibold text-sm uppercase tracking-wide">Referral Program</span>
               </div>
-              <div className="bg-white p-4 rounded-lg flex gap-6">
-                <div className="flex flex-col">
-                  <div className="text-xl ">Your referral code</div>
-                  <div className="text-2xl  font-bold">
-                    {refercode}
+            </div>
+
+            {/* Main Title */}
+            <h1 className="text-4xl lg:text-5xl font-bold text-slate-800 mb-4 leading-tight">
+              Refer Friends,{" "}
+              <span className="bg-gradient-to-r from-orange-600 to-amber-600 bg-clip-text text-transparent">
+                Win Exciting
+              </span>
+              <br />
+              <span className="flex items-center mt-2">
+                Cashbacks
+                <Sparkles className="w-8 h-8 text-amber-500 ml-2" />
+              </span>
+            </h1>
+
+            {/* Subtitle */}
+            <p className="text-xl text-slate-600 mb-8 max-w-2xl leading-relaxed">
+              For every successful referral you can win exciting cashbacks and help your friends discover amazing learning opportunities.
+            </p>
+
+            {/* Referral Code Card */}
+            <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-white/50">
+              <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 items-center">
+                {/* Referral Code Section */}
+                <div className="lg:col-span-1">
+                  <p className="text-sm font-medium text-slate-600 mb-1">Your referral code</p>
+                  <div className="flex items-center">
+                    <span className="text-2xl font-bold text-slate-800 font-mono">
+                      {refercode}
+                    </span>
                   </div>
                 </div>
-                <button
-                  className="bg-white text-black  text-xl p-4 px-8 w-fit border border-black rounded-lg hover:bg-gray-200"
-                  onClick={handlecopy}
-                >
-                  COPY
-                </button>
-                <div className="relative">
+
+                {/* Copy Button */}
+                <div className="lg:col-span-1">
                   <button
-                    className="bg-gray-700 text-white  text-xl p-4 px-8 w-fit border border-black rounded-lg hover:bg-gray-900 flex gap-8"
+                    className={`w-full lg:w-auto px-6 py-3 rounded-xl font-semibold transition-all duration-200 flex items-center justify-center space-x-2 ${
+                      copied 
+                        ? 'bg-green-500 text-white' 
+                        : 'bg-slate-100 hover:bg-slate-200 text-slate-800 border border-slate-300'
+                    }`}
+                    onClick={handlecopy}
+                  >
+                    {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
+                    <span>{copied ? 'COPIED!' : 'COPY'}</span>
+                  </button>
+                </div>
+
+                {/* Share Button */}
+                <div className="lg:col-span-1 relative">
+                  <button
+                    className="w-full lg:w-auto px-6 py-3 bg-gradient-to-r from-slate-700 to-slate-800 text-white rounded-xl font-semibold hover:from-slate-800 hover:to-slate-900 transition-all duration-200 flex items-center justify-center space-x-2"
                     onClick={toggle}
                   >
-                    <div>SHARE</div> {isopen ? <div className="mt-[3px] hover:scale-105 hover:text-red-500"><FaTimes/></div> : <></>}
+                    {isopen ? <X className="w-4 h-4" /> : <Share2 className="w-4 h-4" />}
+                    <span>{isopen ? 'CLOSE' : 'SHARE'}</span>
                   </button>
+
+                  {/* Share Dropdown */}
                   {isopen && (
-                    <div className="absolute top-12 left-0 z-10 bg-white border rounded shadow-lg p-4">
-                      <p className="mb-2 text-gray-700 font-semibold">
-                        Share this content:
-                      </p>
-                      <div className="flex space-x-4">
+                    <div className="absolute top-14 left-0 right-0 lg:left-auto lg:right-0 lg:w-80 z-20 bg-white rounded-2xl shadow-2xl border border-slate-200 p-6 animate-in slide-in-from-top-2 duration-200">
+                      <div className="flex items-center mb-4">
+                        <Share2 className="w-5 h-5 text-slate-600 mr-2" />
+                        <p className="font-semibold text-slate-800">Share your referral code</p>
+                      </div>
+                      
+                      <div className="grid grid-cols-2 gap-3">
                         {/* WhatsApp */}
                         <a
                           href={`https://api.whatsapp.com/send?text=${encodeURIComponent(
-                            `${refercode}`
+                            `Hey! Join me on this amazing learning platform with my referral code: ${refercode}`
                           )}`}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="text-green-500 hover:text-green-600"
+                          className="flex items-center p-3 rounded-xl bg-green-50 hover:bg-green-100 text-green-600 transition-colors duration-200 group"
                         >
-                          <FaWhatsapp size={24} />
+                          <MessageCircle className="w-5 h-5 mr-3" />
+                          <span className="font-medium">WhatsApp</span>
+                          <ArrowRight className="w-4 h-4 ml-auto opacity-0 group-hover:opacity-100 transition-opacity" />
                         </a>
-                        {/* Facebook */}
-                        <a
-                          href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
-                          )}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-blue-600 hover:text-blue-700"
-                        >
-                          <FaFacebook size={24} />
-                        </a>
+
                         {/* Email */}
                         <a
                           href={`mailto:?subject=${encodeURIComponent(
-                            "Check this out!"
+                            "Join me on this learning platform!"
                           )}&body=${encodeURIComponent(
-                            `${refercode}`
+                            `I found this amazing learning platform and thought you'd love it! Use my referral code: ${refercode} to get started.`
                           )}`}
-                          className="text-yellow-500 hover:text-yellow-600"
+                          className="flex items-center p-3 rounded-xl bg-blue-50 hover:bg-blue-100 text-blue-600 transition-colors duration-200 group"
                         >
-                          <FaEnvelope size={24} />
+                          <Mail className="w-5 h-5 mr-3" />
+                          <span className="font-medium">Email</span>
+                          <ArrowRight className="w-4 h-4 ml-auto opacity-0 group-hover:opacity-100 transition-opacity" />
                         </a>
-                        {/* Twitter */}
-                        <a
-                          href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(
-                            `${refercode}`
-                          )}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-sky-500 hover:text-sky-600"
+
+                        {/* Copy Link */}
+                        <button
+                          onClick={handlecopy}
+                          className="flex items-center p-3 rounded-xl bg-purple-50 hover:bg-purple-100 text-purple-600 transition-colors duration-200 group col-span-2"
                         >
-                          <FaTwitter size={24} />
-                        </a>
+                          <Copy className="w-5 h-5 mr-3" />
+                          <span className="font-medium">Copy referral code</span>
+                          <ArrowRight className="w-4 h-4 ml-auto opacity-0 group-hover:opacity-100 transition-opacity" />
+                        </button>
                       </div>
                     </div>
                   )}
                 </div>
-                <div className="flex flex-col">
-                    <div className="text-lg  mx-2">Uses Left</div>
-                    <div className="bg-white w-fit rounded-lg mx-6 px-4 border border-red-200 cursor-default">{props.details.usenumber}</div>
+
+                {/* Uses Left */}
+                <div className="lg:col-span-1">
+                  <p className="text-sm font-medium text-slate-600 mb-1">Referrals Left</p>
+                  <div className="flex items-center">
+                    <div className="bg-gradient-to-r from-orange-100 to-amber-100 border border-orange-200 rounded-xl px-4 py-2">
+                      <span className="text-lg font-bold text-orange-700">
+                        {props.details?.usenumber || '5'}
+                      </span>
+                    </div>
+                    <Users className="w-5 h-5 text-orange-500 ml-2" />
+                  </div>
+                </div>
+              </div>
+            </div>
+            <img src={"/Images/Referral_Image.png"} alt="" />
+
+            {/* Benefits Section */}
+            <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="flex items-center p-4 bg-white/60 backdrop-blur-sm rounded-xl border border-orange-100">
+                <div className="p-2 bg-orange-100 rounded-lg mr-3">
+                  <Gift className="w-5 h-5 text-orange-600" />
+                </div>
+                <div>
+                  <p className="font-semibold text-slate-800">Earn Rewards</p>
+                  <p className="text-sm text-slate-600">Get cashback for referrals</p>
+                </div>
+              </div>
+              
+              <div className="flex items-center p-4 bg-white/60 backdrop-blur-sm rounded-xl border border-orange-100">
+                <div className="p-2 bg-amber-100 rounded-lg mr-3">
+                  <Users className="w-5 h-5 text-amber-600" />
+                </div>
+                <div>
+                  <p className="font-semibold text-slate-800">Help Friends</p>
+                  <p className="text-sm text-slate-600">Share learning opportunities</p>
+                </div>
+              </div>
+              
+              <div className="flex items-center p-4 bg-white/60 backdrop-blur-sm rounded-xl border border-orange-100">
+                <div className="p-2 bg-yellow-100 rounded-lg mr-3">
+                  <Trophy className="w-5 h-5 text-yellow-600" />
+                </div>
+                <div>
+                  <p className="font-semibold text-slate-800">Unlock Bonuses</p>
+                  <p className="text-sm text-slate-600">More referrals, more rewards</p>
                 </div>
               </div>
             </div>
           </div>
+
+          {/* Illustration Section */}
+          <div className="flex-shrink-0 lg:w-96">
+            <div className="relative">
+              {/* Fallback illustration if image doesn't load */}
+              <div className="w-80 h-80 bg-gradient-to-br from-orange-200 to-amber-300 rounded-3xl flex items-center justify-center shadow-2xl">
+                <div className="text-center">
+                  <Gift className="w-24 h-24 text-orange-600 mx-auto mb-4" />
+                  <div className="text-orange-700 font-bold text-xl">Referral Rewards</div>
+                  <div className="text-orange-600">Share & Earn</div>
+                </div>
+              </div>
+              
+              {/* Floating elements */}
+              <div className="absolute -top-4 -right-4 w-16 h-16 bg-gradient-to-r from-yellow-400 to-orange-400 rounded-full flex items-center justify-center shadow-lg animate-bounce">
+                <Sparkles className="w-8 h-8 text-white" />
+              </div>
+              
+              <div className="absolute -bottom-4 -left-4 w-12 h-12 bg-gradient-to-r from-orange-500 to-red-500 rounded-full flex items-center justify-center shadow-lg animate-pulse">
+                <Trophy className="w-6 h-6 text-white" />
+              </div>
+            </div>
+          </div>
         </div>
-        <img src={"/Images/Referral_Image.png"} alt="" />
       </div>
     </div>
   );

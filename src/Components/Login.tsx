@@ -5,18 +5,25 @@ import apiRoutes from "../utils/Routes/apiRoutes";
 import Cookies from "js-cookie";
 import { useMutation } from "@tanstack/react-query";
 
-const handleLogin = async({email, password}: {email: string, password: string}) => {
+const handleLogin = async ({
+  email,
+  password,
+}: {
+  email: string;
+  password: string;
+}) => {
   const { data } = await api.post(apiRoutes.auth.login.signInLogin, {
     email: email,
     password: password,
-  })
+  });
   return data;
-}
+};
 
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const server_addr = import.meta.env.VITE_SERV_ADDR;
 
   useEffect(() => {
@@ -29,10 +36,11 @@ function Login() {
   }, []);
 
   const { mutate: handleLoginMutation } = useMutation({
-    mutationFn: ({email, password}: {email: string, password: string}) => handleLogin({email: email, password: password}),
+    mutationFn: ({ email, password }: { email: string; password: string }) =>
+      handleLogin({ email: email, password: password }),
     onMutate: () => setLoading(true),
-    onSuccess: async(data) => {
-      if(data.accessToken != null && data.refreshToken != null){
+    onSuccess: async (data) => {
+      if (data.accessToken != null && data.refreshToken != null) {
         setLoading(false);
         Cookies.set("AccessToken", data.accessToken, {
           path: "/",
@@ -49,23 +57,26 @@ function Login() {
           secure: true,
           sameSite: "None",
         });
-        localStorage.setItem("toast_message", `Login Successful! Welcome to Kepler ${data.profileinfo.name}`);
+        localStorage.setItem(
+          "toast_message",
+          `Login Successful! Welcome to Kepler ${data.profileinfo.name}`
+        );
         localStorage.setItem("sendAlert", data.sendAlert);
-        localStorage.setItem("paymentLastDate", data.lastDate)
-        localStorage.setItem("pendingCourses", JSON.stringify(data.courses))
+        localStorage.setItem("paymentLastDate", data.lastDate);
+        localStorage.setItem("pendingCourses", JSON.stringify(data.courses));
         window.location.href = "/";
       }
     },
-    onError: async(data) => {
+    onError: async (data) => {
       setLoading(false);
       setEmail("");
       toast.error(data.message);
-    }
-  })
+    },
+  });
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    handleLoginMutation({email, password});
+    handleLoginMutation({ email, password });
   };
 
   const handleGoogleLogin = () => {
@@ -73,74 +84,219 @@ function Login() {
   };
 
   return (
-    <div
-      className={`flex items-center justify-center py-12 bg-gray-100 ${
-        loading ? "cursor-progress" : "cursor-auto"
-      }`}
-    >
-      <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-lg shadow-md">
-        <h2 className="text-2xl font-semibold text-center text-gray-800 ">
-          Kepler Sign In
-        </h2>
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div>
-            <label htmlFor="email" className="block mb-2 text-sm text-gray-600">
-              Email
-            </label>
-            <input
-              type="email"
-              id="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-3 py-2 text-gray-700 bg-gray-200 border rounded-md focus:outline-none focus:ring focus:ring-blue-300"
-              required
-            />
+    <div className="bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 flex items-center justify-center px-4 py-12">
+      {/* Background Pattern */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute -top-40 -right-32 w-80 h-80 rounded-full blur-3xl"></div>
+        <div className="absolute -bottom-40 -left-32 w-96 h-96 rounded-full blur-3xl"></div>
+      </div>
+
+      <div className="relative w-full max-w-md">
+        {/* Main Login Card */}
+        <div className=" bg-white/80 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/20 p-8 space-y-6 min-w-max">
+          <div className="text-center">
+            `{/* Logo/Brand Section */}
+            <div className="mb-6 flex justify-center items-center gap-6">
+              <div className="flex items-center justify-center w-12 h-10 mt-4 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl mb-4 shadow-lg">
+                <svg
+                  className="h-8 text-white"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"
+                  />
+                </svg>
+              </div>
+              <h1 className="text-3xl font-bold bg-gray-900 bg-clip-text text-transparent">
+                Kepler
+              </h1>
+              <p className="text-gray-600 font-medium mt-2">
+                Master coding skills that land jobs
+              </p>
+            </div>
+            <h2 className="text-2xl font-bold text-gray-900 mb-2">
+              Welcome back
+            </h2>
+            <p className="text-gray-600">
+              Sign in to continue your learning journey
+            </p>
           </div>
-          <div>
-            <label
-              htmlFor="password"
-              className="block mb-2 text-sm text-gray-600"
+
+          <form onSubmit={handleSubmit} className="space-y-6">
+            {/* Email Field */}
+            <div className="space-y-2">
+              <label
+                htmlFor="email"
+                className="block text-sm font-semibold text-gray-700"
+              >
+                Email Address
+              </label>
+              <div className="relative">
+                <input
+                  type="email"
+                  id="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="w-full px-4 py-3 text-gray-900 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 placeholder-gray-400"
+                  placeholder="Enter your email"
+                  required
+                />
+                <div className="absolute inset-y-0 right-0 flex items-center pr-3">
+                  <svg
+                    className="w-5 h-5 text-gray-400"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207"
+                    />
+                  </svg>
+                </div>
+              </div>
+            </div>
+
+            {/* Password Field */}
+            <div className="space-y-2">
+              <label
+                htmlFor="password"
+                className="block text-sm font-semibold text-gray-700"
+              >
+                Password
+              </label>
+              <div className="relative">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  id="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="w-full px-4 py-3 text-gray-900 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 placeholder-gray-400 pr-12"
+                  placeholder="Enter your password"
+                  required
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-gray-600 transition-colors"
+                >
+                  {showPassword ? (
+                    <svg
+                      className="w-5 h-5"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.878 9.878L3 3m6.878 6.878L21 21"
+                      />
+                    </svg>
+                  ) : (
+                    <svg
+                      className="w-5 h-5"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                      />
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                      />
+                    </svg>
+                  )}
+                </button>
+              </div>
+            </div>
+
+            {/* Forgot Password Link */}
+            <div className="text-right">
+              <a
+                href="/forgot-password"
+                className="text-sm font-medium text-blue-600 hover:text-blue-500 transition-colors"
+              >
+                Forgot your password?
+              </a>
+            </div>
+
+            {/* Login Button */}
+            <button
+              type="submit"
+              disabled={loading}
+              className={`w-full py-3 px-4 rounded-xl font-semibold text-white transition-all duration-200 ${
+                loading
+                  ? "bg-gray-400 cursor-wait"
+                  : "bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 active:scale-[0.98] shadow-lg hover:shadow-xl"
+              }`}
             >
-              Password
-            </label>
-            <input
-              type="password"
-              id="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-3 py-2 text-gray-700 bg-gray-200 border rounded-md focus:outline-none focus:ring focus:ring-blue-300"
-              required
-            />
+              {loading ? (
+                <div className="flex items-center justify-center space-x-2">
+                  <svg
+                    className="animate-spin w-5 h-5"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                    ></circle>
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                    ></path>
+                  </svg>
+                  <span>Signing in...</span>
+                </div>
+              ) : (
+                "Sign In"
+              )}
+            </button>
+          </form>
+
+          {/* Divider */}
+          <div className="relative">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t border-gray-200"></div>
+            </div>
+            <div className="relative flex justify-center text-sm">
+              <span className="px-4 bg-white text-gray-500 font-medium">
+                Or continue with
+              </span>
+            </div>
           </div>
-          <button
-            type="submit"
-            disabled={loading}
-            className={`w-full py-2 font-semibold text-white bg-blue-500 rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600 ${
-              loading ? "cursor-wait" : "cursor-pointer"
-            }`}
-          >
-            {loading ? <>Logging...</> : <>Login</>}
-          </button>
-        </form>
-        <div className="text-center mt-4">
-          <p className="text-md font-semibold text-gray-600">
-            Not signed up?{" "}
-            <a
-              href="/register"
-              className="text-blue-500 hover:underline text-md font-semibold"
-            >
-              Register
-            </a>
-          </p>
-        </div>
-        <div className="mt-6">
+
+          {/* Google Login Button */}
           <button
             onClick={handleGoogleLogin}
-            className="flex items-center justify-center w-full py-2 space-x-2 font-semibold text-gray-50 bg-orange-500 hover:bg-orange-700 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
+            disabled={loading}
+            className="w-full flex items-center justify-center px-4 py-3 border border-gray-200 rounded-xl 
+                     bg-white hover:bg-gray-50 transition-all duration-200 font-semibold text-gray-700 
+                     hover:shadow-md active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {/* Google logo */}
             <svg
-              className="w-5 h-5"
+              className="w-5 h-5 mr-3"
               viewBox="0 0 533.5 544.3"
               xmlns="http://www.w3.org/2000/svg"
             >
@@ -161,9 +317,21 @@ function Login() {
                 d="M272 107.7c37.8 0 71.7 13 98.5 34.9l74-72.1C386.6 25.3 327.1 0 272 0 171.5 0 80.6 60.6 36.1 148.8l87.5 68.3C144.5 154.3 203 107.7 272 107.7z"
               />
             </svg>
-
-            <span>Login with Google</span>
+            Continue with Google
           </button>
+
+          {/* Sign Up Link */}
+          <div className="text-center pt-4 border-t border-gray-100">
+            <p className="text-gray-600">
+              Don't have an account?{" "}
+              <a
+                href="/register"
+                className="font-semibold text-blue-600 hover:text-blue-500 transition-colors"
+              >
+                Sign up for free
+              </a>
+            </p>
+          </div>
         </div>
       </div>
     </div>

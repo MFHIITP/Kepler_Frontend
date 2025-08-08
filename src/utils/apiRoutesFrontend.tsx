@@ -51,9 +51,7 @@ export const RouterFrontend = (authenticated: boolean, details: userdetails | un
                   <Part1 />
                 </Popping>
                 <Part2 />
-                <Popping>
-                  <Numbers />
-                </Popping>
+                <Numbers />
                 <Popping>
                   <QueryBox />
                 </Popping>

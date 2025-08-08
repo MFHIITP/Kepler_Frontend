@@ -8,6 +8,7 @@ import api from '../../utils/api'
 import apiRoutes from '../../utils/Routes/apiRoutes'
 import { useMutation } from '@tanstack/react-query'
 import toast from 'react-hot-toast'
+import { Play, Send, Code, Terminal, CheckCircle, XCircle, Loader2, Settings, ChevronDown, ChevronUp } from 'lucide-react'
 
 interface IDEPageInterface {
   problem: problemInterface
@@ -67,6 +68,7 @@ const IDEPage: React.FC<IDEPageInterface> = ({ problem, email, name }) => {
 
     if (result.isConfirmed) {
       setLanguage(selectedLanguage)
+      localStorage.removeItem("userCode");
       setCode(defaultCodes[selectedLanguage])
     }
   }
@@ -95,7 +97,7 @@ const IDEPage: React.FC<IDEPageInterface> = ({ problem, email, name }) => {
         await Swal.fire({
           title: 'Congratulations!',
           html: `
-            <div class="text-lg">You have successfully solved today’s <strong>Daily Problem Challenge</strong>!<br><br></div>
+            <div class="text-lg">You have successfully solved today's <strong>Daily Problem Challenge</strong>!<br><br></div>
             <div style="margin-bottom: 10px; display: flex; justify-content: center;">
               <img src="https://cdn-icons-png.flaticon.com/512/1828/1828884.png" width="80" alt="Golden Coin" />
             </div>
@@ -163,123 +165,252 @@ const IDEPage: React.FC<IDEPageInterface> = ({ problem, email, name }) => {
     submitCodeMutation({code: code, language: language, email: email, name: name})
   }
 
+  const getLanguageColor = (lang: string) => {
+    const colors = {
+      'cpp': 'from-blue-500 to-cyan-500',
+      'c++': 'from-blue-500 to-cyan-500',
+      'python': 'from-green-500 to-emerald-500',
+      'javascript': 'from-yellow-500 to-orange-500',
+      'typescript': 'from-blue-600 to-indigo-500',
+      'java': 'from-red-500 to-orange-500',
+      'c': 'from-gray-600 to-slate-500',
+      'go': 'from-cyan-500 to-teal-500',
+      'C#': 'from-purple-500 to-violet-500'
+    };
+    return colors[lang] || 'from-gray-500 to-gray-600';
+  };
+
   return (
-    <div className="bg-black rounded-lg">
-      <div className="p-6 space-y-4">
+    <div className="bg-gradient-to-br from-gray-900 via-slate-900 to-gray-800 rounded-2xl border border-white/10 overflow-hidden">
+      {/* Header */}
+      <div className="bg-gradient-to-r from-gray-800/50 to-slate-800/50 border-b border-white/10 p-6">
         <div className="flex justify-between items-center">
-          <select
-            value={language}
-            onChange={handleLanguageChange}
-            className="p-2 border rounded cursor-pointer bg-yellow-200 text-black"
-          >
-            {['c++', 'python', 'javascript', 'java', 'c', 'typescript', 'go', 'C#'].map((lang) => (
-              <option key={lang} value={lang}>{lang.toUpperCase()}</option>
-            ))}
-          </select>
-          <div className="flex gap-4">
-            <button onClick={handleRunCode} disabled={Loading || submissionLoading} className={`flex items-center justify-center gap-2 px-6 py-2 rounded-lg transition ${Loading ? "bg-green-500 cursor-not-allowed" : "bg-green-700 hover:bg-green-800"} text-white`}
-              title="Run Code">
-              {Loading ? (
-                <>
-                  <svg className="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
-                  </svg>
-                  Running...
-                </>
-              ) : (
-                "Run"
+          {/* Language Selector */}
+          <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-2">
+              <Code className="w-5 h-5 text-blue-400" />
+              <span className="text-white font-medium">Language:</span>
+            </div>
+            <div className="relative">
+              <select
+                value={language}
+                onChange={handleLanguageChange}
+                className={`appearance-none bg-gradient-to-r ${getLanguageColor(language)} text-white px-4 py-2 pr-8 rounded-xl font-semibold cursor-pointer hover:shadow-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500/50`}
+              >
+                {['cpp', 'python', 'javascript', 'java', 'c', 'typescript', 'go', 'C#'].map((lang) => (
+                  <option key={lang} value={lang} className="bg-gray-800 text-white">{lang.toUpperCase()}</option>
+                ))}
+              </select>
+              <Settings className="absolute right-2 top-1/2 transform -translate-y-1/2 w-4 h-4 text-white/70 pointer-events-none" />
+            </div>
+          </div>
+
+          {/* Action Buttons */}
+          <div className="flex items-center space-x-3">
+            <button 
+              onClick={handleRunCode} 
+              disabled={Loading || submissionLoading} 
+              className={`group relative overflow-hidden px-6 py-3 rounded-xl font-semibold text-white transition-all duration-300 ${
+                Loading 
+                  ? "bg-gradient-to-r from-green-400 to-emerald-400 cursor-not-allowed" 
+                  : "bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 hover:shadow-lg hover:scale-105 active:scale-95"
+              }`}
+            >
+              <div className="flex items-center space-x-2">
+                {Loading ? (
+                  <>
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                    <span>Running...</span>
+                  </>
+                ) : (
+                  <>
+                    <Play className="w-4 h-4" />
+                    <span>Run</span>
+                  </>
+                )}
+              </div>
+              {!Loading && (
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
               )}
             </button>
+
             <button 
-              onClick={handleSubmitCode} disabled={submissionLoading || Loading}
-              className={`text-white px-6 py-2 rounded-lg transition flex justify-center items-center ${submissionLoading ? "cursor-not-allowed bg-red-500" : "bg-red-700 hover:bg-red-800"}`}
-              title = "Submit Code"
+              onClick={handleSubmitCode} 
+              disabled={submissionLoading || Loading}
+              className={`group relative overflow-hidden px-6 py-3 rounded-xl font-semibold text-white transition-all duration-300 ${
+                submissionLoading 
+                  ? "bg-gradient-to-r from-red-400 to-rose-400 cursor-not-allowed" 
+                  : "bg-gradient-to-r from-red-500 to-rose-500 hover:from-red-600 hover:to-rose-600 hover:shadow-lg hover:scale-105 active:scale-95"
+              }`}
             >
-              {submissionLoading ? (
-                <>
-                  <svg className="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
-                  </svg>
-                  Submitting..
-                </>
-              ) : (
-                "Submit"
+              <div className="flex items-center space-x-2">
+                {submissionLoading ? (
+                  <>
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                    <span>Submitting...</span>
+                  </>
+                ) : (
+                  <>
+                    <Send className="w-4 h-4" />
+                    <span>Submit</span>
+                  </>
+                )}
+              </div>
+              {!submissionLoading && (
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
               )}
             </button>
           </div>
         </div>
+      </div>
 
-        <CodeEditor language={language} code={code} onChange={handleCodeChange} isOpen={isOpen} />
-
+      {/* Code Editor */}
+      <div className="p-6">
         <div className="relative">
-            <button onClick={() => setIsOpen(!isOpen)} className="absolute left-[-1.2rem] top-[-0.9rem] text-white bg-gray-700 p-2 rounded-full hover:bg-gray-600 transition" title="Toggle Sample I/O">
-                {isOpen ? <FiChevronDown size={20} /> : <FiChevronUp size={20} />}
+          <CodeEditor language={language} code={code} onChange={handleCodeChange} isOpen={isOpen} />
+          
+          {/* Toggle Button */}
+          <div className="absolute -bottom-4 left-4 z-10">
+            <button 
+              onClick={() => setIsOpen(!isOpen)} 
+              className="group bg-gradient-to-r from-gray-700 to-slate-700 hover:from-gray-600 hover:to-slate-600 text-white p-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-200 border border-white/10"
+              title="Toggle Test Cases"
+            >
+              <div className="flex items-center space-x-2">
+                {isOpen ? <ChevronDown className="w-5 h-5" /> : <ChevronUp className="w-5 h-5" />}
+                <Terminal className="w-4 h-4" />
+              </div>
             </button>
+          </div>
         </div>
 
+        {/* Test Cases Panel */}
         {isOpen && (
-          <div className="mt-4 bg-gray-800 p-4 rounded-lg">
-            <div className="flex gap-6 mb-4">
-              <button
-                className={`px-4 py-1 rounded-lg text-sm font-medium ${
-                  content === 'input' ? 'bg-slate-600 text-white' : 'bg-black text-white'
-                }`}
-                onClick={() => setContent('input')}
-              >
-                Input
-              </button>
-              <button
-                className={`px-4 py-1 rounded-lg text-sm font-medium ${
-                  content === 'output' ? 'bg-slate-600 text-white' : 'bg-black text-white'
-                }`}
-                onClick={() => setContent('output')}
-              >
-                Output
-              </button>
+          <div className="mt-8 bg-gradient-to-r from-gray-800/50 to-slate-800/50 rounded-2xl border border-white/10 overflow-hidden">
+            {/* Panel Header */}
+            <div className="bg-gradient-to-r from-gray-700/30 to-slate-700/30 border-b border-white/10 p-4">
+              <div className="flex items-center space-x-4">
+                <div className="flex items-center space-x-2">
+                  <Terminal className="w-5 h-5 text-blue-400" />
+                  <span className="text-white font-semibold">Test Cases</span>
+                </div>
+                
+                <div className="flex space-x-1 bg-white/5 rounded-lg p-1">
+                  <button
+                    className={`px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 ${
+                      content === 'input' 
+                        ? 'bg-white/20 text-white shadow-lg' 
+                        : 'text-gray-300 hover:text-white hover:bg-white/10'
+                    }`}
+                    onClick={() => setContent('input')}
+                  >
+                    Input
+                  </button>
+                  <button
+                    className={`px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 ${
+                      content === 'output' 
+                        ? 'bg-white/20 text-white shadow-lg' 
+                        : 'text-gray-300 hover:text-white hover:bg-white/10'
+                    }`}
+                    onClick={() => setContent('output')}
+                  >
+                    Output
+                  </button>
+                </div>
+              </div>
             </div>
 
-            <div className="flex gap-4">
-              {inputs && inputs.map((val, index) => (
-                <div key={index} className="w-full">
-                  <div className={`cursor-pointer px-4 py-2 rounded-t-md text-sm font-semibold ${currentNumber === index ? 'bg-gray-300 text-black' : 'bg-gray-600 text-white'}`}
-                    onClick={() => setCurrentNumber(index)}>
-                    <div className="flex justify-between">
-                      <div className="">Sample Test Case {index + 1}</div>
-                      <div className={`${providedOutputs.length > 0 && !Loading ? '' : 'hidden'}`}>{
-                        val.output == providedOutputs[index] ? <span className='text-green-900'>Accepted</span> : <span className='text-red-900'>Rejected</span>  
-                      }</div>
-                    </div>
-                  </div>
-                  {content == 'input' && (
-                    <div className={`bg-gray-400 p-3 rounded-b-md ${currentNumber === index ? '' : 'hidden'}`}>
-                      <input type="text" value={val.input} className='w-full bg-gray-400' onChange={(e) => handleUpdateInput(e.target.value, index)}/>
-                    </div>
-                  )}
-                  {!Loading && content == 'output' && (
-                    <div className={`bg-gray-400 text-black p-3 rounded-b-md ${currentNumber === index ? '' : 'hidden'}`}>
-                      <div className="flex justify-between">
-                        <div className="">
-                          <span className='text-black font-semibold mr-2'>Expected Output: </span>{val.output}
+            {/* Test Cases Content */}
+            <div className="p-6">
+              <div className="grid gap-4">
+                {inputs && inputs.map((val, index) => (
+                  <div key={index} className="bg-white/5 rounded-xl border border-white/10 overflow-hidden hover:border-white/20 transition-all duration-200">
+                    {/* Test Case Header */}
+                    <div 
+                      className={`cursor-pointer px-6 py-4 border-b border-white/10 transition-all duration-200 ${
+                        currentNumber === index 
+                          ? 'bg-gradient-to-r from-blue-500/20 to-purple-500/20' 
+                          : 'hover:bg-white/5'
+                      }`}
+                      onClick={() => setCurrentNumber(index)}
+                    >
+                      <div className="flex justify-between items-center">
+                        <div className="flex items-center space-x-3">
+                          <div className={`w-3 h-3 rounded-full ${currentNumber === index ? 'bg-blue-400' : 'bg-gray-500'}`}></div>
+                          <span className="text-white font-medium">Test Case {index + 1}</span>
                         </div>
-                        <div className={`${providedOutputs.length > 0 ? '' : 'hidden'}`}>
-                          <span className='text-black font-semibold mr-2'>Your Output: </span>{providedOutputs[index]}
-                        </div>
+                        {providedOutputs.length > 0 && !Loading && (
+                          <div className="flex items-center space-x-2">
+                            {val.output == providedOutputs[index] ? (
+                              <div className="flex items-center space-x-2 text-emerald-400">
+                                <CheckCircle className="w-4 h-4" />
+                                <span className="font-semibold">Passed</span>
+                              </div>
+                            ) : (
+                              <div className="flex items-center space-x-2 text-red-400">
+                                <XCircle className="w-4 h-4" />
+                                <span className="font-semibold">Failed</span>
+                              </div>
+                            )}
+                          </div>
+                        )}
                       </div>
                     </div>
-                  )}
-                  {Loading && (
-                    <div className="text-gray-600 mt-2 flex items-center gap-2">
-                      <svg className="animate-spin h-4 w-4 text-green-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
-                      </svg>
-                      Processing code...
-                    </div>
-                  )}
-                </div>
-              ))}
+
+                    {/* Test Case Content */}
+                    {currentNumber === index && (
+                      <div className="p-6">
+                        {content === 'input' && (
+                          <div className="space-y-3">
+                            <label className="block text-sm font-medium text-gray-300">Input:</label>
+                            <input 
+                              type="text" 
+                              value={val.input} 
+                              onChange={(e) => handleUpdateInput(e.target.value, index)}
+                              className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all duration-200"
+                              placeholder="Enter test input..."
+                            />
+                          </div>
+                        )}
+
+                        {content === 'output' && !Loading && (
+                          <div className="space-y-4">
+                            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                              <div className="space-y-2">
+                                <label className="block text-sm font-medium text-emerald-300">Expected Output:</label>
+                                <div className="px-4 py-3 bg-emerald-500/10 border border-emerald-500/20 rounded-lg text-emerald-100 font-mono">
+                                  {val.output}
+                                </div>
+                              </div>
+                              {providedOutputs.length > 0 && (
+                                <div className="space-y-2">
+                                  <label className="block text-sm font-medium text-blue-300">Your Output:</label>
+                                  <div className={`px-4 py-3 rounded-lg font-mono border ${
+                                    val.output == providedOutputs[index] 
+                                      ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-100' 
+                                      : 'bg-red-500/10 border-red-500/20 text-red-100'
+                                  }`}>
+                                    {providedOutputs[index]}
+                                  </div>
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        )}
+
+                        {Loading && (
+                          <div className="flex items-center justify-center py-8">
+                            <div className="flex items-center space-x-3 text-blue-400">
+                              <Loader2 className="w-6 h-6 animate-spin" />
+                              <span className="text-lg font-medium">Processing your code...</span>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         )}
@@ -289,7 +420,3 @@ const IDEPage: React.FC<IDEPageInterface> = ({ problem, email, name }) => {
 }
 
 export default IDEPage
-function confetti(arg0: { particleCount: number; spread: number; origin: { y: number } }) {
-  throw new Error('Function not implemented.')
-}
-

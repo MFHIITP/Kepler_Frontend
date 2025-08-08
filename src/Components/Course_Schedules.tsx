@@ -1,156 +1,490 @@
 import React, { useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import { schedules, syllabus } from "../lists.js";
-import Footer from '../Components/Footer.jsx'
-import Playlist from "./Playlist.jsx";
+import { 
+  Calendar, 
+  Clock, 
+  Users, 
+  BookOpen, 
+  PlayCircle, 
+  CheckCircle, 
+  Star,
+  ArrowRight,
+  FileText,
+  Video,
+  Award,
+  Target,
+  Zap,
+  TrendingUp,
+  Download,
+  Bell,
+  ChevronRight
+} from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import Playlist from "./Playlist";
+import Footer from "./Footer";
 
-function Course_Schedules() {
-  const { examname } = useParams();
+interface ScheduleItem {
+  month: string;
+  day: string;
+  title: string;
+  details: string;
+  topic: string;
+  type?: 'live' | 'test' | 'assignment';
+  status?: 'upcoming' | 'live' | 'completed';
+}
+
+interface CourseInfo {
+  type: string;
+  name: string;
+  teachers: string;
+  description: string;
+  duration: string;
+  students: string;
+  rating: number;
+  startDate: string;
+}
+
+function ProfessionalCourseSchedule() {
+  const examname = "college"; // Default to college for demo
+
   const navigate = useNavigate();
-  const [list, setList] = useState({
+
+  // Sample data structure
+  const courseData: { [key: string]: CourseInfo } = {
     college: {
-      type: "Full Syllabus Batch",
-      name: "College Aimers Batch",
-      teachers: "Shubhayan Ghosal, Subhojit Fadikar, Shirso Dey",
-      description:
-        "In this batch, the complete syllabus for each and every semester exam will be covered by expert educators. This batch will be helpful for students who are preparing for college semester exams and wish to score excellent grades. All doubts related to the subject will be cleared during the doubt-clearing sessions. The batch will be completed in 5 months, the syllabus will be covered in English, and the notes will be provided in the same.",
+      type: "Comprehensive Semester Program",
+      name: "College Excellence Batch 2025",
+      teachers: "Dr. Shubhayan Ghosal, Prof. Subhajit Fadikar, Dr. Shirso Dey",
+      description: "Complete semester exam preparation with expert faculty guidance. Comprehensive coverage of all subjects with interactive doubt-clearing sessions, practice tests, and personalized mentorship. Designed for students aiming for top grades in their college examinations.",
+      duration: "6 Months",
+      students: "12,500+",
+      rating: 4.8,
+      startDate: "January 1st, 2025"
     },
-  });
+    jee: {
+      type: "Complete JEE Mastery Program", 
+      name: "JEE Champions Batch 2025-26",
+      teachers: "IIT Alumni Faculty Team",
+      description: "Comprehensive JEE Main & Advanced preparation with proven methodology and expert guidance from IIT alumni.",
+      duration: "24 Months",
+      students: "25,000+",
+      rating: 4.9,
+      startDate: "April 1st, 2024"
+    },
+    gate: {
+      type: "GATE Excellence Program",
+      name: "GATE Achievers Batch 2025",
+      teachers: "Expert Engineering Faculty",
+      description: "Targeted GATE preparation with branch-specific modules and comprehensive practice sessions.",
+      duration: "12 Months", 
+      students: "8,500+",
+      rating: 4.7,
+      startDate: "June 1st, 2024"
+    }
+  };
+
+  // Sample schedule data
+  const scheduleData: { [key: string]: ScheduleItem[] } = {
+    college: [
+      {
+        month: "JAN",
+        day: "15",
+        title: "Calculus Fundamentals",
+        details: "Live interactive session on differential calculus with real-time problem solving",
+        topic: "Mathematics • Chapter 1-3",
+        type: "live",
+        status: "upcoming"
+      },
+      {
+        month: "JAN",
+        day: "17",
+        title: "Weekly Assessment Test",
+        details: "Comprehensive test covering calculus and analytical geometry",
+        topic: "Mathematics • Evaluation",
+        type: "test",
+        status: "upcoming"
+      },
+      {
+        month: "JAN",
+        day: "20",
+        title: "Physics Mechanics",
+        details: "Newton's laws and applications in engineering problems",
+        topic: "Physics • Mechanics",
+        type: "live",
+        status: "live"
+      },
+      {
+        month: "JAN",
+        day: "22",
+        title: "Doubt Clearing Session",
+        details: "Interactive Q&A session with subject matter experts",
+        topic: "All Subjects • Support",
+        type: "live",
+        status: "upcoming"
+      }
+    ],
+    jee: [
+      {
+        month: "JAN",
+        day: "16",
+        title: "Organic Chemistry",
+        details: "Advanced organic reactions and mechanism study",
+        topic: "Chemistry • Organic",
+        type: "live",
+        status: "upcoming"
+      },
+      {
+        month: "JAN",
+        day: "18",
+        title: "JEE Mock Test",
+        details: "Full-length JEE Main pattern mock test",
+        topic: "All Subjects • Mock Test",
+        type: "test",
+        status: "upcoming"
+      }
+    ],
+    gate: [
+      {
+        month: "JAN",
+        day: "14",
+        title: "Engineering Mathematics",
+        details: "Linear algebra and differential equations",
+        topic: "Mathematics • Core",
+        type: "live",
+        status: "upcoming"
+      }
+    ]
+  };
+
+  // Sample syllabus data
+  const syllabusData: { [key: string]: string[] } = {
+    college: [
+      "Advanced Calculus & Analysis",
+      "Linear Algebra & Matrices",
+      "Differential Equations",
+      "Complex Analysis",
+      "Numerical Methods",
+      "Statistics & Probability",
+      "Engineering Physics",
+      "Applied Mathematics"
+    ],
+    jee: [
+      "Physics - Mechanics & Waves",
+      "Physics - Thermodynamics",
+      "Chemistry - Physical",
+      "Chemistry - Organic",
+      "Chemistry - Inorganic", 
+      "Mathematics - Calculus",
+      "Mathematics - Algebra",
+      "Mathematics - Coordinate Geometry"
+    ],
+    gate: [
+      "Engineering Mathematics",
+      "General Aptitude",
+      "Core Subject (Branch-wise)",
+      "Technical Subjects",
+      "Previous Year Analysis",
+      "Mock Test Series"
+    ]
+  };
+
+  const currentCourse = courseData[examname as string] || courseData.college;
+  const currentSchedule = scheduleData[examname as string] || scheduleData.college;
+  const currentSyllabus = syllabusData[examname as string] || syllabusData.college;
+
+  const handleSubscriptionClick = () => {
+    navigate('/profiles')
+  };
+
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case 'live': return 'bg-red-100 text-red-700 border-red-200';
+      case 'upcoming': return 'bg-blue-100 text-blue-700 border-blue-200';
+      case 'completed': return 'bg-green-100 text-green-700 border-green-200';
+      default: return 'bg-gray-100 text-gray-700 border-gray-200';
+    }
+  };
+
+  const getTypeIcon = (type: string) => {
+    switch (type) {
+      case 'live': return <Video className="w-4 h-4" />;
+      case 'test': return <FileText className="w-4 h-4" />;
+      case 'assignment': return <BookOpen className="w-4 h-4" />;
+      default: return <PlayCircle className="w-4 h-4" />;
+    }
+  };
+
   return (
-    <>
-    <div className="mx-14 my-4">
-      <div className="shadow-lg shadow-gray-400 bg-white p-4 h-[60vh] mx-24 my-12 rounded-lg">
-        <div className="flex h-[75%]">
-          <img
-            src="/Images/Monitoring.webp"
-            alt=""
-            className="w-[40%] rounded-lg"
-          />
-          <div className="flex flex-col mx-8 px-4">
-            <div className="text-xl text-blue-800">
-              {examname == "college" ? list.college.type : ""}
-            </div>
-            <div className="text-black text-3xl mt-2 font-extrabold">
-              {examname == "college" ? list.college.name : ""}
-            </div>
-            <div className="text-black font-bold text-xl mt-2">
-              {examname == "college" ? list.college.teachers : ""}
-            </div>
-            <div className="text-md text-gray-500 mt-2">
-              {examname == "college" ? list.college.description : ""}
-            </div>
-          </div>
-        </div>
-        <hr className="bg-gray-300 mt-8 h-1" />
-        <div className="flex justify-around my-6">
-          <div className="flex">
-            <svg width="22px" height="22px" viewBox="0 0 22 20">
-              <path
-                d="M6.0197 0.868601C6.0197 0.388886 5.62621 0 5.14081 0C4.65542 0 4.26193 0.388886 4.26193 0.868601V2.97227C2.51228 3.21673 1.13003 4.58442 0.896043 6.32902L0.794618 7.08523C0.777423 7.21344 0.76098 7.34172 0.74529 7.47006C0.703671 7.81052 0.975076 8.10695 1.32207 8.10695H20.6779C21.0249 8.10695 21.2963 7.81052 21.2547 7.47006C21.239 7.34172 21.2226 7.21343 21.2054 7.08522L21.104 6.32902C20.87 4.58444 19.4878 3.21677 17.7381 2.97228V0.868601C17.7381 0.388886 17.3446 0 16.8593 0C16.3739 0 15.9804 0.388886 15.9804 0.868601V2.79995C12.6667 2.50829 9.33336 2.50829 6.0197 2.79994V0.868601Z"
-                fill="var(--color-i-yellow-4)"
-              ></path>
-              <path
-                d="M21.4817 10.3949C21.4714 10.0863 21.2134 9.84415 20.901 9.84415H1.09897C0.786587 9.84415 0.528587 10.0863 0.518328 10.3949C0.448722 12.4884 0.577393 14.5862 0.904026 16.6608C1.1513 18.2312 2.44227 19.4375 4.0427 19.5935L5.44072 19.7297C9.13794 20.0901 12.8621 20.0901 16.5593 19.7297L17.9573 19.5935C19.5577 19.4375 20.8487 18.2312 21.096 16.6608C21.4226 14.5862 21.5513 12.4884 21.4817 10.3949Z"
-                fill="var(--color-i-yellow-4)"
-              ></path>
-            </svg>
-            <div className="flex-flex-col mx-4 mt-[-12px]">
-              <div className="text-gray-800 ">Batch Schedule</div>
-              <div className=" font-bold text-black">
-                Started on 1st January
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50">
+      {/* Background Elements */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-0 right-0 w-96 h-96 bg-blue-100/20 rounded-full blur-3xl transform translate-x-1/2 -translate-y-1/2"></div>
+        <div className="absolute bottom-0 left-0 w-96 h-96 bg-emerald-100/20 rounded-full blur-3xl transform -translate-x-1/2 translate-y-1/2"></div>
+      </div>
+
+      <div className="relative max-w-7xl mx-auto px-6 py-12">
+        
+        {/* Course Header Section */}
+        <section className="mb-16">
+          <div className="bg-white rounded-3xl border border-slate-200 shadow-xl overflow-hidden">
+            <div className="lg:flex">
+              {/* Course Image */}
+              <div className="lg:w-2/5 relative">
+                <img
+                  src="/Images/Monitoring.webp"
+                  alt="Course"
+                  className="w-full h-80 lg:h-full object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
+                
+                {/* Live Badge */}
+                <div className="absolute top-6 left-6">
+                  <div className="bg-red-500 text-white px-4 py-2 rounded-full text-sm font-semibold flex items-center gap-2">
+                    <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
+                    Classes Live Now
+                  </div>
+                </div>
+
+                {/* Course Stats */}
+                <div className="absolute bottom-6 left-6 right-6">
+                  <div className="flex items-center justify-between text-white">
+                    <div className="flex items-center gap-4">
+                      <div className="flex items-center gap-1">
+                        <Star className="w-5 h-5 fill-current text-yellow-400" />
+                        <span className="font-semibold">{currentCourse.rating}</span>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <Users className="w-5 h-5" />
+                        <span>{currentCourse.students}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Course Details */}
+              <div className="lg:w-3/5 p-8 lg:p-12">
+                <div className="mb-6">
+                  <div className="inline-flex items-center gap-2 bg-blue-100 text-blue-800 px-4 py-2 rounded-full text-sm font-semibold mb-4">
+                    <Award className="w-4 h-4" />
+                    {currentCourse.type}
+                  </div>
+                  <h1 className="text-3xl lg:text-4xl font-bold text-slate-800 mb-4">
+                    {currentCourse.name}
+                  </h1>
+                  <div className="flex items-center gap-2 text-blue-600 font-semibold mb-6">
+                    <Users className="w-5 h-5" />
+                    {currentCourse.teachers}
+                  </div>
+                  <p className="text-slate-600 text-lg leading-relaxed mb-8">
+                    {currentCourse.description}
+                  </p>
+                </div>
+
+                {/* Course Meta Info */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-8">
+                  <div className="flex items-center gap-3 p-4 bg-slate-50 rounded-xl">
+                    <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                      <Calendar className="w-5 h-5 text-blue-600" />
+                    </div>
+                    <div>
+                      <div className="text-sm text-slate-600">Started on</div>
+                      <div className="font-semibold text-slate-800">{currentCourse.startDate}</div>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-3 p-4 bg-slate-50 rounded-xl">
+                    <div className="w-10 h-10 bg-emerald-100 rounded-lg flex items-center justify-center">
+                      <Clock className="w-5 h-5 text-emerald-600" />
+                    </div>
+                    <div>
+                      <div className="text-sm text-slate-600">Duration</div>
+                      <div className="font-semibold text-slate-800">{currentCourse.duration}</div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* CTA Button */}
+                <button
+                  onClick={handleSubscriptionClick}
+                  className="w-full sm:w-auto bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-200 hover:shadow-lg flex items-center justify-center gap-2"
+                >
+                  Get Subscription & Start Learning
+                  <ArrowRight className="w-5 h-5" />
+                </button>
               </div>
             </div>
           </div>
-          <div className="bg-blue-800 text-white p-2 rounded-lg shadow-md font-bold cursor-pointer mt-[-6px] hover:shadow-lg hover:shadow-gray-600" onClick={()=>{navigate('/profiles')}}>
-            Get Subscription and Start Learing
-          </div>
-        </div>
-      </div>
-      <div className="my-8 mx-[6rem] h-[30rem] bg-gray-200 shadow-lg rounded-lg p-4">
-        <Playlist exam = {examname}/>
-      </div>
-      <div className="flex mx-14 my-4 gap-x-14">
-        <div className="flex flex-col ml-10">
-          <div className="text-black font-bold  text-2xl mb-5">
-            Schedule
-          </div>
-          <div className="flex gap-2">
-            <svg width="16px" height="16px" viewBox="0 0 16 16">
-              <circle
-                cx="8"
-                cy="8"
-                r="6.0025"
-                stroke="var(--color-text-secondary)"
-              ></circle>
-              <path
-                d="M10.3036 8.76761L8 7.99996V3.99829"
-                stroke="var(--color-text-secondary)"
-              ></path>
-            </svg>
-            <div className="text-md  text-gray-700 mt-[-3px]">
-              Morning & evening classes • Four times a week
-            </div>
-          </div>
-          <div className="flex gap-2 my-5">
-            <svg width="16px" height="16px" viewBox="0 0 16 16">
-              <path
-                d="M5 14H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v1.5"
-                stroke="#7A8B94"
-              ></path>
-              <path
-                d="M9.755 13.808A.655.655 0 0 1 9.29 14h-1.32v-1.32c0-.174.069-.341.192-.464l3.882-3.886a1.128 1.128 0 0 1 1.595 0v0a1.127 1.127 0 0 1 0 1.596l-3.885 3.882Z"
-                stroke="#7A8B94"
-              ></path>
-              <path
-                d="m13.323 10.244.59.59c.31.31.31.814 0 1.125l-.714.715"
-                stroke="#7A8B94"
-              ></path>
-              <path d="M5 8.334h2.5M5 6h6" stroke="#7A8B94"></path>
-            </svg>
-            <div className="text-md  text-gray-700 mt-[-4px]">
-              Mock tests • Four times a week
-            </div>
-          </div>
-        </div>
-        <div className="flex flex-col mt-10 gap-y-6 w-full mr-8">
-          {schedules[`${examname}`].map((val, index) => (
-            <div
-              className="bg-gray-200 shadow-md rounded-lg flex gap-x-12 p-4"
-              key={index}
-            >
-              <div className="flex flex-col">
-                <div className="text-lg text-black ">{val.month}</div>
-                <div className="text-lg text-gray-800  flex justify-center">
-                  {val.day}
-                </div>
-              </div>
-              <div className="flex flex-col gap-y-1">
-                <div className=" font-bold text-lg">
-                  {val.title}
-                </div>
-                <div className=" text-md text-gray-800">
-                  {val.details}
-                </div>
-                <div className=" text-md text-gray-800">{val.topic}</div>
+        </section>
+
+        {/* Video Playlist Section */}
+        <section className="mb-16">
+          <div className="bg-white rounded-3xl border border-slate-200 shadow-lg p-8">
+            <div className="flex items-center justify-between mb-8">
+              <h2 className="text-2xl lg:text-3xl font-bold text-slate-800">Course Content</h2>
+              <div className="flex items-center gap-2 text-emerald-600">
+                <PlayCircle className="w-5 h-5" />
+                <span className="font-semibold">150+ Hours of Content</span>
               </div>
             </div>
-          ))}
-        </div>
-      </div>
-      <div className="flex mx-20 my-8 bg-gray-200 p-8 gap-x-20 rounded-lg shadow-lg">
-        <div className="text-2xl font-bold">Syllabus</div>
-        <div className="grid grid-cols-2 gap-x-6 gap-y-6 w-full">
-          {syllabus[`${examname}`].map((val, index)=>(
-            <div key={index} className="bg-white rounded-lg p-12 text-xl">
-              {val}
+            
+            {/* Playlist placeholder */}
+            <div className="bg-slate-50 rounded-2xl p-6 text-center border-2 border-dashed border-slate-300">
+                <div className="my-8 h-[30rem] bg-gray-200 shadow-lg rounded-lg p-4">
+                  <Playlist exam = {examname}/>
+                </div>
             </div>
-          ))}
+          </div>
+        </section>
+
+        {/* Schedule & Content Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-16">
+          
+          {/* Schedule Info Sidebar */}
+          <div className="lg:col-span-1">
+            <div className="bg-white rounded-3xl border border-slate-200 shadow-lg p-8 sticky top-6">
+              <h3 className="text-2xl font-bold text-slate-800 mb-6">Class Schedule</h3>
+              
+              <div className="space-y-6">
+                <div className="flex items-start gap-3">
+                  <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <Clock className="w-5 h-5 text-blue-600" />
+                  </div>
+                  <div>
+                    <div className="font-semibold text-slate-800 mb-1">Class Timings</div>
+                    <div className="text-slate-600">Morning & Evening sessions</div>
+                    <div className="text-slate-600">4 days per week</div>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-3">
+                  <div className="w-10 h-10 bg-emerald-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <Target className="w-5 h-5 text-emerald-600" />
+                  </div>
+                  <div>
+                    <div className="font-semibold text-slate-800 mb-1">Assessments</div>
+                    <div className="text-slate-600">Weekly mock tests</div>
+                    <div className="text-slate-600">Progress tracking</div>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-3">
+                  <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <Bell className="w-5 h-5 text-purple-600" />
+                  </div>
+                  <div>
+                    <div className="font-semibold text-slate-800 mb-1">Notifications</div>
+                    <div className="text-slate-600">Class reminders</div>
+                    <div className="text-slate-600">Assignment alerts</div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="mt-8 p-4 bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl border border-blue-100">
+                <div className="flex items-center gap-2 text-blue-700 font-semibold mb-2">
+                  <Zap className="w-4 h-4" />
+                  Next Class
+                </div>
+                <div className="text-slate-800 font-semibold">Calculus Fundamentals</div>
+                <div className="text-slate-600 text-sm">Tomorrow at 10:00 AM</div>
+              </div>
+            </div>
+          </div>
+
+          {/* Main Schedule Content */}
+          <div className="lg:col-span-2">
+            <div className="bg-white rounded-3xl border border-slate-200 shadow-lg p-8">
+              <h3 className="text-2xl font-bold text-slate-800 mb-8">Upcoming Sessions</h3>
+              
+              <div className="space-y-6">
+                {currentSchedule.map((session, index) => (
+                  <div key={index} className="group border border-slate-200 rounded-2xl p-6 hover:shadow-md hover:border-blue-200 transition-all duration-200">
+                    <div className="flex items-start gap-6">
+                      {/* Date Badge */}
+                      <div className="flex-shrink-0 bg-gradient-to-br from-slate-100 to-slate-200 rounded-xl p-4 text-center min-w-[80px]">
+                        <div className="text-sm font-semibold text-slate-600">{session.month}</div>
+                        <div className="text-2xl font-bold text-slate-800">{session.day}</div>
+                      </div>
+
+                      {/* Session Content */}
+                      <div className="flex-1">
+                        <div className="flex items-start justify-between mb-3">
+                          <h4 className="text-xl font-bold text-slate-800 group-hover:text-blue-600 transition-colors">
+                            {session.title}
+                          </h4>
+                          <div className={`flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold border ${getStatusColor(session.status || 'upcoming')}`}>
+                            {getTypeIcon(session.type || 'live')}
+                            {session.status || 'upcoming'}
+                          </div>
+                        </div>
+                        
+                        <p className="text-slate-600 mb-3 leading-relaxed">
+                          {session.details}
+                        </p>
+                        
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-2 text-blue-600 font-medium">
+                            <BookOpen className="w-4 h-4" />
+                            {session.topic}
+                          </div>
+                          <button className="opacity-0 group-hover:opacity-100 transition-opacity text-blue-600 hover:text-blue-700 flex items-center gap-1">
+                            Join Session
+                            <ChevronRight className="w-4 h-4" />
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
         </div>
+
+        {/* Syllabus Section */}
+        <section>
+          <div className="bg-white rounded-3xl border border-slate-200 shadow-lg overflow-hidden">
+            <div className="bg-gradient-to-r from-slate-50 to-blue-50 px-8 py-6 border-b border-slate-200">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h2 className="text-2xl lg:text-3xl font-bold text-slate-800 mb-2">Course Syllabus</h2>
+                  <p className="text-slate-600">Comprehensive curriculum designed for success</p>
+                </div>
+                <button className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl font-semibold transition-colors inline-flex items-center gap-2">
+                  <Download className="w-4 h-4" />
+                  Download PDF
+                </button>
+              </div>
+            </div>
+
+            <div className="p-8">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {currentSyllabus.map((topic, index) => (
+                  <div key={index} className="group bg-slate-50 hover:bg-blue-50 border border-slate-200 hover:border-blue-200 rounded-2xl p-6 transition-all duration-200">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-4">
+                        <div className="w-12 h-12 bg-white group-hover:bg-blue-100 rounded-xl flex items-center justify-center border border-slate-200 group-hover:border-blue-200 transition-all">
+                          <BookOpen className="w-6 h-6 text-slate-600 group-hover:text-blue-600" />
+                        </div>
+                        <div>
+                          <h4 className="font-semibold text-slate-800 group-hover:text-blue-700 transition-colors">
+                            {topic}
+                          </h4>
+                          <div className="text-sm text-slate-500">
+                            Module {index + 1}
+                          </div>
+                        </div>
+                      </div>
+                      <CheckCircle className="w-5 h-5 text-emerald-500" />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
       </div>
+      <Footer/>
     </div>
-    <Footer/>
-    </>
   );
 }
 
-export default Course_Schedules;
+export default ProfessionalCourseSchedule;

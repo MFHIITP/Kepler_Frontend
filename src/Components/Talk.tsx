@@ -1,7 +1,7 @@
 import React, {useEffect, useState, useContext, useRef, FC, MutableRefObject} from "react";
 import { MyContext } from "../main";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTrashAlt } from "@fortawesome/free-solid-svg-icons";
+import { faTrashAlt, faInfo, faTimes, faUsers, faPaperclip, faPaperPlane, faFile, faDownload } from "@fortawesome/free-solid-svg-icons";
 import PdfPreview from "./PdfPreview";
 import Group_Members from "./Group_Members";
 import api from "../utils/api";
@@ -48,6 +48,7 @@ const Talk: FC<TalkInterface> = ({key, details, groupName, ref, groupDescription
   const [allmessages, setAllmessages] = useState<groupChatMessages[]>([]);
   const [Socket, setSocket] = useState<WebSocket | null>(null);
   const [loading, setLoading] = useState(false);
+  const [isTyping, setIsTyping] = useState(false);
   const context = useContext(MyContext);
   const adminemails = context?.adminemails;
   const webs_addr = import.meta.env.VITE_WEBS_ADDR;
@@ -107,10 +108,14 @@ const Talk: FC<TalkInterface> = ({key, details, groupName, ref, groupDescription
     localStorage.setItem("before_url", "image/upload/v1735395980");
     navigate(`/readbook/${newUrl}`);
   };
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement> | React.KeyboardEvent<HTMLTextAreaElement>) => {
-    event.preventDefault(); // Prevents the page from refreshing
+    event.preventDefault();
+    
+    if (!message.trim() && !file) return;
 
     if (Socket) {
+      setIsTyping(true);
       const formdata = new FormData();
       formdata.append("format", "GroupChat");
       formdata.append("email", details.email);
@@ -142,6 +147,7 @@ const Talk: FC<TalkInterface> = ({key, details, groupName, ref, groupDescription
         socketData[key] = val as string;
       });
       Socket.send(JSON.stringify(socketData));
+      setIsTyping(false);
     }
     setMessage("");
     setFile(undefined);
@@ -149,11 +155,11 @@ const Talk: FC<TalkInterface> = ({key, details, groupName, ref, groupDescription
 
   const handleDelete = async (posts: groupChatMessages, index: number) => {
     confirmAlert({
-      title: 'Confirmation To Delete Message',
-      message: 'Do you want to Delete this Message from this Group ?',
+      title: 'Delete Message',
+      message: 'Are you sure you want to delete this message? This action cannot be undone.',
       buttons: [
         {
-          label: 'Yes',
+          label: 'Delete',
           onClick: () => {
             deleteMessageMutation({removerEmail: details.email, groupName: group!, dateToDelete: posts.date, removedEmail: posts.email});
             setAllmessages((prevMessages) =>
@@ -162,235 +168,384 @@ const Talk: FC<TalkInterface> = ({key, details, groupName, ref, groupDescription
           }
         },
         {
-          label: 'No',
+          label: 'Cancel',
           onClick: () => {
             toast.error("Deletion Cancelled");
           }
         }
-      ]
+      ],
+      customUI: ({ onClose, title, message, buttons }) => (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-2xl p-6 max-w-md w-full mx-4 shadow-2xl">
+            <div className="text-center">
+              <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <FontAwesomeIcon icon={faTrashAlt} className="text-red-600 text-xl" />
+              </div>
+              <h2 className="text-xl font-bold text-gray-800 mb-2">{title}</h2>
+              <p className="text-gray-600 mb-6">{message}</p>
+              <div className="flex space-x-3">
+                <button
+                  onClick={() => {
+                    buttons?.[1].onClick?.();
+                    onClose();
+                  }}
+                  className="flex-1 px-4 py-2 bg-gray-200 text-gray-800 rounded-lg font-medium hover:bg-gray-300 transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={() => {
+                    buttons?.[0].onClick?.();
+                    onClose();
+                  }}
+                  className="flex-1 px-4 py-2 bg-red-600 text-white rounded-lg font-medium hover:bg-red-700 transition-colors"
+                >
+                  Delete
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )
     })
+  };
+
+  const getMessageTime = (dateString: string) => {
+    try {
+      const date = new Date(dateString);
+      return date.toLocaleTimeString('en-US', { 
+        hour: '2-digit', 
+        minute: '2-digit',
+        hour12: true 
+      });
+    } catch {
+      return dateString;
+    }
+  };
+
+  const generateAvatar = (name: string) => {
+    const colors = [
+      'bg-red-500', 'bg-blue-500', 'bg-green-500', 'bg-purple-500', 
+      'bg-pink-500', 'bg-indigo-500', 'bg-yellow-500', 'bg-teal-500'
+    ];
+    const colorIndex = name.charCodeAt(0) % colors.length;
+    return colors[colorIndex];
   };
 
   if (loading) {
     return (
-      <div className="bg-black h-[90vh] w-screen flex justify-center items-center text-white  text-4xl">
-        Loading ...
+      <div className="flex-1 bg-gradient-to-br from-slate-50 to-slate-100 flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-16 h-16 border-4 border-emerald-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-xl text-gray-600 font-medium">Loading messages...</p>
+          <p className="text-sm text-gray-500 mt-1">Please wait while we fetch your conversations</p>
+        </div>
       </div>
     );
   }
+
   if (groupName == null) {
     return (
-      <div
-        className="flex flex-col bg-gray-900 w-full h-[90vh] justify-center items-center text-4xl overflow-y-auto wp_body rounded-lg shadow-md scrollbar-thin text-white"
-        style={{ height: "78vh", borderRadius: "12px" }}
-        ref={scrollref}
-      >
-        Select a group to start chatting...
+      <div className="flex-1 bg-gradient-to-br from-emerald-50 to-teal-50 flex items-center justify-center">
+        <div className="text-center max-w-md mx-auto p-8">
+          <div className="w-24 h-24 bg-gradient-to-br from-emerald-400 to-teal-500 rounded-full flex items-center justify-center mx-auto mb-6 shadow-xl">
+            <FontAwesomeIcon icon={faUsers} className="text-white text-3xl" />
+          </div>
+          <h2 className="text-2xl font-bold text-gray-800 mb-3">
+            Welcome to Group Chats
+          </h2>
+          <p className="text-gray-600 leading-relaxed">
+            Select a group from the sidebar to start chatting with your classmates and instructors. 
+            Collaborate, learn, and grow together in our educational community.
+          </p>
+        </div>
       </div>
     );
   }
+
   if (!details.name) {
     return (
-      <div className="bg-black text-white h-screen flex justify-center items-center  text-4xl">
-        Please Log In
+      <div className="flex-1 bg-gradient-to-br from-red-50 to-orange-50 flex items-center justify-center">
+        <div className="text-center max-w-md mx-auto p-8">
+          <div className="w-24 h-24 bg-gradient-to-br from-red-400 to-orange-500 rounded-full flex items-center justify-center mx-auto mb-6 shadow-xl">
+            <span className="text-white text-3xl font-bold">!</span>
+          </div>
+          <h2 className="text-2xl font-bold text-gray-800 mb-3">
+            Authentication Required
+          </h2>
+          <p className="text-gray-600 leading-relaxed mb-6">
+            Please log in to access the group chat and start collaborating with your peers.
+          </p>
+          <button className="px-6 py-3 bg-red-600 text-white font-medium rounded-lg hover:bg-red-700 transition-colors">
+            Log In
+          </button>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="w-full bg-gray-900 h-[90vh] flex">
-      <div className={`flex flex-col ${opendetails ? "w-[80%]" : "w-[100%]"}`}>
-        <div className="h-14 mx-12 text-2xl flex justify-between items-center text-white font-bold">
-          <div className="">{groupName}</div>
-          {!opendetails && (
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className={`text-blue-300 cursor-pointer`}
+    <div className="flex-1 flex bg-white">
+      <div className={`flex flex-col transition-all duration-300 ${opendetails ? "w-2/3" : "w-full"}`}>
+        {/* Chat Header */}
+        <div className="bg-gradient-to-r from-emerald-600 to-teal-600 text-white px-6 py-4 shadow-lg">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-4">
+              <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
+                <FontAwesomeIcon icon={faUsers} className="text-white" />
+              </div>
+              <div>
+                <h1 className="text-xl font-bold">{groupName}</h1>
+                <p className="text-emerald-100 text-sm">
+                  {allmessages.length} messages • Online
+                </p>
+              </div>
+            </div>
+            <button
               onClick={() => setOpendetails(!opendetails)}
+              className="p-2 bg-white/20 hover:bg-white/30 rounded-full transition-all duration-200"
+              title={opendetails ? "Hide Details" : "Show Details"}
             >
-              <line x1="3" y1="6" x2="21" y2="6" />
-              <line x1="3" y1="12" x2="21" y2="12" />
-              <line x1="3" y1="18" x2="21" y2="18" />
-            </svg>
-          )}
-          {opendetails && (
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="text-blue-300 cursor-pointer"
-              onClick={() => setOpendetails(!opendetails)}
-            >
-              <line x1="18" y1="6" x2="6" y2="18" />
-              <line x1="6" y1="6" x2="18" y2="18" />
-            </svg>
-          )}
+              <FontAwesomeIcon icon={opendetails ? faTimes : faInfo} />
+            </button>
+          </div>
         </div>
+
+        {/* Messages Container */}
         <div
-          className="p-4 overflow-y-auto wp_body rounded-lg shadow-md scrollbar-thin"
-          style={{ height: "74vh", borderRadius: "12px" }}
+          className="p-4 overflow-y-auto wp_body scrollbar-thin"
+          style={{ height: "64vh" }}
           ref={scrollref}
         >
-          <ul className="space-y-6">
-            {allmessages.map((post, index) => (
-              <li
-                key={index}
-                className={`p-4 rounded-lg shadow-lg relative transition-all duration-300 transform ${
-                  details.email === post.email
-                    ? "ml-auto bg-blue-600 hover:bg-blue-800 text-white border-black"
-                    : "mr-auto ml-4 bg-gray-300 hover:bg-gray-400 border-black"
-                } w-1/3`}
-              >
-                <div className="absolute left-[-22px] top-[2px] flex items-center justify-center w-8 h-8 rounded-full bg-orange-300 text-black font-bold">
-                  {post.name[0].toUpperCase()}
-                </div>
-                <button
-                  onClick={() => handleDelete(post, index)}
-                  className={`absolute top-2 right-1 text-white hover:text-red-500 transition ${
-                    details.email === post.email ||
-                    adminemails?.includes(details.email)
-                      ? ""
-                      : "hidden"
-                  }`}
-                  aria-label="Delete message"
+          <div className="space-y-4 max-w-4xl mx-auto">
+            {allmessages.map((post, index) => {
+              const isOwnMessage = details.email === post.email;
+              const showAvatar = index === 0 || allmessages[index - 1]?.email !== post.email;
+              
+              return (
+                <div
+                  key={index}
+                  className={`flex ${isOwnMessage ? 'justify-end' : 'justify-start'} group`}
                 >
-                  <FontAwesomeIcon icon={faTrashAlt} />
-                </button>
-                <div className="overflow-auto scrollbar-thin">
-                  <div className="flex flex-col sm:flex-row justify-between w-full my-1">
-                    <div className="text-sm my-1">
-                      <div>{post.name}</div>
-                    </div>
-                  </div>
-                  <p style={{ whiteSpace: "pre-line" }} className={``}>
-                    {post.message.startsWith('http') || post.message.startsWith('https') ? <a href={post.message} className="underline" target="_blank" rel="noopener noreferrer">{post.message}</a> : post.message}
-                  </p>
-                  {post.image && !post.image.endsWith(".pdf") && (
-                    <img
-                      className="mt-4 rounded-lg"
-                      src={`${post.image}`}
-                      alt="File not found"
-                      style={{ maxHeight: 300 }}
-                      onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => {
-                        e.currentTarget.style.display = "none"; // Hide image if not found
-                      }}
-                    />
-                  )}
-                  {post.image && post.image.endsWith(".pdf") && (
-                    <div
-                      className="relative cursor-pointer"
-                      onClick={() => {
-                        handlePdfClick(post.image ?? "");
-                      }}
-                    >
-                      <PdfPreview
-                        pdfUrl={post.image}
-                      />
-                      <div className="absolute bottom-0 h-20 opacity-85 w-fit bg-black text-white flex justify-center items-center font-xl  p-2 rounded-lg">
-                        {post.image_title}
+                  <div
+                    className={`relative max-w-xs sm:max-w-md lg:max-w-lg xl:max-w-xl ${
+                      isOwnMessage ? 'order-2' : 'order-1'
+                    }`}
+                  >
+                    {/* Avatar */}
+                    {!isOwnMessage && showAvatar && (
+                      <div className={`w-8 h-8 ${generateAvatar(post.name)} rounded-full flex items-center justify-center text-white font-bold text-sm mb-1`}>
+                        {post.name[0].toUpperCase()}
                       </div>
-                    </div>
-                  )}
+                    )}
 
-                  <div className=" flex justify-end mt-2">{post.date}</div>
+                    {/* Message Bubble */}
+                    <div
+                      className={`relative p-3 rounded-2xl shadow-sm ${
+                        isOwnMessage
+                          ? 'bg-emerald-600 text-white ml-4'
+                          : 'bg-white text-gray-800 mr-4 border border-gray-200'
+                      } ${showAvatar || isOwnMessage ? 'mt-2' : 'mt-1'}`}
+                    >
+                      {/* Delete Button */}
+                      {(details.email === post.email || adminemails?.includes(details.email)) && (
+                        <button
+                          onClick={() => handleDelete(post, index)}
+                          className={`absolute -top-2 -right-2 w-6 h-6 bg-red-500 hover:bg-red-600 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200 shadow-lg ${
+                            isOwnMessage ? 'text-white' : 'text-white'
+                          }`}
+                          title="Delete message"
+                        >
+                          <FontAwesomeIcon icon={faTrashAlt} className="text-xs" />
+                        </button>
+                      )}
+
+                      {/* Sender Name (for others' messages) */}
+                      {!isOwnMessage && showAvatar && (
+                        <p className="text-sm font-semibold text-emerald-600 mb-1">
+                          {post.name}
+                        </p>
+                      )}
+
+                      {/* Message Content */}
+                      <div className="space-y-2">
+                        {post.message && (
+                          <p className="whitespace-pre-wrap break-words">
+                            {post.message.startsWith('http') || post.message.startsWith('https') ? (
+                              <a 
+                                href={post.message} 
+                                className={`underline hover:no-underline ${
+                                  isOwnMessage ? 'text-emerald-100' : 'text-emerald-600'
+                                }`}
+                                target="_blank" 
+                                rel="noopener noreferrer"
+                              >
+                                {post.message}
+                              </a>
+                            ) : (
+                              post.message
+                            )}
+                          </p>
+                        )}
+
+                        {/* Image/File Display */}
+                        {post.image && (
+                          <div className="mt-2">
+                            {post.image.endsWith(".pdf") ? (
+                              <div
+                                className="relative cursor-pointer group/pdf"
+                                onClick={() => handlePdfClick(post.image ?? "")}
+                              >
+                                <div className="bg-gray-100 rounded-lg p-4 border-2 border-dashed border-gray-300 hover:border-emerald-400 transition-colors">
+                                  <div className="flex items-center space-x-3">
+                                    <div className="w-12 h-12 bg-red-500 rounded-lg flex items-center justify-center">
+                                      <FontAwesomeIcon icon={faFile} className="text-white" />
+                                    </div>
+                                    <div className="flex-1">
+                                      <p className="font-medium text-gray-800 truncate">
+                                        {post.image_title || 'Document.pdf'}
+                                      </p>
+                                      <p className="text-sm text-gray-600">PDF Document</p>
+                                    </div>
+                                    <FontAwesomeIcon 
+                                      icon={faDownload} 
+                                      className="text-gray-400 group-hover/pdf:text-emerald-600 transition-colors" 
+                                    />
+                                  </div>
+                                </div>
+                              </div>
+                            ) : (
+                              <img
+                                src={post.image}
+                                alt="Shared image"
+                                className="max-w-full h-auto rounded-lg shadow-sm hover:shadow-md transition-shadow cursor-pointer"
+                                style={{ maxHeight: '300px', objectFit: 'cover' }}
+                                onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+                                  e.currentTarget.style.display = "none";
+                                }}
+                                onClick={() => window.open(post.image, '_blank')}
+                              />
+                            )}
+                          </div>
+                        )}
+                      </div>
+
+
+                      {/* Message Tail */}
+                      <div
+                        className={`absolute top-0 w-0 h-0 ${
+                          isOwnMessage
+                            ? 'right-0 translate-x-2 border-l-8 border-l-emerald-600 border-t-8 border-t-transparent'
+                            : 'left-0 -translate-x-2 border-r-8 border-r-white border-t-8 border-t-transparent'
+                        }`}
+                      />
+                    </div>
+                      {/* Message Time */}
+                      <div className={`flex justify-end mt-2 ${
+                        isOwnMessage ? 'text-emerald-200' : 'text-gray-200'
+                      }`}>
+                        <span className="text-xs">
+                          {getMessageTime(post.date)}
+                        </span>
+                      </div>
+                  </div>
                 </div>
-              </li>
-            ))}
-          </ul>
-        </div>
-        <div className="my-auto">
-          <form
-            className="space-y-4"
-            onSubmit={(e) => {
-              handleSubmit(e); // Pass the event to handleSubmit
-            }}
-          >
-            <div className="grid grid-cols-[3%,60%,3%] gap-4 h-8 justify-center">
-              <div className="relative flex items-center cursor-pointer w-full bg-blue-800 rounded-lg hover:bg-blue-700 transition duration-200">
-                <input
-                  type="file"
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFile(e.target.files?.[0])}
-                  className="absolute inset-0 opacity-0 cursor-pointer"
-                />
-                <div className="text-white py-2 px-1 text-center w-full cursor-pointer">
-                  {file?.name ? (
-                    <>{file.name}</>
-                  ) : (
-                    <>
-                      <svg
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        className="cursor-pointer"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M9 7C9 4.23858 11.2386 2 14 2C16.7614 2 19 4.23858 19 7V15C19 18.866 15.866 22 12 22C8.13401 22 5 18.866 5 15V9C5 8.44772 5.44772 8 6 8C6.55228 8 7 8.44772 7 9V15C7 17.7614 9.23858 20 12 20C14.7614 20 17 17.7614 17 15V7C17 5.34315 15.6569 4 14 4C12.3431 4 11 5.34315 11 7V15C11 15.5523 11.4477 16 12 16C12.5523 16 13 15.5523 13 15V9C13 8.44772 13.4477 8 14 8C14.5523 8 15 8.44772 15 9V15C15 16.6569 13.6569 18 12 18C10.3431 18 9 16.6569 9 15V7Z"
-                          fill="currentColor"
-                        ></path>
-                      </svg>
-                    </>
-                  )}
+              );
+            })}
+          </div>
+
+          {/* Typing Indicator */}
+          {isTyping && (
+            <div className="flex justify-start mb-4">
+              <div className="bg-white rounded-2xl px-4 py-2 shadow-sm border border-gray-200">
+                <div className="flex space-x-1">
+                  <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
+                  <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{animationDelay: '0.1s'}}></div>
+                  <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{animationDelay: '0.2s'}}></div>
                 </div>
               </div>
+            </div>
+          )}
+        </div>
+
+        {/* Message Input */}
+        <div className="bg-white border-t border-gray-200 p-4">
+          <form onSubmit={handleSubmit} className="flex items-end space-x-3">
+            {/* File Upload */}
+            <div className="relative">
+              <input
+                type="file"
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFile(e.target.files?.[0])}
+                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                accept="image/*,.pdf,.doc,.docx"
+              />
+              <button
+                type="button"
+                className="w-12 h-12 bg-gray-100 hover:bg-emerald-100 text-gray-600 hover:text-emerald-600 rounded-full flex items-center justify-center transition-colors duration-200"
+                title="Attach file"
+              >
+                <FontAwesomeIcon icon={faPaperclip} />
+              </button>
+            </div>
+
+            {/* File Preview */}
+            {file && (
+              <div className="flex items-center space-x-2 bg-emerald-50 border border-emerald-200 rounded-lg px-3 py-2">
+                <FontAwesomeIcon icon={faFile} className="text-emerald-600" />
+                <span className="text-sm text-emerald-700 font-medium truncate max-w-32">
+                  {file.name}
+                </span>
+                <button
+                  onClick={() => setFile(undefined)}
+                  className="text-emerald-600 hover:text-emerald-800"
+                  type="button"
+                >
+                  <FontAwesomeIcon icon={faTimes} className="text-xs" />
+                </button>
+              </div>
+            )}
+
+            {/* Message Input */}
+            <div className="flex-1">
               <textarea
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
-                placeholder="Type your message here..."
-                className="w-full p-2 rounded-lg bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-600 text-lg resize-none scrollbar-none"
+                placeholder="Type your message..."
+                className="w-full p-3 bg-gray-50 border border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent resize-none transition-all duration-200"
+                rows={1}
+                style={{ minHeight: '48px', maxHeight: '120px' }}
                 onKeyDown={(e) => {
-                  if (e.key === "Enter") {
+                  if (e.key === "Enter" && !e.shiftKey) {
                     e.preventDefault();
                     handleSubmit(e);
                   }
                 }}
               />
-              <button
-                type="submit"
-                className="p-1 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-bold text-lg transition duration-200"
-              >
-                <svg
-                  viewBox="0 0 24 24"
-                  height="24"
-                  width="24"
-                  preserveAspectRatio="xMidYMid meet"
-                  version="1.1"
-                  x="0px"
-                  y="0px"
-                >
-                  <title>send</title>
-                  <path
-                    fill="currentColor"
-                    d="M1.101,21.757L23.8,12.028L1.101,2.3l0.011,7.912l13.623,1.816L1.112,13.845 L1.101,21.757z"
-                  ></path>
-                </svg>
-              </button>
             </div>
+
+            {/* Send Button */}
+            <button
+              type="submit"
+              disabled={!message.trim() && !file}
+              className="w-12 h-12 bg-emerald-600 hover:bg-emerald-700 disabled:bg-gray-300 disabled:cursor-not-allowed text-white rounded-full flex items-center justify-center transition-all duration-200 shadow-lg hover:shadow-xl"
+              title="Send message"
+            >
+              <FontAwesomeIcon icon={faPaperPlane} />
+            </button>
           </form>
         </div>
       </div>
+
+      {/* Group Details Sidebar */}
       {opendetails && (
-        <Group_Members
-          key={groupName!}
-          groupName={groupName!}
-          details={details}
-          groupDescription={groupDescription}
-        />
+        <div className="w-1/3 border-l border-gray-200 bg-white">
+          <Group_Members
+            key={groupName!}
+            groupName={groupName!}
+            details={details}
+            groupDescription={groupDescription}
+          />
+        </div>
       )}
     </div>
   );
