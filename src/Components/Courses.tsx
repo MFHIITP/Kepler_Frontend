@@ -111,7 +111,7 @@ function ProfessionalEducationPage() {
       image: "/Images/JEE_Prep.webp",
       features: ["Live Classes", "Mock Tests", "Doubt Sessions", "Study Material"],
       rating: 4.8,
-      // students: "25,000+"
+    // students: "25,000+"
     },
     {
       name: "Data Structures and Algorithms", 

@@ -345,7 +345,7 @@ const Index: FC<componentPropsInterface> = ({ auth, details }) => {
             {/* Mobile Logo */}
             <Link to="/" className="flex items-center space-x-2">
               <img
-                src="/Images/JMS_Logo(1).png"
+                src="/Images/Kepler_Logo.png"
                 alt="Kepler 22B"
                 width={32}
                 height={32}

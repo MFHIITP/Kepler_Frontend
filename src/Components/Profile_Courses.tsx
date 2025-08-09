@@ -13,7 +13,8 @@ interface CourseInterface {
 interface courseDetailsInterface {
   admittedCourses: [string];
   selectedCourses: [CourseInterface];
-  preventedCourses: [string]
+  preventedCourses: [string];
+  allPossibleCourses: [string];
 }
 
 const getAllCourses = async (emailId: string) => {
@@ -60,38 +61,12 @@ const CheckIcon = () => (
 );
 
 const Profile_Courses: React.FC<componentPropsInterfacePaymentProfile> = (props) => {
-  const [admittedCourses, setAdmittedCourses] = useState<{
-    JEE: string[];
-    CAT: string[];
-    GATE: string[];
-    "Mathematics And Computer Science": string[];
-  }>({
-    JEE: [],
-    CAT: [],
-    GATE: [],
-    "Mathematics And Computer Science": [],
-  });
-  const [choices, setChoices] = useState<{
-    JEE: string[];
-    CAT: string[];
-    GATE: string[];
-    "Mathematics And Computer Science": string[];
-  }>({
-    JEE: [],
-    CAT: [],
-    GATE: [],
-    "Mathematics And Computer Science": [],
-  });
+  const [admittedCourses, setAdmittedCourses] = useState<{"Computer Science": string[]}>({"Computer Science": []});
+  const [choices, setChoices] = useState<{"Computer Science": string[]}>({"Computer Science": []});
+  const [allComputerCourses, setAllComputerCourses] = useState<{"Computer Science": string[]}>({"Computer Science": []})
   const [dropdowns, setDropdowns] = useState({
     AllCourses: false,
-    JEE: false,
-    JEE_Class11: false,
-    JEE_Class12: false,
-    CAT: false,
-    GATE: false,
-    GATE_1: false,
-    GATE_2: false,
-    "Mathematics And Computer Science": false,
+    "Computer Science": false
   });
 
   const [preventedCourses, setPreventedCourses] = useState<string[]>([]);
@@ -101,20 +76,19 @@ const Profile_Courses: React.FC<componentPropsInterfacePaymentProfile> = (props)
     onSuccess: (data) => {
       const admittedCourses = data.admittedCourses;
       const filteredAdmittedCourses = {
-        JEE: admittedCourses.filter((val) => String(val).startsWith("JEE")),
-        CAT: admittedCourses.filter((val) => String(val).startsWith("CAT")),
-        GATE: admittedCourses.filter((val) => String(val).startsWith("GATE")),
-        "Mathematics And Computer Science": admittedCourses.filter((val) => String(val).startsWith("Mathematics And Computer Science")),
+        "Computer Science": admittedCourses.filter((val) => String(val).startsWith("Computer Science")),
       };
       setAdmittedCourses(filteredAdmittedCourses);
       const selectedCourses = data.selectedCourses;
       const filteredChoices = {
-        JEE: selectedCourses.filter((val) => String(val.name).startsWith("JEE")).map((val) => val.name),
-        CAT: selectedCourses.filter((val) => String(val.name).startsWith("CAT")).map((val) => val.name),
-        GATE: selectedCourses.filter((val) => String(val.name).startsWith("GATE")).map((val) => val.name),
-        "Mathematics And Computer Science": selectedCourses.filter((val) => String(val.name).startsWith("Mathematics And Computer Science")).map((val) => val.name),
+        "Computer Science": selectedCourses.filter((val) => String(val.name).startsWith("Computer Science")).map((val) => val.name),
       };
       setChoices(filteredChoices);
+      const allPossibleCourses = data.allPossibleCourses
+      const filteredComputerCourses = allPossibleCourses.filter((val) => String(val).startsWith("Computer Science")).map(val => val.replace(/^Computer Science\s*/, ""))
+      setAllComputerCourses({
+        "Computer Science": filteredComputerCourses
+      })
       setPreventedCourses(data.preventedCourses)
     },
   });
@@ -126,10 +100,7 @@ const Profile_Courses: React.FC<componentPropsInterfacePaymentProfile> = (props)
   const [search, setsearch] = useState("");
 
   const [courses, setCourses] = useState([
-    "JEE",
-    "CAT",
-    "Mathematics And Computer Science",
-    "GATE",
+    "Computer Science"
   ]);
 
   const applied_courses = courses.filter((val) => {
@@ -175,8 +146,7 @@ const Profile_Courses: React.FC<componentPropsInterfacePaymentProfile> = (props)
     let total = 0;
     Object.entries(choices).forEach(([category, courseList]) => {
       courseList.forEach(course => {
-        if (course.includes('CAT')) total += 3000;
-        else total += 1000;
+        if (course.includes('Computer Science')) total += 1000;
       });
     });
     return total;
@@ -256,158 +226,28 @@ const Profile_Courses: React.FC<componentPropsInterfacePaymentProfile> = (props)
                       >
                         <div className="flex items-center gap-4">
                           <div className={`w-3 h-3 rounded-full ${
-                            category === 'JEE' ? 'bg-red-500' :
-                            category === 'CAT' ? 'bg-orange-500' :
-                            category === 'GATE' ? 'bg-green-500' :
-                            'bg-purple-500'
+                            category === 'Computer Science' ? 'bg-purple-500' : 'bg-green-500'
                           }`} />
                           <h3 className="text-xl font-semibold text-gray-800">{category}</h3>
                         </div>
                         <ChevronDownIcon isOpen={dropdowns[category]} className="text-gray-600" />
                       </div>
 
-                      {/* Course Content */}
-                      {category === "JEE" && dropdowns.JEE && (
-                        <div className="px-6 pb-6 space-y-4">
-                          {/* Class 11 */}
-                          <div className="bg-white rounded-lg border border-gray-200">
-                            <div
-                              className="flex items-center justify-between p-4 cursor-pointer hover:bg-gray-50"
-                              onClick={() =>
-                                setDropdowns((prev) => ({
-                                  ...prev,
-                                  JEE_Class11: !prev.JEE_Class11,
-                                }))
-                              }
-                            >
-                              <span className="font-medium text-gray-700">Class 11 Foundation</span>
-                              <ChevronDownIcon isOpen={dropdowns.JEE_Class11} className="text-gray-500" />
-                            </div>
-                            {dropdowns.JEE_Class11 && (
-                              <div className="border-t border-gray-200">
-                                {["Physics", "Chemistry", "Mathematics"].map((course) => (
-                                  <label key={course} className="flex items-center justify-between p-4 hover:bg-blue-50 cursor-pointer border-b border-gray-100 last:border-b-0">
-                                    <div className="flex items-center gap-3">
-                                      <div className="relative">
-                                        <input
-                                          type="checkbox"
-                                          className="w-5 h-5 text-blue-600 border-2 border-gray-300 rounded focus:ring-blue-500 disabled:opacity-50"
-                                          checked={choices[category].includes(`JEE ${course} - Class 11`)}
-                                          disabled={preventedCourses.includes(`JEE ${course} - Class 11`)}
-                                          onChange={() => handleChoiceChange(category, `JEE ${course} - Class 11`)}
-                                        />
-                                        {choices[category].includes(`JEE ${course} - Class 11`) && (
-                                          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                                            <CheckIcon />
-                                          </div>
-                                        )}
-                                      </div>
-                                      <span className="text-gray-700 font-medium">{course}</span>
-                                    </div>
-                                    <span className="text-green-600 font-semibold">₹1,000</span>
-                                  </label>
-                                ))}
-                              </div>
-                            )}
-                          </div>
-
-                          {/* Class 12 */}
-                          <div className="bg-white rounded-lg border border-gray-200">
-                            <div
-                              className="flex items-center justify-between p-4 cursor-pointer hover:bg-gray-50"
-                              onClick={() =>
-                                setDropdowns((prev) => ({
-                                  ...prev,
-                                  JEE_Class12: !prev.JEE_Class12,
-                                }))
-                              }
-                            >
-                              <span className="font-medium text-gray-700">Class 12 Advanced</span>
-                              <ChevronDownIcon isOpen={dropdowns.JEE_Class12} className="text-gray-500" />
-                            </div>
-                            {dropdowns.JEE_Class12 && (
-                              <div className="border-t border-gray-200">
-                                {["Physics", "Chemistry", "Mathematics"].map((course) => (
-                                  <label key={course} className="flex items-center justify-between p-4 hover:bg-blue-50 cursor-pointer border-b border-gray-100 last:border-b-0">
-                                    <div className="flex items-center gap-3">
-                                      <div className="relative">
-                                        <input
-                                          type="checkbox"
-                                          className="w-5 h-5 text-blue-600 border-2 border-gray-300 rounded focus:ring-blue-500 disabled:opacity-50"
-                                          checked={choices[category].includes(`JEE ${course} - Class 12`)}
-                                          disabled={preventedCourses.includes(`JEE ${course} - Class 12`)}
-                                          onChange={() => handleChoiceChange(category, `JEE ${course} - Class 12`)}
-                                        />
-                                        {choices[category].includes(`JEE ${course} - Class 12`) && (
-                                          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                                            <CheckIcon />
-                                          </div>
-                                        )}
-                                      </div>
-                                      <span className="text-gray-700 font-medium">{course}</span>
-                                    </div>
-                                    <span className="text-green-600 font-semibold">₹1,000</span>
-                                  </label>
-                                ))}
-                              </div>
-                            )}
-                          </div>
-                        </div>
-                      )}
-
-                      {dropdowns.CAT && category === "CAT" && (
+                      {dropdowns["Computer Science"] && category === "Computer Science" && (
                         <div className="px-6 pb-6">
                           <div className="bg-white rounded-lg border border-gray-200">
-                            {["2025"].map((course) => (
-                              <label key={course} className="flex items-center justify-between p-4 hover:bg-blue-50 cursor-pointer">
-                                <div className="flex items-center gap-3">
-                                  <div className="relative">
-                                    <input
-                                      type="checkbox"
-                                      className="w-5 h-5 text-blue-600 border-2 border-gray-300 rounded focus:ring-blue-500 disabled:opacity-50"
-                                      checked={choices[category].includes(`CAT - ${course}`)}
-                                      disabled={preventedCourses.includes(`CAT - ${course}`)}
-                                      onChange={() => handleChoiceChange(category, `CAT - ${course}`)}
-                                    />
-                                    {choices[category].includes(`CAT - ${course}`) && (
-                                      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                                        <CheckIcon />
-                                      </div>
-                                    )}
-                                  </div>
-                                  <span className="text-gray-700 font-medium">CAT - {course}</span>
-                                </div>
-                                <span className="text-green-600 font-semibold">₹3,000</span>
-                              </label>
-                            ))}
-                          </div>
-                        </div>
-                      )}
-
-                      {dropdowns["Mathematics And Computer Science"] && category === "Mathematics And Computer Science" && (
-                        <div className="px-6 pb-6">
-                          <div className="bg-white rounded-lg border border-gray-200">
-                            {[
-                              "Engineering Mathematics 1",
-                              "Engineering Mathematics 2", 
-                              "Engineering Mathematics 3",
-                              "Engineering Mathematics 4",
-                              "Computer Languages",
-                              "Computer Science Fundamentals",
-                              "Data Structures And Algorithms",
-                              "Artificial Intelligence And Machine Learning",
-                            ].map((sem) => (
+                            {allComputerCourses["Computer Science"].map((sem) => (
                               <label key={sem} className="flex items-center justify-between p-4 hover:bg-blue-50 cursor-pointer border-b border-gray-100 last:border-b-0">
                                 <div className="flex items-center gap-3">
                                   <div className="relative">
                                     <input
                                       type="checkbox"
                                       className="w-5 h-5 text-blue-600 border-2 border-gray-300 rounded focus:ring-blue-500 disabled:opacity-50"
-                                      checked={choices[category].includes(`Mathematics And Computer Science - ${sem}`)}
-                                      disabled={preventedCourses.includes(`Mathematics And Computer Science - ${sem}`)}
-                                      onChange={() => handleChoiceChange(category, `Mathematics And Computer Science - ${sem}`)}
+                                      checked={choices[category].includes(`Computer Science - ${sem}`)}
+                                      disabled={preventedCourses.includes(`Computer Science - ${sem}`)}
+                                      onChange={() => handleChoiceChange(category, `Computer Science - ${sem}`)}
                                     />
-                                    {choices[category].includes(`Mathematics And Computer Science - ${sem}`) && (
+                                    {choices[category].includes(`Computer Science - ${sem}`) && (
                                       <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                                         <CheckIcon />
                                       </div>
@@ -418,104 +258,6 @@ const Profile_Courses: React.FC<componentPropsInterfacePaymentProfile> = (props)
                                 <span className="text-green-600 font-semibold">₹1,000</span>
                               </label>
                             ))}
-                          </div>
-                        </div>
-                      )}
-
-                      {category === "GATE" && dropdowns.GATE && (
-                        <div className="px-6 pb-6 space-y-4">
-                          {/* GATE 2025 */}
-                          <div className="bg-white rounded-lg border border-gray-200">
-                            <div
-                              className="flex items-center justify-between p-4 cursor-pointer hover:bg-gray-50"
-                              onClick={() =>
-                                setDropdowns((prev) => ({
-                                  ...prev,
-                                  GATE_1: !prev.GATE_1,
-                                }))
-                              }
-                            >
-                              <span className="font-medium text-gray-700">GATE - 2025</span>
-                              <ChevronDownIcon isOpen={dropdowns.GATE_1} className="text-gray-500" />
-                            </div>
-                            {dropdowns.GATE_1 && (
-                              <div className="border-t border-gray-200">
-                                {[
-                                  "Computer Science and Information Technology",
-                                  "Electronics and Communication",
-                                  "Electrical",
-                                  "Instrumentation",
-                                ].map((course) => (
-                                  <label key={course} className="flex items-center justify-between p-4 hover:bg-blue-50 cursor-pointer border-b border-gray-100 last:border-b-0">
-                                    <div className="flex items-center gap-3">
-                                      <div className="relative">
-                                        <input
-                                          type="checkbox"
-                                          className="w-5 h-5 text-blue-600 border-2 border-gray-300 rounded focus:ring-blue-500 disabled:opacity-50"
-                                          checked={choices[category].includes(`GATE - 2025 ${course}`)}
-                                          disabled={preventedCourses.includes(`GATE - 2025 ${course}`)}
-                                          onChange={() => handleChoiceChange(category, `GATE - 2025 ${course}`)}
-                                        />
-                                        {choices[category].includes(`GATE - 2025 ${course}`) && (
-                                          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                                            <CheckIcon />
-                                          </div>
-                                        )}
-                                      </div>
-                                      <span className="text-gray-700 font-medium">{course}</span>
-                                    </div>
-                                    <span className="text-green-600 font-semibold">₹1,000</span>
-                                  </label>
-                                ))}
-                              </div>
-                            )}
-                          </div>
-
-                          {/* GATE 2026 */}
-                          <div className="bg-white rounded-lg border border-gray-200">
-                            <div
-                              className="flex items-center justify-between p-4 cursor-pointer hover:bg-gray-50"
-                              onClick={() =>
-                                setDropdowns((prev) => ({
-                                  ...prev,
-                                  GATE_2: !prev.GATE_2,
-                                }))
-                              }
-                            >
-                              <span className="font-medium text-gray-700">GATE - 2026</span>
-                              <ChevronDownIcon isOpen={dropdowns.GATE_2} className="text-gray-500" />
-                            </div>
-                            {dropdowns.GATE_2 && (
-                              <div className="border-t border-gray-200">
-                                {[
-                                  "Computer Science and Information Technology",
-                                  "Electronics and Communication", 
-                                  "Electrical",
-                                  "Instrumentation",
-                                ].map((course) => (
-                                  <label key={course} className="flex items-center justify-between p-4 hover:bg-blue-50 cursor-pointer border-b border-gray-100 last:border-b-0">
-                                    <div className="flex items-center gap-3">
-                                      <div className="relative">
-                                        <input
-                                          type="checkbox"
-                                          className="w-5 h-5 text-blue-600 border-2 border-gray-300 rounded focus:ring-blue-500 disabled:opacity-50"
-                                          checked={choices[category].includes(`GATE - 2026 ${course}`)}
-                                          disabled={preventedCourses.includes(`GATE - 2026 ${course}`)}
-                                          onChange={() => handleChoiceChange(category, `GATE - 2026 ${course}`)}
-                                        />
-                                        {choices[category].includes(`GATE - 2026 ${course}`) && (
-                                          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                                            <CheckIcon />
-                                          </div>
-                                        )}
-                                      </div>
-                                      <span className="text-gray-700 font-medium">{course}</span>
-                                    </div>
-                                    <span className="text-green-600 font-semibold">₹1,000</span>
-                                  </label>
-                                ))}
-                              </div>
-                            )}
                           </div>
                         </div>
                       )}
@@ -530,10 +272,7 @@ const Profile_Courses: React.FC<componentPropsInterfacePaymentProfile> = (props)
                   className="flex-1 bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white font-semibold py-4 px-6 rounded-xl transition-all duration-200 hover:scale-105 hover:shadow-lg"
                   onClick={() =>
                     setChoices({
-                      CAT: [],
-                      JEE: [],
-                      "Mathematics And Computer Science": [],
-                      GATE: [],
+                      "Computer Science": [],
                     })
                   }
                 >
