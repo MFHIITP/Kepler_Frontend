@@ -496,7 +496,7 @@ const User_Details: React.FC<componentPropsInterfacePaymentProfile> = (
                 </div>
                 <div>
                   <h1 className="text-2xl font-bold text-gray-800">
-                    Student Dashboard
+                    {props.details?.name}
                   </h1>
                   <p className="text-gray-600">
                     Welcome back, {props.details?.name}

@@ -44,115 +44,123 @@ function ProfessionalCourseDetails() {
     navigate(`/profiles`);
   };
   const teachersData = {
-    college: [
+    languages: [
       {
         id: 1,
-        name: "Dr. Shubhayan Ghosal",
+        name: "Purnendu Kumar Misra",
         image: "/Images/Shubhayan_image.jpg",
-        subjects: ["Complex Analysis", "Advanced Mathematics"],
+        subjects: ["Java", "C++"],
         experience: "5+ Years Teaching",
         rating: 4.9,
         students: "2,500+",
         description: "Specializes in Complex Analysis with extensive experience in university-level mathematics. Currently pursuing PhD in Mathematics from Jadavpur University."
       },
-      {
-        id: 2,
-        name: "Prof. Subhajit Fadikar", 
-        image: "/Images/College_Prep.webp",
-        subjects: ["Calculus", "Differential Equations"],
-        experience: "4+ Years Teaching",
-        rating: 4.8,
-        students: "3,200+",
-        description: "Expert in Calculus and Engineering Mathematics with proven track record in helping students excel in semester examinations."
-      },
-      {
-        id: 3,
-        name: "Dr. Sagnik Saha",
-        image: "/Images/College_Prep.webp", 
-        subjects: ["Mathematical Analysis", "Topology"],
-        experience: "3+ Years Teaching",
-        rating: 4.7,
-        students: "1,800+",
-        description: "Specialized in Mathematical Analysis and advanced topics. Known for making complex concepts accessible to students."
-      }
     ],
-    jee: [
+    webdev: [
       {
         id: 1,
-        name: "Shirso Dey",
+        name: "Farshid Hossain",
         image: "/Images/College_Prep.webp",
-        subjects: ["Physics", "Mathematics"],
+        subjects: ["Frontend", "Backend", "DataBase", "DevOps"],
         experience: "6+ Years Teaching",
         rating: 4.9,
         students: "5,000+",
         description: "IIT alumnus with exceptional track record in JEE preparation. Expert in both Physics and Mathematics with innovative teaching methods."
       },
-      {
-        id: 2,
-        name: "Arijit Paul",
-        image: "/Images/College_Prep.webp",
-        subjects: ["Mathematics", "Problem Solving"],
-        experience: "5+ Years Teaching", 
-        rating: 4.8,
-        students: "4,200+",
-        description: "Mathematics expert with deep understanding of JEE patterns. Known for systematic approach and excellent problem-solving techniques."
-      }
     ],
-    gate: [
+    dsa: [
       {
         id: 1,
-        name: "Dr. Sagnik Saha",
+        name: "Satwik Biswas",
         image: "/Images/College_Prep.webp",
-        subjects: ["Linear Algebra", "Engineering Mathematics"],
+        subjects: ["Arrays", "Linked Lists", "Binary Search", "Sliding Window", "Trees", "Graphs", "Dynamic Programming", "Tries"],
         experience: "4+ Years Teaching",
         rating: 4.8,
         students: "2,100+",
         description: "GATE expert with comprehensive knowledge of engineering mathematics and analytical problem solving."
       }
-    ]
+    ],
+    fundamentals: [
+      {
+        id: 1,
+        name: "Vivek Haldar",
+        image: "/Images/College_Prep.webp",
+        subjects: ["CN", "DBMS", "OS", "COA"],
+        experience: "6+ Years Teaching",
+        rating: 4.9,
+        students: "5,000+",
+        description: "IIT alumnus with exceptional track record in JEE preparation. Expert in both Physics and Mathematics with innovative teaching methods."
+      },
+    ],
+    ml: [
+      {
+        id: 1,
+        name: "Dipan Mondal",
+        image: "/Images/College_Prep.webp",
+        subjects: ["ML", "AI", "DL", "LLM"],
+        experience: "6+ Years Teaching",
+        rating: 4.9,
+        students: "5,000+",
+        description: "IIT alumnus with exceptional track record in JEE preparation. Expert in both Physics and Mathematics with innovative teaching methods."
+      },
+    ],
   };
 
   const courseInfo = {
-    college: {
-      title: "College Semester Mastery Program 2025",
-      subtitle: "Comprehensive preparation for all college-level examinations",
+    languages: {
+      title: "Computer Languages Mastery Program",
+      subtitle: "Comprehensive preparation for all object oriented programming languages",
       image: "/Images/Mentorship.webp",
       highlights: [
-        "Complete semester syllabus coverage",
+        "Complete guidance from experts in the industry",
         "Interactive doubt-clearing sessions", 
         "Comprehensive study materials",
         "Regular assessments and feedback"
       ],
-      duration: "Full Academic Year",
-      students: "15,000+",
+      duration: "6 months",
+      students: "150+",
       rating: 4.8
     },
-    jee: {
-      title: "JEE Master Program 2025-26",
-      subtitle: "Complete preparation for JEE Main & Advanced",
+    fundamentals: {
+      title: "Complete Computer Fundamentals Program",
+      subtitle: "Comprehensive preparation for Computer Networks, Database Management, Operating Systems and Computer Organization and Architechture",
       image: "/Images/Mentorship.webp", 
       highlights: [
-        "Comprehensive Physics, Chemistry, Mathematics",
-        "Previous year questions analysis",
-        "Mock tests and performance tracking",
-        "Personal mentorship program"
+        "Complete guidance from experts in the industry",
+        "Interactive doubt-clearing sessions", 
+        "Comprehensive study materials",
+        "Regular assessments and feedback"
       ],
-      duration: "2 Years",
-      students: "25,000+",
+      duration: "6 months",
+      students: "150+",
       rating: 4.9
     },
-    gate: {
-      title: "GATE Excellence Program 2025",
-      subtitle: "Targeted preparation for GATE examinations",
+    webdev: {
+      title: "Complete Web Development package",
+      subtitle: "Complete Full Stack Web Development with Dev Ops Masterclass",
       image: "/Images/Mentorship.webp",
       highlights: [
-        "Branch-specific comprehensive modules",
-        "Engineering mathematics mastery",
-        "Previous years solved papers",
-        "Interview preparation guidance"
+        "Complete guidance from experts in the industry",
+        "Interactive doubt-clearing sessions", 
+        "Comprehensive study materials",
+        "Regular assessments and feedback"
       ],
-      duration: "1 Year",
-      students: "8,000+", 
+      duration: "6 months",
+      students: "150+", 
+      rating: 4.7
+    },
+    dsa: {
+      title: "Complete DSA masterclass package",
+      subtitle: "Targeted Preparation for all variations of DSA questions in any job interview",
+      image: "/Images/Mentorship.webp",
+      highlights: [
+        "Complete guidance from experts in the industry",
+        "Interactive doubt-clearing sessions", 
+        "Comprehensive study materials",
+        "Regular assessments and feedback"
+      ],
+      duration: "6 months",
+      students: "150+", 
       rating: 4.7
     }
   };
@@ -179,9 +187,10 @@ function ProfessionalCourseDetails() {
 
   const getExamTitle = () => {
     switch (exam) {
-      case "college": return "College Semester Exams";
-      case "jee": return "JEE Main & Advanced";
-      case "gate": return "GATE Examinations";
+      case "languages": return "Master Technical Skills";
+      case "dsa": return "Master Technical Skills";
+      case "webdev": return "Master Technical Skills";
+      case "fundamentals": return "Master Technical Skills";
       default: return "Competitive Exams";
     }
   };
@@ -214,7 +223,7 @@ function ProfessionalCourseDetails() {
             Premium Course Program
           </div>
           <h1 className="text-4xl lg:text-6xl font-bold text-slate-800 mb-6 leading-tight">
-            Master {getExamTitle()}
+           {getExamTitle()}
             <span className="block text-blue-600">with Expert Guidance</span>
           </h1>
           <p className="text-xl text-slate-600 max-w-3xl mx-auto mb-8">
@@ -248,9 +257,9 @@ function ProfessionalCourseDetails() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8">
+          <div className="flex justify-center gap-8">
             {teachers.map((teacher) => (
-              <div key={teacher.id} className="group bg-white rounded-2xl border border-slate-200 overflow-hidden hover:shadow-xl hover:border-blue-200 transition-all duration-300">
+              <div key={teacher.id} className="group w-[40%] bg-white rounded-2xl border border-slate-200 overflow-hidden hover:shadow-xl hover:border-blue-200 transition-all duration-300">
                 <div className="p-8">
                   {/* Teacher Header */}
                   <div className="flex items-center gap-4 mb-6">

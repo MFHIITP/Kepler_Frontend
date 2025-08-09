@@ -105,38 +105,47 @@ function ProfessionalEducationPage() {
 
   const examPrograms = [
     {
-      name: "JEE Preparation",
-      exam: "jee",
-      description: "Comprehensive 2-year program for Joint Entrance Examination with 95% success rate",
+      name: "Languages",
+      exam: "languages",
+      description: "Comprehensive programme for learning popular Object Oriented Languages like C++, Java and Python",
       image: "/Images/JEE_Prep.webp",
       features: ["Live Classes", "Mock Tests", "Doubt Sessions", "Study Material"],
       rating: 4.8,
       // students: "25,000+"
     },
     {
-      name: "CAT Preparation", 
-      exam: "cat",
-      description: "Complete MBA entrance exam preparation with industry-expert mentorship",
+      name: "Data Structures and Algorithms", 
+      exam: "dsa",
+      description: "Comprehensive DSA and industry oriented coding that will almost surely land you a job in your dream company",
       image: "/Images/CAT_Prep.webp",
-      features: ["Verbal Ability", "Quantitative Aptitude", "Data Interpretation", "Mock CATs"],
+      features: ["Live Classes", "Live Coding", "Interactive Sessions", "Doubt Clearing"],
       rating: 4.9,
       // students: "15,000+"
     },
     {
-      name: "GATE Preparation",
-      exam: "gate",
-      description: "Engineering graduate aptitude test preparation with branch-specific modules",
+      name: "Web Technologies",
+      exam: "webdev",
+      description: "Comprehensive Web Development sessions complete with Frontend, Backend, Database and DevOps, and land a full stack job in the company of your choice",
       image: "/Images/GATE_Prep.webp", 
-      features: ["Technical Subjects", "Aptitude", "Previous Years", "Live Guidance"],
+      features: ["Technical Subjects", "Live Classes", "Doubt Clearing", "Full Stack Projects"],
       rating: 4.7,
       // students: "20,000+"
     },
     {
-      name: "College Exams",
-      exam: "college",
-      description: "Semester exams and placement preparation for college students",
+      name: "CS Fundamentals",
+      exam: "fundamentals",
+      description: "Complete CS Fundamentals package comprising Computer Networks, Database Management, Operating Systems and Computer Organization and Architechture and gain the necessary expertise to thrive in the current job market",
       image: "/Images/College_Prep.webp",
-      features: ["Semester Prep", "Placement Training", "Skill Development", "Interview Prep"],
+      features: ["DBMS", "OS", "COA", "CN"],
+      rating: 4.6,
+      // students: "30,000+"
+    },
+    {
+      name: "Machine Learning",
+      exam: "ml",
+      description: "Complete Machine Learning package with algorithms, Deep Learning, Neural Network and Large Language Models",
+      image: "/Images/College_Prep.webp",
+      features: ["AI", "ML", "LLMs", "DL"],
       rating: 4.6,
       // students: "30,000+"
     },
@@ -272,7 +281,7 @@ function ProfessionalEducationPage() {
       {/* Main Header */}
       <section className={`max-w-7xl mx-auto px-6 py-16 text-center ${isModalOpen ? 'blur-sm' : ''}`}>
         <h2 className="text-4xl lg:text-5xl font-bold text-slate-800 mb-6">
-          Excel in JEE & College Entrance Exams
+          Excel in Job Interviews and UpSkill in Technical Roles 
         </h2>
         <p className="text-xl text-slate-600 max-w-3xl mx-auto mb-8">
           Join over 100,000 students who have achieved their academic goals with Kepler's 
@@ -281,11 +290,11 @@ function ProfessionalEducationPage() {
         <div className="flex flex-wrap justify-center gap-8 text-sm text-slate-500">
           <div className="flex items-center gap-2">
             <Check className="w-5 h-5 text-emerald-500" />
-            <span>IIT Alumni Faculty</span>
+            <span>Expert Industry Based Faculties</span>
           </div>
           <div className="flex items-center gap-2">
             <Check className="w-5 h-5 text-emerald-500" />
-            <span>95% Success Rate</span>
+            <span>99% Success Rate</span>
           </div>
           <div className="flex items-center gap-2">
             <Check className="w-5 h-5 text-emerald-500" />
