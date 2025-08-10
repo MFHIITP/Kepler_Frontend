@@ -59,6 +59,7 @@ const apiRoutes = {
             userInformation: `/payment/getUserInformation`
         }
     },
+    getAllCourses: '/users/getAllCourses',
     razorpay: {
         payment: {
             createOrder: '/razorpay/create-order',

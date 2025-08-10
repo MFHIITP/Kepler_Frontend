@@ -10,6 +10,7 @@ function Part2() {
   const courses = [
     {
       title: "DSA - 1",
+      exam: 'dsa1',
       description: "UpSkill your DSA skills from scratch to top industry level.",
       icon: <Database className="w-8 h-8" />,
       color: "from-blue-500 to-cyan-500",
@@ -18,6 +19,7 @@ function Part2() {
     },
     {
       title: "Web Dev - 1",
+      exam: 'webdev1',
       description: "Start making websites from personal projects to industry projects.",
       icon: <Globe className="w-8 h-8" />,
       color: "from-green-500 to-emerald-500",
@@ -26,6 +28,7 @@ function Part2() {
     },
     {
       title: "Language",
+      exam: 'language',
       description: "Learn all the languages necessary for industries in one go.",
       icon: <Code className="w-8 h-8" />,
       color: "from-purple-500 to-pink-500",
@@ -34,6 +37,7 @@ function Part2() {
     },
     {
       title: "Machine Learning - 1",
+      exam: 'ml1',
       description: "Hands-on ML with real datasets and competitions.",
       icon: <Brain className="w-8 h-8" />,
       color: "from-orange-500 to-red-500",
@@ -42,6 +46,7 @@ function Part2() {
     },
     {
       title: "Computer Fundamentals - 1",
+      exam: 'fundamentals1',
       description: "Learn Computer Networks and Wireless technologies.",
       icon: <Network className="w-8 h-8" />,
       color: "from-teal-500 to-blue-500",
@@ -50,6 +55,7 @@ function Part2() {
     },
     {
       title: "DSA - 2",
+      exam: 'dsa2',
       description: "Focus on non-linear Data Structures to complete industry oriented DSA.",
       icon: <Database className="w-8 h-8" />,
       color: "from-indigo-500 to-purple-500",
@@ -126,8 +132,7 @@ function Part2() {
   });
 
   const handleCourseClick = (course) => {
-    navigate(`/courses/${course.title}`);
-    console.log(`Navigating to ${course.title}`);
+    navigate(`/courses/${course.exam}`);
   };
 
   return (

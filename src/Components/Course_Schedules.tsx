@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Calendar,
   Clock,
@@ -45,10 +45,10 @@ interface CourseInfo {
 
 const ProfessionalCourseSchedule = () => {
   const { exam } = useParams();
-
+  
   const navigate = useNavigate();
 
-  const courseData: { [key: string]: CourseInfo } = {
+  const [courseData, setCourseData] = useState({
     languages: {
       type: "Language",
       name: "Programming Languages Mastery 2025",
@@ -60,7 +60,7 @@ const ProfessionalCourseSchedule = () => {
       rating: 4.8,
       startDate: "January 1st, 2025",
     },
-    webdev: {
+    webdev1: {
       type: "Web Development",
       name: "Full Stack Web Development Bootcamp 2025",
       teachers: "IIT Alumni Faculty Team",
@@ -71,7 +71,7 @@ const ProfessionalCourseSchedule = () => {
       rating: 4.9,
       startDate: "April 1st, 2024",
     },
-    dsa: {
+    dsa1: {
       type: "Data Structures & Algorithms",
       name: "DSA Mastery Program 2025",
       teachers: "Expert Engineering Faculty",
@@ -82,7 +82,7 @@ const ProfessionalCourseSchedule = () => {
       rating: 4.7,
       startDate: "June 1st, 2024",
     },
-    fundamentals: {
+    fundamentals1: {
       type: "Computer Fundamentals",
       name: "Computer Science Fundamentals 2025",
       teachers: "Expert Engineering Faculty",
@@ -93,7 +93,7 @@ const ProfessionalCourseSchedule = () => {
       rating: 4.7,
       startDate: "June 1st, 2024",
     },
-    ml: {
+    ml1: {
       type: "Machine Learning & AI",
       name: "Machine Learning & AI Program 2025",
       teachers: "Expert Engineering Faculty",
@@ -104,9 +104,9 @@ const ProfessionalCourseSchedule = () => {
       rating: 4.7,
       startDate: "June 1st, 2024",
     },
-  };
+  });
 
-  const scheduleData: { [key: string]: ScheduleItem[] } = {
+  const [scheduleData, setScheduleData] = useState({
     languages: [
       {
         month: "SEP",
@@ -146,7 +146,7 @@ const ProfessionalCourseSchedule = () => {
         status: "upcoming",
       },
     ],
-    webdev: [
+    webdev1: [
       {
         month: "SEP",
         day: "2",
@@ -166,7 +166,7 @@ const ProfessionalCourseSchedule = () => {
         status: "upcoming",
       },
     ],
-    dsa: [
+    dsa1: [
       {
         month: "SEP",
         day: "3",
@@ -177,7 +177,7 @@ const ProfessionalCourseSchedule = () => {
         status: "upcoming",
       },
     ],
-    fundamentals: [
+    fundamentals1: [
       {
         month: "SEP",
         day: "4",
@@ -188,7 +188,7 @@ const ProfessionalCourseSchedule = () => {
         status: "upcoming",
       },
     ],
-    ml: [
+    ml1: [
       {
         month: "SEP",
         day: "7",
@@ -199,10 +199,10 @@ const ProfessionalCourseSchedule = () => {
         status: "upcoming",
       },
     ],
-  };
+  });
 
   // Sample syllabus data
-  const syllabusData: { [key: string]: string[] } = {
+  const [syllabusData, setSyllabusData] = useState({
     languages: [
       "C",
       "C++",
@@ -213,7 +213,7 @@ const ProfessionalCourseSchedule = () => {
       "Error Handling and Reflection",
       "Class Diagram and System Design",
     ],
-    dsa: [
+    dsa1: [
       "Recursion",
       "Arrays",
       "Sliding Window",
@@ -223,7 +223,7 @@ const ProfessionalCourseSchedule = () => {
       "Graphs",
       "Dynamic Programming",
     ],
-    webdev: [
+    webdev1: [
       "HTML5",
       "CSS3",
       "JavaScript",
@@ -233,7 +233,7 @@ const ProfessionalCourseSchedule = () => {
       "MongoDB",
       "PostgreSQL"
     ],
-    ml: [
+    ml1: [
       "Data Gathering",
       "Data Processing",
       "Data Analysis",
@@ -241,20 +241,18 @@ const ProfessionalCourseSchedule = () => {
       "Deep Learning",
       "Natural Language Processing",
     ],
-    fundamentals: [
+    fundamentals1: [
       "Computer Networks",
       "Database Management",
       "Operating Systems",
       "Computer Organization and Architechture",
       "System Design",
     ],
-  };
+  });
 
   const currentCourse = courseData[exam as string] || courseData.languages;
-  const currentSchedule =
-    scheduleData[exam as string] || scheduleData.languages;
-  const currentSyllabus =
-    syllabusData[exam as string] || syllabusData.languages;
+  const currentSchedule = scheduleData[exam as string] || scheduleData.languages;
+  const currentSyllabus = syllabusData[exam as string] || syllabusData.languages;
 
   const handleSubscriptionClick = () => {
     navigate("/profiles");

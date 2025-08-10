@@ -56,7 +56,7 @@ function ProfessionalCourseDetails() {
         description: "Specializes in Complex Analysis with extensive experience in university-level mathematics. Currently pursuing PhD in Mathematics from Jadavpur University."
       },
     ],
-    webdev: [
+    webdev1: [
       {
         id: 1,
         name: "Farshid Hossain",
@@ -68,7 +68,7 @@ function ProfessionalCourseDetails() {
         description: "IIT alumnus with exceptional track record in JEE preparation. Expert in both Physics and Mathematics with innovative teaching methods."
       },
     ],
-    dsa: [
+    dsa1: [
       {
         id: 1,
         name: "Satwik Biswas",
@@ -80,7 +80,7 @@ function ProfessionalCourseDetails() {
         description: "GATE expert with comprehensive knowledge of engineering mathematics and analytical problem solving."
       }
     ],
-    fundamentals: [
+    fundamentals1: [
       {
         id: 1,
         name: "Vivek Haldar",
@@ -92,7 +92,7 @@ function ProfessionalCourseDetails() {
         description: "IIT alumnus with exceptional track record in JEE preparation. Expert in both Physics and Mathematics with innovative teaching methods."
       },
     ],
-    ml: [
+    ml1: [
       {
         id: 1,
         name: "Dipan Mondal",
@@ -121,7 +121,7 @@ function ProfessionalCourseDetails() {
       students: "150+",
       rating: 4.8
     },
-    fundamentals: {
+    fundamentals1: {
       title: "Complete Computer Fundamentals Program",
       subtitle: "Comprehensive preparation for Computer Networks, Database Management, Operating Systems and Computer Organization and Architechture",
       image: "/Images/Mentorship.webp", 
@@ -135,7 +135,7 @@ function ProfessionalCourseDetails() {
       students: "150+",
       rating: 4.9
     },
-    webdev: {
+    webdev1: {
       title: "Complete Web Development package",
       subtitle: "Complete Full Stack Web Development with Dev Ops Masterclass",
       image: "/Images/Mentorship.webp",
@@ -149,7 +149,21 @@ function ProfessionalCourseDetails() {
       students: "150+", 
       rating: 4.7
     },
-    dsa: {
+    dsa1: {
+      title: "Complete DSA masterclass package",
+      subtitle: "Targeted Preparation for all variations of DSA questions in any job interview",
+      image: "/Images/Mentorship.webp",
+      highlights: [
+        "Complete guidance from experts in the industry",
+        "Interactive doubt-clearing sessions", 
+        "Comprehensive study materials",
+        "Regular assessments and feedback"
+      ],
+      duration: "6 months",
+      students: "150+", 
+      rating: 4.7
+    },
+    ml1: {
       title: "Complete DSA masterclass package",
       subtitle: "Targeted Preparation for all variations of DSA questions in any job interview",
       image: "/Images/Mentorship.webp",
