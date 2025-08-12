@@ -343,7 +343,7 @@ const Index: FC<componentPropsInterface> = ({ auth, details }) => {
         <div className="px-4 sm:px-6">
           <div className="flex justify-between items-center h-16">
             {/* Mobile Logo */}
-            <Link to="/" className="flex items-center space-x-2">
+            <Link to="/" className="flex items-center space-x-2" onClick={() => setNavOpen(false)}>
               <img
                 src="/Images/Kepler_Logo.png"
                 alt="Kepler 22B"
@@ -377,6 +377,7 @@ const Index: FC<componentPropsInterface> = ({ auth, details }) => {
                     ? "text-blue-600 bg-blue-50" 
                     : "text-gray-700 hover:text-gray-900 hover:bg-gray-100"
                 }`}
+                  onClick={() => setNavOpen(false)}
               >
                 <FontAwesomeIcon icon={faHome} className="mr-3" />
                 Home
@@ -389,20 +390,23 @@ const Index: FC<componentPropsInterface> = ({ auth, details }) => {
                     ? "text-blue-600 bg-blue-50" 
                     : "text-gray-700 hover:text-gray-900 hover:bg-gray-100"
                 }`}
+                  onClick={() => setNavOpen(false)}
               >
                 <FontAwesomeIcon icon={faQuestionCircle} className="mr-3" />
                 About Us
               </Link>
 
               <Link 
-                to="/rules"
-                className={`block px-3 py-2 rounded-md text-base font-medium ${
-                  window.location.pathname === "/rules" 
+                to="/courses"
+                className={`flex items-center px-3 py-2 rounded-md text-base font-medium ${
+                  window.location.pathname === "/courses" 
                     ? "text-blue-600 bg-blue-50" 
                     : "text-gray-700 hover:text-gray-900 hover:bg-gray-100"
                 }`}
+                  onClick={() => setNavOpen(false)}
               >
-                Rules
+                <FontAwesomeIcon icon={faLayerGroup} className="mr-2" />
+                Courses
               </Link>
 
               {/* Mobile Admins */}
@@ -456,6 +460,7 @@ const Index: FC<componentPropsInterface> = ({ auth, details }) => {
                             key={index}
                             to={`/admins/coreteam/${team.toLowerCase().replace(/\s/g, "")}`}
                             className="block px-3 py-2 text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-md"
+                            onClick={() => setNavOpen(false)}
                           >
                             {team}
                           </Link>
@@ -466,6 +471,7 @@ const Index: FC<componentPropsInterface> = ({ auth, details }) => {
                     <Link 
                       to="/admins/userlist" 
                       className={`block px-3 py-2 text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-md ${auth ? "" : "hidden"}`}
+                      onClick={() => setNavOpen(false)}
                     >
                       UserList
                     </Link>
@@ -482,6 +488,7 @@ const Index: FC<componentPropsInterface> = ({ auth, details }) => {
                       className={`block px-3 py-2 text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-md ${
                         auth ? "" : "hidden"
                       } ${adminemails.includes(details?.email ?? "") ? "" : "hidden"}`}
+                       onClick={() => setNavOpen(false)}
                     >
                       User History
                     </Link>
@@ -511,10 +518,10 @@ const Index: FC<componentPropsInterface> = ({ auth, details }) => {
                 
                 {librarydrop && (
                   <div className="ml-4 space-y-1">
-                    <Link to="/library/resources" className="block px-3 py-2 text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-md">
+                    <Link to="/library/resources" className="block px-3 py-2 text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-md" onClick={() => setNavOpen(false)}>
                       Resources
                     </Link>
-                    <Link to="/problems/dailyProblems" className="block px-3 py-2 text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-md">
+                    <Link to="/problems/dailyProblems" className="block px-3 py-2 text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-md" onClick={() => setNavOpen(false)}>
                       Daily Problems
                     </Link>
                   </div>
@@ -528,6 +535,7 @@ const Index: FC<componentPropsInterface> = ({ auth, details }) => {
                     ? "text-blue-600 bg-blue-50" 
                     : "text-gray-700 hover:text-gray-900 hover:bg-gray-100"
                 } ${auth ? "" : "hidden"}`}
+                 onClick={() => setNavOpen(false)}
               >
                 <FontAwesomeIcon icon={faComments} className="mr-3" />
                 Group Chat
@@ -540,6 +548,7 @@ const Index: FC<componentPropsInterface> = ({ auth, details }) => {
                     ? "text-blue-600 bg-blue-50" 
                     : "text-gray-700 hover:text-gray-900 hover:bg-gray-100"
                 } ${auth ? "" : "hidden"}`}
+                 onClick={() => setNavOpen(false)}
               >
                 <FontAwesomeIcon icon={faVideo} className="mr-3" />
                 Meeting
@@ -554,6 +563,7 @@ const Index: FC<componentPropsInterface> = ({ auth, details }) => {
                 }`}
                 target="_blank"
                 rel="noopener noreferrer"
+                onClick={() => setNavOpen(false)}
               >
                 <FontAwesomeIcon icon={faImage} className="mr-3" />
                 Gallery
@@ -583,14 +593,14 @@ const Index: FC<componentPropsInterface> = ({ auth, details }) => {
                   <div className="ml-4 space-y-1">
                     <Link 
                       to="/notice/notices" 
-                      className={`block px-3 py-2 text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-md ${auth ? "" : "hidden"}`}
+                      className={`block px-3 py-2 text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-md ${auth ? "" : "hidden"}`} onClick={() => setNavOpen(false)}
                     >
                       Notice and Circulars
                     </Link>
-                    <Link to="/notice/merchandise" className="block px-3 py-2 text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-md">
+                    <Link to="/notice/merchandise" className="block px-3 py-2 text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-md" onClick={() => setNavOpen(false)}>
                       Merchandise
                     </Link>
-                    <Link to="/notice/donation" className="block px-3 py-2 text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-md">
+                    <Link to="/notice/donation" className="block px-3 py-2 text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-md" onClick={() => setNavOpen(false)}>
                       Donate Us
                     </Link>
                   </div>
@@ -605,6 +615,7 @@ const Index: FC<componentPropsInterface> = ({ auth, details }) => {
                     ? "text-blue-600 bg-blue-50" 
                     : "text-gray-700 hover:text-gray-900 hover:bg-gray-100"
                 } ${auth ? "" : "hidden"}`}
+                 onClick={() => setNavOpen(false)}
               >
                 <Avatar
                   sx={{
@@ -627,6 +638,7 @@ const Index: FC<componentPropsInterface> = ({ auth, details }) => {
                   className={`block w-full text-center px-3 py-2 rounded-md text-base font-medium text-white bg-blue-600 hover:bg-blue-700 ${
                     auth ? "hidden" : ""
                   }`}
+                  onClick={() => setNavOpen(false)}
                 >
                   Login
                 </Link>

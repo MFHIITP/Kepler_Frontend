@@ -90,7 +90,7 @@ const CodingDetails: React.FC<CodingDetailsInterface> = ({ details, goToPage }) 
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
       {/* Header with Glass Effect */}
       <div className="sticky top-0 z-10 backdrop-blur-md bg-white/70 border-b border-slate-200/50 shadow-sm">
-        <div className="max-w-7xl mx-auto px-6 py-4">
+        <div className="w-screen md:max-w-7xl mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
               <div className="w-10 h-10 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl flex items-center justify-center">
@@ -114,7 +114,7 @@ const CodingDetails: React.FC<CodingDetailsInterface> = ({ details, goToPage }) 
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-6 py-8">
+      <div className="w-screen md:max-w-7xl mx-auto px-6 py-8">
         {/* Profile Card with Advanced Styling */}
         <div className="relative mb-8">
           <div className="absolute inset-0 bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 rounded-3xl blur-xl opacity-20 animate-pulse"></div>
@@ -222,7 +222,7 @@ const CodingDetails: React.FC<CodingDetailsInterface> = ({ details, goToPage }) 
             </div>
             
             <div className="overflow-x-auto">
-              <div className="max-h-[70vh] overflow-y-auto scrollbar-thin scrollbar-thumb-slate-300 scrollbar-track-transparent">
+              <div className="max-h-[70vh] overflow-y-auto scrollbar-thin">
                 <table className="w-full">
                   <thead className="sticky top-0 bg-gradient-to-r from-slate-50 to-blue-50 backdrop-blur-sm border-b border-slate-200">
                     <tr>

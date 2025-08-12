@@ -5,9 +5,12 @@ import Profile from "./Profile";
 import { componentPropsInterface } from "./Interfaces/ComponentProps.interface";
 import CodingDetails from "./CodingDetails";
 import Leaderboard from "./Leaderboard";
+import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const Landing: React.FC<componentPropsInterface> = (props) => {
   const [option, setOption] = useState("courses");
+  const [mobileView, setMobileView] = useState("courses")
   
   // Professional navigation structure
   const navigationItems = [
@@ -47,9 +50,9 @@ const Landing: React.FC<componentPropsInterface> = (props) => {
   ];
 
   return (
-    <div className="flex h-[91vh] bg-gray-50">
+    <div className={`flex h-[91vh] bg-gray-50`}>
       {/* Professional Sidebar */}
-      <div className="flex flex-col w-[280px] bg-white border-r border-gray-200 shadow-sm">
+      <div className={`bg-white border-r border-gray-200 shadow-sm ${mobileView == 'landing' ? 'w-screen md:flex-col md:w-[280px]' : 'hidden md:block'}`}>
         {/* Kepler Brand Header */}
         <div className="px-6 py-6 border-b border-gray-100">
           <div className="flex items-center gap-3">
@@ -76,7 +79,7 @@ const Landing: React.FC<componentPropsInterface> = (props) => {
                       ? "bg-blue-50 border-r-2 border-blue-600"
                       : "hover:bg-gray-50"
                   }`}
-                  onClick={() => setOption(item.key)}
+                  onClick={() => {setOption(item.key); setMobileView(item.key)}}
                 >
                   <div className="flex-1">
                     <div className={`text-sm font-medium ${
@@ -110,7 +113,7 @@ const Landing: React.FC<componentPropsInterface> = (props) => {
                       ? "bg-blue-50 border-r-2 border-blue-600"
                       : "hover:bg-gray-50"
                   }`}
-                  onClick={() => setOption(item.key)}
+                  onClick={() => {setOption(item.key); setMobileView(item.key)}}
                 >
                   <div className="flex-1">
                     <div className={`text-sm font-medium ${
@@ -132,12 +135,12 @@ const Landing: React.FC<componentPropsInterface> = (props) => {
         </div>
 
         {/* Professional Footer */}
-        <div className="px-4 py-4 border-t border-gray-100">
-          <div className="flex items-center gap-3 px-3 py-2">
+        <div className="px-4 border-t border-gray-100">
+          <div className="flex items-center gap-3 px-3">
             <div className="w-7 h-7 bg-gray-100 rounded-full flex items-center justify-center">
               <div className="w-4 h-4 bg-gray-400 rounded-full"></div>
             </div>
-            <div className="flex-1">
+            <div className="flex-1 py-2 md:py-0">
               <div className="text-sm font-medium text-gray-700">{props.details?.name}</div>
               <div className="text-xs text-gray-500">{props.details?.email}</div>
             </div>
@@ -147,7 +150,8 @@ const Landing: React.FC<componentPropsInterface> = (props) => {
       </div>
 
       {/* Main Content Area */}
-      <div className="flex-1 flex flex-col bg-white">
+      <div className={`bg-white relative ${mobileView != "landing" ? "md:flex-1 md:flex md:flex-col" : "hidden md:flex-1 md:flex md:flex-col"}`}>
+        <div className={`absolute left-0.5 top-2 py-1 px-2 rounded-lg shadow-md bg-gray-300 md:hidden`} onClick={() => {setMobileView("landing")}}><FontAwesomeIcon icon={faArrowLeft}/></div>
         {/* Professional Header */}
         <div className="bg-white border-b border-gray-200 px-8 py-5">
           <div className="flex items-center justify-between">
@@ -168,7 +172,7 @@ const Landing: React.FC<componentPropsInterface> = (props) => {
         </div>
 
         {/* Content Container */}
-        <div className="flex-1 bg-gray-50">
+        <div className={`flex-1 bg-gray-50`}>
           {option === "dashboard" && (
             <div className="h-full overflow-y-auto">
               <User_Details details={props.details} goToPage={setOption} />

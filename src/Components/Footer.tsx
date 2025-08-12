@@ -92,7 +92,7 @@ const Footer = () => {
               {/* Social Links */}
               <div>
                 <h4 className="font-semibold mb-4 text-white">Follow Us</h4>
-                <div className="flex space-x-3">
+                <div className="flex space-x-3 mb-4">
                   {[
                     { icon: <Linkedin className="w-5 h-5" />, href: 'https://www.linkedin.com', color: 'hover:bg-blue-600' },
                     { icon: <Facebook className="w-5 h-5" />, href: 'https://www.facebook.com', color: 'hover:bg-blue-700' },
@@ -121,7 +121,7 @@ const Footer = () => {
             <div className="flex flex-col md:flex-row items-center justify-between space-y-4 md:space-y-0">
               
               {/* Logo and Copyright */}
-              <div className="flex items-center space-x-4 mt-3">
+              <div className="flex flex-col md:flex-row items-center space-x-4 mt-3">
                 <img src="/Images/Kepler_Logo.png" alt="" height={30} width={30} className="rounded-lg"/>
                 <Anime />
                 <div className="text-sm text-gray-400">

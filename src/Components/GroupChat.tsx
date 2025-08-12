@@ -40,6 +40,7 @@ const GroupChat: React.FC<componentPropsInterface> = (props) => {
   const [newDescription, setNewDescription] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const [showAddForm, setShowAddForm] = useState(false);
+  const [mobileView, setMobileView] = useState("chatList")
 
   const context = useContext(MyContext);
   const adminemails = context?.adminemails;
@@ -148,7 +149,7 @@ const GroupChat: React.FC<componentPropsInterface> = (props) => {
     >
       {/* Left Sidebar - Groups List */}
       <div
-        className={`w-80 bg-white border-r border-gray-200 shadow-xl flex flex-col ${
+        className={`w-screen md:w-80 ${mobileView == 'chatList' ? '' : 'hidden md:flex md:flex-col'} bg-white border-r overflow-auto scrollbar-thin border-gray-200 shadow-xl ${
           fs ? "h-[90vh]" : "h-[90vh]"
         }`}
       >
@@ -197,6 +198,7 @@ const GroupChat: React.FC<componentPropsInterface> = (props) => {
                 onClick={() => {
                   setName(val.name);
                   setGroupdescription(val.description);
+                  setMobileView(val.name);
                 }}
                 title={val.name.replace(/^Computer Science\s*/, "")}
                 className={`group relative flex items-center p-3 rounded-xl cursor-pointer transition-all duration-200 hover:bg-gray-50 ${
@@ -298,7 +300,7 @@ const GroupChat: React.FC<componentPropsInterface> = (props) => {
       </div>
 
       {/* Right Chat Area */}
-      <div className="flex-1 flex flex-col h-[74vh]">
+      <div className={`flex-1 h-[80vh] ${mobileView != 'chatList' ? '' : 'hidden'} md:flex md:flex-col`}>
         {name ? (
           <Talk
             key={name}
@@ -306,6 +308,8 @@ const GroupChat: React.FC<componentPropsInterface> = (props) => {
             groupName={name}
             ref={scrollref}
             groupDescription={groupdescription}
+            changeView = {setMobileView}
+            mobileView={mobileView}
           />
         ) : (
           <div className="flex-1 flex items-center justify-center bg-gradient-to-br from-emerald-50 to-teal-50">

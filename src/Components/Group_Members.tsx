@@ -1,6 +1,5 @@
 import React, { FC, useEffect, useState, useContext } from "react";
 import api from "../utils/api";
-import { componentPropsInterface } from "./Interfaces/ComponentProps.interface";
 import apiRoutes from "../utils/Routes/apiRoutes";
 import { userdetails } from "./Interfaces/Details.interface";
 import { MyContext } from "../main";
@@ -22,6 +21,8 @@ interface GroupMembersInterface {
   groupName: string,
   details: userdetails,
   groupDescription: string,
+  mobileView: string,
+  changeView: React.Dispatch<React.SetStateAction<string>>
 }
 
 const Group_Members: React.FC<GroupMembersInterface> = (props) => {
@@ -33,7 +34,6 @@ const Group_Members: React.FC<GroupMembersInterface> = (props) => {
   
   const context = useContext(MyContext);
   const adminemails = context?.adminemails;
-  const isCurrentUserAdmin = adminemails?.includes(props.details?.email);
 
   useEffect(() => {
     const participant_find = async () => {
@@ -97,6 +97,11 @@ const Group_Members: React.FC<GroupMembersInterface> = (props) => {
               <FontAwesomeIcon icon={faInfoCircle} className="text-blue-600 text-sm" />
             </div>
             <div className="">
+              <button className="p-2 rounded-full md:hidden text-white bg-green-600 shadow-lg" onClick={() => props.changeView(props.groupName)}>
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="24" height="24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                  </svg>
+                </button>
               <p className="text-sm font-medium text-gray-800 mb-1">Group Description</p>
               <p className="text-sm text-gray-600 leading-relaxed">
                 {props.groupDescription}
@@ -255,7 +260,7 @@ const Group_Members: React.FC<GroupMembersInterface> = (props) => {
                   Cancel
                 </button>
                 <button
-                  onClick={handleAddMember}
+                  // onClick={handleAddMember}
                   disabled={!newMemberEmail.trim()}
                   className="flex-1 px-4 py-3 bg-emerald-600 text-white rounded-lg font-medium hover:bg-emerald-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
                 >

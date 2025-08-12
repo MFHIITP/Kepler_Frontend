@@ -91,9 +91,9 @@ function Login() {
         <div className="absolute -bottom-40 -left-32 w-96 h-96 rounded-full blur-3xl"></div>
       </div>
 
-      <div className="relative w-full max-w-md">
+      <div className="relative w-full md:max-w-md">
         {/* Main Login Card */}
-        <div className=" bg-white/80 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/20 p-8 space-y-6 min-w-max">
+        <div className=" bg-white/80 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/20 p-8 space-y-6 md:min-w-max">
           <div className="text-center">
             `{/* Logo/Brand Section */}
             <div className="mb-6 flex justify-center items-center gap-6">
