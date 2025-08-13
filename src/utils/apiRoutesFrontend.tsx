@@ -1,7 +1,7 @@
-import { lazy, ReactElement, ReactInstance, Suspense } from "react";
+import { lazy, Suspense } from "react";
 import { userdetails } from "../Components/Interfaces/Details.interface";
-import { createBrowserRouter, Navigate } from "react-router-dom";
-import DailyProblemsPage from "../Components/DailyProblems/DailyProblemsPage";
+import { createBrowserRouter } from "react-router-dom";
+const DailyProblemsPage = lazy(() => import("../Components/DailyProblems/DailyProblemsPage"));
 
 const MainLayout = lazy(()=>import("./MainLayout"))
 const Login = lazy(() => import("../Components/Login"));
@@ -20,11 +20,9 @@ const Courses = lazy(() => import("../Components/Courses"));
 const ReadBook = lazy(() => import("../Components/ReadBook"));
 const Popping = lazy(() => import("../Components/Popping"));
 const PayPal = lazy(() => import("../Components/PayPalComponent"));
-const QRPage = lazy(() => import("../Components/QRPage"));
 const ContentTeam = lazy(() => import("../Components/Teams/ContentTeam"));
 const LiveUsers = lazy(() => import("../Components/Live_Usere"));
 const HistoryUsers = lazy(() => import("../Components/History_Users"));
-const DonateUs = lazy(() => import("../Components/DonateUs"));
 const Course_Details = lazy(() => import("../Components/Course_Details"));
 const ReferCode = lazy(() => import("../Components/ReferCode"));
 const Course_Schedules = lazy(() => import("../Components/Course_Schedules"));
@@ -159,34 +157,10 @@ export const RouterFrontend = (authenticated: boolean, details: userdetails | un
           ),
         },
         {
-          path: "/notice/donation",
-          element: (
-            <Suspense fallback={<div>Loading...</div>}>
-              <DonateUs />
-            </Suspense>
-          ),
-        },
-        {
           path: "/admins/coreteam/treasurycommittee",
           element: (
             <Suspense fallback={<div>Loading...</div>}>
               <ContentTeam details={details} teamName = {"TreasuryCommittee"}/>
-            </Suspense>
-          ),
-        },
-        {
-          path: "/notice/donation/qrcode",
-          element: (
-            <Suspense>
-              <QRPage />
-            </Suspense>
-          ),
-        },
-        {
-          path: "/notice/donation/paypal/:donation",
-          element: (
-            <Suspense>
-              <PayPal />
             </Suspense>
           ),
         },

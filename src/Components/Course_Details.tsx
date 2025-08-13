@@ -273,7 +273,7 @@ function ProfessionalCourseDetails() {
 
           <div className="flex justify-center gap-8">
             {teachers.map((teacher) => (
-              <div key={teacher.id} className="group w-[40%] bg-white rounded-2xl border border-slate-200 overflow-hidden hover:shadow-xl hover:border-blue-200 transition-all duration-300">
+              <div key={teacher.id} className="group md:w-[40%] bg-white rounded-2xl border border-slate-200 overflow-hidden hover:shadow-xl hover:border-blue-200 transition-all duration-300">
                 <div className="p-8">
                   {/* Teacher Header */}
                   <div className="flex items-center gap-4 mb-6">

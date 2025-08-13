@@ -405,8 +405,8 @@ const ProfessionalCourseSchedule = () => {
             </div>
 
             {/* Playlist placeholder */}
-            <div className="bg-slate-50 rounded-2xl p-6 text-center border-2 border-dashed border-slate-300">
-              <div className="my-8 h-[30rem] bg-gray-200 shadow-lg rounded-lg p-4">
+            <div className="bg-slate-50 rounded-2xl p-0 md:p-6 text-center border-2 border-dashed border-slate-300">
+              <div className="my-8 h-screen md:h-[30rem] bg-gray-200 shadow-lg rounded-lg p-0 md:p-4">
                 <Playlist exam={exam} />
               </div>
             </div>
@@ -493,9 +493,9 @@ const ProfessionalCourseSchedule = () => {
                     key={index}
                     className="group border border-slate-200 rounded-2xl p-6 hover:shadow-md hover:border-blue-200 transition-all duration-200"
                   >
-                    <div className="flex items-start gap-6">
+                    <div className="flex flex-col md:flex-row items-start gap-6">
                       {/* Date Badge */}
-                      <div className="flex-shrink-0 bg-gradient-to-br from-slate-100 to-slate-200 rounded-xl p-4 text-center min-w-[80px]">
+                      <div className="flex-shrink-0 bg-gradient-to-br from-slate-100 to-slate-200 rounded-xl p-4 text-center md:min-w-[80px]">
                         <div className="text-sm font-semibold text-slate-600">
                           {session.month}
                         </div>

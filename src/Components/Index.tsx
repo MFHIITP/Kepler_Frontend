@@ -284,9 +284,6 @@ const Index: FC<componentPropsInterface> = ({ auth, details }) => {
                       <Link to="/notice/merchandise" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                         Merchandise
                       </Link>
-                      <Link to="/notice/donation" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                        Donate Us
-                      </Link>
                     </div>
                   </div>
                 )}

@@ -1,5 +1,4 @@
 import ReactPlayer from "react-player/youtube";
-
 import React, { useState } from "react";
 import {
   Play,
@@ -19,6 +18,8 @@ import {
   SkipBack,
   SkipForward,
   Pause,
+  ChevronUp,
+  ChevronDown,
 } from "lucide-react";
 import { playlistData } from "../lists";
 
@@ -37,11 +38,12 @@ export interface VideoItem {
   difficulty?: "beginner" | "intermediate" | "advanced";
 }
 
-function ProfessionalVideoPlaylist({ exam = "college" }) {
+function ProfessionalVideoPlaylist({ exam }: { exam: string }) {
   const [selectedVideoId, setSelectedVideoId] = useState(1);
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentProgress, setCurrentProgress] = useState(0);
   const [ind, setIndex] = useState(1);
+  const [showPlaylist, setShowPlaylist] = useState(false); // For mobile toggle
 
   const currentPlaylist = playlistData[exam] || playlistData.college;
   const selectedVideo =
@@ -80,6 +82,7 @@ function ProfessionalVideoPlaylist({ exam = "college" }) {
       setSelectedVideoId(videoId);
       setIsPlaying(false);
       setCurrentProgress(0);
+      setShowPlaylist(false); // Close playlist on mobile after selection
     }
   };
 
@@ -88,12 +91,12 @@ function ProfessionalVideoPlaylist({ exam = "college" }) {
   };
 
   return (
-    <div className="h-full bg-white rounded-2xl border border-slate-200 shadow-lg overflow-hidden">
-      <div className="flex h-full">
+    <div className="h-full bg-white rounded-none md:rounded-2xl border-0 md:border md:border-slate-200 shadow-none md:shadow-lg overflow-hidden">
+      <div className="flex flex-col lg:flex-row h-full">
         {/* Main Video Player */}
-        <div className="flex-1 flex flex-col">
+        <div className="flex-1 flex flex-col min-h-0">
           {/* Video Container */}
-          <div className="relative bg-black flex-1 flex items-center justify-center rounded-tl-2xl overflow-hidden">
+          <div className="relative bg-black aspect-video lg:flex-1 lg:aspect-auto flex items-center justify-center overflow-hidden">
             {selectedVideo.type === "drive" ? (
               <div className="w-full h-full relative">
                 <iframe
@@ -110,30 +113,30 @@ function ProfessionalVideoPlaylist({ exam = "college" }) {
                   <ReactPlayer
                     url={selectedVideo.link}
                     playing={isPlaying}
-                    controls={true} // Enable YouTube controls
-                    light={true} // Enable light mode (thumbnail image shown before play)
+                    controls={true}
+                    light={true}
                     width="100%"
                     height="100%"
                     onPlay={() => console.log("Video is playing")}
                     config={{
                       youtube: {
                         playerVars: {
-                          modestbranding: 1, // Use 1 to hide YouTube branding
-                          rel: 0, // Disable related videos at the end
-                          showinfo: 0, // Disable video info
-                          controls: 1, // Enable YouTube controls
+                          modestbranding: 1,
+                          rel: 0,
+                          showinfo: 0,
+                          controls: 1,
                         },
                       },
                     }}
                   />
                 </div>
 
-                <div className="absolute top-4 left-4 right-4 flex justify-between items-start">
-                  <div className="bg-black/70 backdrop-blur-sm text-white px-3 py-1 rounded-full text-sm font-medium flex items-center gap-2">
+                <div className="absolute top-2 md:top-4 left-2 md:left-4 right-2 md:right-4 flex justify-between items-start">
+                  <div className="bg-black/70 backdrop-blur-sm text-white px-2 md:px-3 py-1 rounded-full text-xs md:text-sm font-medium flex items-center gap-1 md:gap-2">
                     {getTypeIcon(selectedVideo.type)}
-                    {selectedVideo.type.toUpperCase()}
+                    <span className="hidden sm:inline">{selectedVideo.type.toUpperCase()}</span>
                   </div>
-                  <div className="bg-black/70 backdrop-blur-sm text-white px-3 py-1 rounded-full text-sm font-medium">
+                  <div className="bg-black/70 backdrop-blur-sm text-white px-2 md:px-3 py-1 rounded-full text-xs md:text-sm font-medium">
                     {selectedVideo.duration}
                   </div>
                 </div>
@@ -151,36 +154,36 @@ function ProfessionalVideoPlaylist({ exam = "college" }) {
           </div>
 
           {/* Video Controls & Info */}
-          <div className="p-6 border-t border-slate-200">
+          <div className="p-4 md:p-6 border-t border-slate-200">
             <div className="mb-4">
-              <div className="flex items-start justify-between mb-3">
-                <h2 className="text-2xl font-bold text-slate-800 leading-tight">
+              <div className="flex flex-col sm:flex-row sm:items-start justify-between mb-3 gap-3 sm:gap-0">
+                <h2 className="text-lg md:text-2xl font-bold text-slate-800 leading-tight">
                   {selectedVideo.name}
                 </h2>
-                <div className="flex items-center gap-2">
-                  <button className="bg-slate-100 hover:bg-slate-200 p-2 rounded-lg transition-colors">
-                    <Settings className="w-5 h-5 text-slate-600" />
+                <div className="flex items-center gap-2 flex-shrink-0">
+                  <button className="bg-slate-100 hover:bg-slate-200 p-2 rounded-lg transition-colors touch-manipulation">
+                    <Settings className="w-4 md:w-5 h-4 md:h-5 text-slate-600" />
                   </button>
-                  <button className="bg-slate-100 hover:bg-slate-200 p-2 rounded-lg transition-colors">
-                    <Download className="w-5 h-5 text-slate-600" />
+                  <button className="bg-slate-100 hover:bg-slate-200 p-2 rounded-lg transition-colors touch-manipulation">
+                    <Download className="w-4 md:w-5 h-4 md:h-5 text-slate-600" />
                   </button>
-                  <button className="bg-slate-100 hover:bg-slate-200 p-2 rounded-lg transition-colors">
-                    <Maximize className="w-5 h-5 text-slate-600" />
+                  <button className="bg-slate-100 hover:bg-slate-200 p-2 rounded-lg transition-colors touch-manipulation">
+                    <Maximize className="w-4 md:w-5 h-4 md:h-5 text-slate-600" />
                   </button>
                 </div>
               </div>
 
-              <div className="flex items-center gap-4 text-sm text-slate-600 mb-4">
+              <div className="flex flex-wrap items-center gap-2 md:gap-4 text-xs md:text-sm text-slate-600 mb-4">
                 <div className="flex items-center gap-1">
-                  <Eye className="w-4 h-4" />
+                  <Eye className="w-3 md:w-4 h-3 md:h-4" />
                   {selectedVideo.views} views
                 </div>
                 <div className="flex items-center gap-1">
-                  <Clock className="w-4 h-4" />
+                  <Clock className="w-3 md:w-4 h-3 md:h-4" />
                   {selectedVideo.duration}
                 </div>
                 <div
-                  className={`px-3 py-1 rounded-full text-xs font-medium border ${getDifficultyColor(
+                  className={`px-2 md:px-3 py-1 rounded-full text-xs font-medium border ${getDifficultyColor(
                     selectedVideo.difficulty || "beginner"
                   )}`}
                 >
@@ -194,61 +197,88 @@ function ProfessionalVideoPlaylist({ exam = "college" }) {
             </div>
 
             {/* Playback Controls */}
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <button className="bg-slate-100 hover:bg-slate-200 p-3 rounded-xl transition-colors">
-                  <SkipBack className="w-5 h-5 text-slate-700" />
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-4 sm:gap-0">
+              <div className="flex items-center gap-2 md:gap-3">
+                <button className="bg-slate-100 hover:bg-slate-200 p-2.5 md:p-3 rounded-xl transition-colors touch-manipulation">
+                  <SkipBack className="w-4 md:w-5 h-4 md:h-5 text-slate-700" />
                 </button>
                 <button
                   onClick={togglePlayPause}
-                  className="bg-blue-600 hover:bg-blue-700 p-3 rounded-xl transition-colors"
+                  className="bg-blue-600 hover:bg-blue-700 p-2.5 md:p-3 rounded-xl transition-colors touch-manipulation"
                 >
                   {isPlaying ? (
-                    <Pause className="w-5 h-5 text-white" />
+                    <Pause className="w-4 md:w-5 h-4 md:h-5 text-white" />
                   ) : (
-                    <Play className="w-5 h-5 text-white ml-0.5" />
+                    <Play className="w-4 md:w-5 h-4 md:h-5 text-white ml-0.5" />
                   )}
                 </button>
-                <button className="bg-slate-100 hover:bg-slate-200 p-3 rounded-xl transition-colors">
-                  <SkipForward className="w-5 h-5 text-slate-700" />
+                <button className="bg-slate-100 hover:bg-slate-200 p-2.5 md:p-3 rounded-xl transition-colors touch-manipulation">
+                  <SkipForward className="w-4 md:w-5 h-4 md:h-5 text-slate-700" />
                 </button>
-                <button className="bg-slate-100 hover:bg-slate-200 p-3 rounded-xl transition-colors">
-                  <Volume2 className="w-5 h-5 text-slate-700" />
+                <button className="bg-slate-100 hover:bg-slate-200 p-2.5 md:p-3 rounded-xl transition-colors touch-manipulation">
+                  <Volume2 className="w-4 md:w-5 h-4 md:h-5 text-slate-700" />
                 </button>
               </div>
 
-              <div className="text-sm text-slate-600">
+              <div className="text-xs md:text-sm text-slate-600">
                 Video {selectedVideoId} of {currentPlaylist.length}
               </div>
             </div>
           </div>
+
+          {/* Mobile Playlist Toggle */}
+          <div className="lg:hidden border-t border-slate-200">
+            <button
+              onClick={() => setShowPlaylist(!showPlaylist)}
+              className="w-full p-4 flex items-center justify-between text-slate-700 hover:bg-slate-50 transition-colors touch-manipulation"
+            >
+              <span className="font-semibold">
+                Course Videos ({currentPlaylist.length})
+              </span>
+              {showPlaylist ? (
+                <ChevronUp className="w-5 h-5" />
+              ) : (
+                <ChevronDown className="w-5 h-5" />
+              )}
+            </button>
+          </div>
         </div>
 
         {/* Playlist Sidebar */}
-        <div className="w-96 border-l border-slate-200 flex flex-col">
-          {/* Playlist Header */}
-          <div className="p-6 border-b border-slate-200 bg-gradient-to-r from-slate-50 to-blue-50">
+        <div className={`
+          w-full lg:w-80 xl:w-96 border-l-0 lg:border-l border-slate-200 flex flex-col
+          ${showPlaylist ? 'block' : 'hidden lg:flex'}
+          ${showPlaylist ? 'max-h-96 lg:max-h-none' : ''}
+        `}>
+          {/* Playlist Header - Hidden on mobile when collapsed */}
+          <div className={`
+            p-4 md:p-6 border-b border-slate-200 bg-gradient-to-r from-slate-50 to-blue-50
+            ${showPlaylist ? 'block' : 'hidden lg:block'}
+          `}>
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-xl font-bold text-slate-800">
+              <h3 className="text-lg md:text-xl font-bold text-slate-800">
                 Course Videos
               </h3>
-              <div className="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm font-semibold">
+              <div className="bg-blue-100 text-blue-700 px-2 md:px-3 py-1 rounded-full text-xs md:text-sm font-semibold">
                 {currentPlaylist.length} Videos
               </div>
             </div>
-            <div className="text-sm text-slate-600">
+            <div className="text-xs md:text-sm text-slate-600">
               Complete all videos to unlock the next chapter
             </div>
           </div>
 
           {/* Video List */}
-          <div className="flex-1 overflow-y-auto">
-            <div className="p-4 space-y-3">
+          <div className={`
+            flex-1 overflow-y-auto
+            ${showPlaylist ? 'block' : 'hidden lg:block'}
+          `}>
+            <div className="p-3 md:p-4 space-y-2 md:space-y-3">
               {currentPlaylist.map((video, index) => (
                 <div
                   key={video.id}
                   onClick={() => handleVideoSelect(video.id)}
-                  className={`group rounded-xl border transition-all duration-200 cursor-pointer ${
+                  className={`group rounded-xl border transition-all duration-200 cursor-pointer touch-manipulation ${
                     video.id === selectedVideoId
                       ? "border-blue-300 bg-blue-50 shadow-md"
                       : video.isLocked
@@ -256,32 +286,34 @@ function ProfessionalVideoPlaylist({ exam = "college" }) {
                       : "border-slate-200 bg-white hover:border-blue-200 hover:bg-blue-50/50 hover:shadow-sm"
                   }`}
                 >
-                  <div className="p-4">
-                    <div className="flex gap-4">
+                  <div className="p-3 md:p-4">
+                    <div className="flex gap-3 md:gap-4">
                       {/* Thumbnail */}
                       <div className="relative flex-shrink-0">
                         <img
                           src={video.image}
                           alt={video.name}
-                          className="w-20 h-11 rounded-lg object-cover"
+                          className="w-16 md:w-20 h-9 md:h-11 rounded-lg object-cover"
                         />
                         <div className="absolute inset-0 bg-black/20 rounded-lg flex items-center justify-center">
                           {video.isLocked ? (
-                            <Lock className="w-4 h-4 text-white" />
+                            <Lock className="w-3 md:w-4 h-3 md:h-4 text-white" />
                           ) : (
-                            getTypeIcon(video.type)
+                            <div className="scale-75 md:scale-100">
+                              {getTypeIcon(video.type)}
+                            </div>
                           )}
                         </div>
-                        <div className="absolute bottom-1 right-1 bg-black/80 text-white text-xs px-1 rounded">
+                        <div className="absolute bottom-0.5 md:bottom-1 right-0.5 md:right-1 bg-black/80 text-white text-xs px-1 rounded">
                           {video.time}
                         </div>
                       </div>
 
                       {/* Video Info */}
                       <div className="flex-1 min-w-0">
-                        <div className="flex items-start justify-between mb-2">
+                        <div className="flex items-start justify-between mb-1 md:mb-2">
                           <h4
-                            className={`font-semibold text-sm leading-tight ${
+                            className={`font-semibold text-xs md:text-sm leading-tight line-clamp-2 ${
                               video.id === selectedVideoId
                                 ? "text-blue-700"
                                 : "text-slate-800"
@@ -290,25 +322,30 @@ function ProfessionalVideoPlaylist({ exam = "college" }) {
                             {video.name}
                           </h4>
                           {video.isCompleted && (
-                            <CheckCircle className="w-4 h-4 text-emerald-500 flex-shrink-0 mt-0.5" />
+                            <CheckCircle className="w-3 md:w-4 h-3 md:h-4 text-emerald-500 flex-shrink-0 mt-0.5" />
                           )}
                         </div>
 
-                        <div className="text-xs text-slate-500 mb-2">
+                        <div className="text-xs text-slate-500 mb-1 md:mb-2 truncate">
                           {video.chapter}
                         </div>
 
                         <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-2 text-xs text-slate-500">
-                            <Eye className="w-3 h-3" />
-                            {video.views}
+                          <div className="flex items-center gap-1 text-xs text-slate-500">
+                            <Eye className="w-2.5 md:w-3 h-2.5 md:h-3" />
+                            <span className="truncate">{video.views}</span>
                           </div>
                           <div
-                            className={`px-2 py-1 rounded-full text-xs font-medium border ${getDifficultyColor(
+                            className={`px-1.5 md:px-2 py-0.5 md:py-1 rounded-full text-xs font-medium border ${getDifficultyColor(
                               video.difficulty || "beginner"
                             )}`}
                           >
-                            {video.difficulty}
+                            <span className="hidden sm:inline">
+                              {video.difficulty}
+                            </span>
+                            <span className="sm:hidden">
+                              {video.difficulty?.charAt(0).toUpperCase()}
+                            </span>
                           </div>
                         </div>
                       </div>
@@ -320,7 +357,10 @@ function ProfessionalVideoPlaylist({ exam = "college" }) {
           </div>
 
           {/* Progress Footer */}
-          <div className="p-6 border-t border-slate-200 bg-slate-50">
+          <div className={`
+            p-4 md:p-6 border-t border-slate-200 bg-slate-50
+            ${showPlaylist ? 'block' : 'hidden lg:block'}
+          `}>
             <div className="flex items-center justify-between mb-3">
               <span className="text-sm font-semibold text-slate-700">
                 Course Progress
