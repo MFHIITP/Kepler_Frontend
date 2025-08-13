@@ -19,7 +19,6 @@ const About = lazy(() => import("../Components/About"));
 const Courses = lazy(() => import("../Components/Courses"));
 const ReadBook = lazy(() => import("../Components/ReadBook"));
 const Popping = lazy(() => import("../Components/Popping"));
-const PayPal = lazy(() => import("../Components/PayPalComponent"));
 const ContentTeam = lazy(() => import("../Components/Teams/ContentTeam"));
 const LiveUsers = lazy(() => import("../Components/Live_Usere"));
 const HistoryUsers = lazy(() => import("../Components/History_Users"));
