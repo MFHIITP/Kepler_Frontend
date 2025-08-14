@@ -5,6 +5,7 @@ import api from "../../utils/api";
 import apiRoutes from "../../utils/Routes/apiRoutes";
 import { useMutation } from "@tanstack/react-query";
 import toast from "react-hot-toast";
+import { useParams } from "react-router-dom";
 
 interface addPersonInterface {
   teamName: string, 
@@ -27,7 +28,16 @@ const addTeamMember = async(values: addPersonInterface) => {
   return data;
 }
 
-const ContentTeam: FC<{details: userdetails | undefined, teamName: string}> = ({ details, teamName }) => {
+const deleteTeamMember = async({email, teamName, emailId}: {email: string, teamName: string, emailId: string}) => {
+  const {data} = await api.post(apiRoutes.teams.teamUpdates.deletePerson, {
+    email: email,
+    teamName: teamName,
+    memberEmail: emailId
+  });
+  return data;
+}
+
+const ContentTeam: FC<{details: userdetails | undefined}> = ({ details }) => {
   const [team, setTeam] = useState<teamDetails[]>([])
   const [position, setPosition] = useState("");
   const [name, setName] = useState("");
@@ -36,8 +46,17 @@ const ContentTeam: FC<{details: userdetails | undefined, teamName: string}> = ({
   const [Degree, setDegree] = useState("");
   const [linkedIn, setLinkedIn] = useState("");
   const [description, setDescription] = useState("");
+  
+  // Add delete modal states
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [memberToDelete, setMemberToDelete] = useState<teamDetails | null>(null);
+  const [deleting, setDeleting] = useState(false);
+  
   const context = useContext(MyContext);
   const adminemails = context?.adminemails ?? [];
+  const isAdmin = adminemails.includes(details?.email ?? "");
+
+  const { teamName } = useParams<{teamName: string}>();
 
   const resetForm = () => {
     setPosition("");
@@ -65,18 +84,50 @@ const ContentTeam: FC<{details: userdetails | undefined, teamName: string}> = ({
     onSuccess: () => {
       getTeamMembersMutation(teamName)
       resetForm();
+      toast.success("Team member added successfully!");
     },
     onError: () => {
       toast.error("Upload failed")
     }
   })
 
+  // Add delete mutation
+  const {mutate: deleteTeamMemberMutation} = useMutation({
+    mutationFn: ({ teamName, emailId }: { teamName: string, emailId: string }) => 
+      deleteTeamMember({
+        email: details?.email ?? "",
+        teamName: teamName,
+        emailId: emailId
+      }),
+    onSuccess: () => {
+      toast.success("Team member deleted successfully!");
+      setShowDeleteModal(false);
+      setMemberToDelete(null);
+      setDeleting(false);
+      getTeamMembersMutation(teamName);
+    },
+    onError: (error) => {
+      console.error("Delete failed:", error);
+      toast.error("Failed to delete team member. Please try again.");
+      setDeleting(false);
+    },
+    onMutate: () => {
+      setDeleting(true);
+    },
+  });
+
   useEffect(() => {
     getTeamMembersMutation(teamName);
   }, [teamName])
   
   const handleSubmit = async () => {
+    if (!position || !name || !email || !Phone || !Degree) {
+      toast.error("Please fill in all required fields");
+      return;
+    }
+
     const data: addPersonInterface = {
+      email: details?.email ?? "",
       teamName: teamName,
       position: position,
       name: name,
@@ -89,8 +140,30 @@ const ContentTeam: FC<{details: userdetails | undefined, teamName: string}> = ({
     addTeamMemberMutation(data);
   };
 
+  // Add delete handlers
+  const handleDeleteClick = (member: teamDetails, e: React.MouseEvent) => {
+    e.stopPropagation();
+    setMemberToDelete(member);
+    setShowDeleteModal(true);
+  };
+
+  const confirmDelete = () => {
+    if (memberToDelete && teamName) {
+      deleteTeamMemberMutation({  
+        emailId: memberToDelete.emailid || "",
+        teamName: teamName 
+      });
+    }
+  };
+
   const formatTeamName = (name: string) => {
-    return name.replace(/([a-z])([A-Z])/g, "$1 $2");
+    const last4 = name.slice(-4);
+    const firstPart = name.slice(0, -4);
+
+    const firstWord = firstPart.charAt(0).toUpperCase() + firstPart.slice(1).toLowerCase();
+    const secondWord = last4.charAt(0).toUpperCase() + last4.slice(1).toLowerCase();
+
+    return `${firstWord} ${secondWord}`;
   };
 
   const getTeamIcon = (teamName: string) => {
@@ -117,9 +190,9 @@ const ContentTeam: FC<{details: userdetails | undefined, teamName: string}> = ({
           </div>
         </div>
         <div className="relative max-w-7xl mx-auto px-6 py-24 text-center">
-          <div className="text-6xl mb-4">{getTeamIcon(teamName)}</div>
+          <div className="text-6xl mb-4">{getTeamIcon(teamName ?? "")}</div>
           <h1 className="text-5xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-white to-blue-200 bg-clip-text text-transparent">
-            {formatTeamName(teamName)}
+            {formatTeamName(teamName ?? "")}
           </h1>
           <p className="text-xl md:text-2xl text-blue-100 max-w-3xl mx-auto leading-relaxed">
             Meet the brilliant minds powering Kepler 22B's mission to transform tech education
@@ -135,8 +208,21 @@ const ContentTeam: FC<{details: userdetails | undefined, teamName: string}> = ({
             {team.map((member, index) => (
               <div
                 key={index}
-                className="group perspective-1000 w-full h-96"
+                className="group perspective-1000 w-full h-96 relative"
               >
+                {/* Delete Button - Only visible to admins */}
+                {isAdmin && (
+                  <button
+                    onClick={(e) => handleDeleteClick(member, e)}
+                    className="absolute top-3 right-3 w-8 h-8 bg-red-100 hover:bg-red-200 text-red-600 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-200 hover:scale-110 z-30 shadow-lg"
+                    title="Delete team member"
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                    </svg>
+                  </button>
+                )}
+
                 {/* Card Container with 3D Transform */}
                 <div className="relative w-full h-full transition-transform duration-700 transform-style-preserve-3d group-hover:rotate-y-180">
                   
@@ -178,10 +264,10 @@ const ContentTeam: FC<{details: userdetails | undefined, teamName: string}> = ({
                           <div className="w-2 h-2 bg-green-500 rounded-full mr-3 flex-shrink-0"></div>
                           <span className="font-medium">Email:</span>
                           <a 
-                            href={`mailto:${member.email_id || member.emailId}`}
+                            href={`mailto:${member.emailid}`}
                             className="ml-2 text-blue-600 hover:text-blue-800 transition-colors duration-200 truncate"
                           >
-                            {member.email_id || member.emailId}
+                            {member.emailid}
                           </a>
                         </div>
 
@@ -189,10 +275,10 @@ const ContentTeam: FC<{details: userdetails | undefined, teamName: string}> = ({
                           <div className="w-2 h-2 bg-purple-500 rounded-full mr-3 flex-shrink-0"></div>
                           <span className="font-medium">Phone:</span>
                           <a 
-                            href={`tel:${member.phone_number || member.phoneNumber}`}
+                            href={`tel:${member.phonenumber}`}
                             className="ml-2 text-blue-600 hover:text-blue-800 transition-colors duration-200"
                           >
-                            {member.phone_number || member.phoneNumber}
+                            {member.phonenumber}
                           </a>
                         </div>
                       </div>
@@ -280,7 +366,7 @@ const ContentTeam: FC<{details: userdetails | undefined, teamName: string}> = ({
       {/* Add Team Member Form */}
       <div
         className={`max-w-4xl mx-auto px-6 pb-16 ${
-          adminemails.includes(details?.email ?? "") ? "" : "hidden"
+          isAdmin ? "" : "hidden"
         }`}
       >
         <div className="bg-white rounded-3xl shadow-2xl overflow-hidden border border-gray-100">
@@ -385,6 +471,66 @@ const ContentTeam: FC<{details: userdetails | undefined, teamName: string}> = ({
           </div>
         </div>
       </div>
+
+      {/* Delete Confirmation Modal */}
+      {showDeleteModal && memberToDelete && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-2xl p-8 max-w-md w-full shadow-2xl">
+            <div className="text-center mb-6">
+              <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <svg className="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
+                </svg>
+              </div>
+              <h2 className="text-2xl font-bold text-gray-800 mb-2">Remove Team Member</h2>
+              <p className="text-gray-600 mb-4">
+                Are you sure you want to remove this team member? This action cannot be undone.
+              </p>
+              
+              <div className="bg-gray-50 rounded-lg p-4 mb-6">
+                <div className="w-12 h-12 bg-gradient-to-br from-blue-400 to-indigo-500 rounded-full flex items-center justify-center text-white text-lg font-bold mx-auto mb-3">
+                  {memberToDelete.name.charAt(0).toUpperCase()}
+                </div>
+                <h3 className="font-semibold text-gray-800 mb-1">{memberToDelete.name}</h3>
+                <p className="text-gray-600 text-sm">{memberToDelete.position}</p>
+                <p className="text-gray-500 text-xs mt-1">{memberToDelete.email_id || memberToDelete.emailId}</p>
+              </div>
+            </div>
+
+            <div className="flex space-x-4">
+              <button
+                onClick={() => {
+                  setShowDeleteModal(false);
+                  setMemberToDelete(null);
+                }}
+                className="flex-1 px-4 py-3 bg-gray-200 text-gray-800 rounded-lg font-medium hover:bg-gray-300 transition-colors duration-200"
+                disabled={deleting}
+              >
+                Cancel
+              </button>
+              <button
+                onClick={confirmDelete}
+                disabled={deleting}
+                className="flex-1 px-4 py-3 bg-red-600 text-white rounded-lg font-medium hover:bg-red-700 disabled:bg-red-400 disabled:cursor-not-allowed transition-colors duration-200 flex items-center justify-center space-x-2"
+              >
+                {deleting ? (
+                  <>
+                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                    <span>Removing...</span>
+                  </>
+                ) : (
+                  <>
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                    </svg>
+                    <span>Remove Member</span>
+                  </>
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* CSS for 3D flip effect */}
       <style jsx>{`

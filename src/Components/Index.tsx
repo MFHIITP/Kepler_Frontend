@@ -143,13 +143,13 @@ const Index: FC<componentPropsInterface> = ({ auth, details }) => {
                           <div className="absolute left-full top-0 ml-1 w-64 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
                             <div className="py-1">
                               {[
-                                "Executive Committee",
-                                "Core Committee",
-                                "Treasury Committee", 
-                                "Development Team",
+                                "Executive Team",
                                 "Educators Team",
-                                "PR Team",
-                              ].map((team, index) => (
+                                "Technical Team",
+                                "Marketing Team", 
+                                "Financial Team",
+                                "HR Team",
+                              ].map((team: string, index) => (
                                 <Link
                                   key={index}
                                   to={`/admins/coreteam/${team.toLowerCase().replace(/\s/g, "")}`}
@@ -442,16 +442,12 @@ const Index: FC<componentPropsInterface> = ({ auth, details }) => {
                     {coreTeamDropdownOpen && (
                       <div className="ml-4 space-y-1">
                         {[
-                          "Executive Committee",
-                          "Core Committee",
-                          "Treasury Committee",
-                          "Development Team", 
-                          "Design Team",
-                          "Content Team",
-                          "Activity Team",
-                          "PR Team",
-                          "Appointment Sub-Committee",
-                          "Disciplinary Sub-Committee",
+                          "Executive Team",
+                          "Educators Team",
+                          "Technical Team",
+                          "Marketing Team", 
+                          "Financial Team",
+                          "HR Team",
                         ].map((team, index) => (
                           <Link
                             key={index}

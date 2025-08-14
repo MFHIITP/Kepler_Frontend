@@ -5,6 +5,7 @@ const apiRoutes = {
         },
         teamUpdates: {
             addPerson: `/team/addPerson`,
+            deletePerson: `/team/deletePerson`
         },
     },
     auth: {
@@ -48,7 +49,8 @@ const apiRoutes = {
     library: {
         getBooks: `/library/books/getBook`,
         postBooks: `/library/books/postBook`,
-        getCourses: '/library/courses/getCourses'
+        getCourses: '/library/courses/getCourses',
+        deleteBook: `/library/books/deleteBook`,
     },
     imagePosting: `/talks/imagestore`,
     querySending: `/api/sendquery`,

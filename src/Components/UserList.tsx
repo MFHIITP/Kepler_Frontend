@@ -46,6 +46,8 @@ const UsersTable: React.FC<componentPropsInterface> = (props) => {
   const [dropdownEmail, setDropdownEmail] = useState<string | null>(null);
   const [message, setMessage] = useState("Searching");
   const [amount, setAmount] = useState(0);
+  const [numberAll, setNumberAll] = useState(0);
+  const [numberDistinct, setNumberDistinct] = useState(0);
   const navigate = useNavigate();
 
   const { mutate: getUsersMutation } = useMutation({
@@ -53,6 +55,8 @@ const UsersTable: React.FC<componentPropsInterface> = (props) => {
     onMutate: () => setLoading(true),
     onSuccess: (data) => {
       setUsers(data.allUsers);
+      setNumberAll(data.numberAllUsers);
+      setNumberDistinct(data.numberDistinctUsers);
       setLoading(false);
     },
     onError: (err) => {
@@ -221,6 +225,42 @@ const UsersTable: React.FC<componentPropsInterface> = (props) => {
                 </div>
               </div>
             </div>
+            <div className="mb-8">
+              <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-4">
+                    <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-lg flex items-center justify-center">
+                      <Users className="w-6 h-6 text-white" />
+                    </div>
+                    <div>
+                      <h2 className="text-2xl font-bold text-gray-800">Total Visits</h2>
+                      <p className="text-gray-600">Users who visited our website</p>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <div className="text-4xl font-bold text-blue-600">{numberAll}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="mb-8">
+              <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-4">
+                    <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-lg flex items-center justify-center">
+                      <Users className="w-6 h-6 text-white" />
+                    </div>
+                    <div>
+                      <h2 className="text-2xl font-bold text-gray-800">Total Unique Visits</h2>
+                      <p className="text-gray-600">Number of Unique persons who visits our website</p>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <div className="text-4xl font-bold text-blue-600">{numberDistinct}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
 
             {/* Users List */}
             <div className="space-y-6">
@@ -231,7 +271,7 @@ const UsersTable: React.FC<componentPropsInterface> = (props) => {
                 >
                   {/* User Header */}
                   <div className="bg-gradient-to-r from-gray-50 to-blue-50 p-6 border-b border-gray-100">
-                    <div className="flex items-center justify-between">
+                    <div className="flex flex-col md:flex-row items-center justify-between">
                       <div className="flex items-center space-x-4">
                         <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full flex items-center justify-center text-white text-xl font-bold">
                           {user.name ? user.name.charAt(0).toUpperCase() : user.email.charAt(0).toUpperCase()}
@@ -335,28 +375,6 @@ const UsersTable: React.FC<componentPropsInterface> = (props) => {
                                 <div className="flex justify-between items-center">
                                   <span className="text-gray-600 font-medium">Email:</span>
                                   <span className="text-blue-600 font-semibold">{userMoreInformation.email}</span>
-                                </div>
-                                <div className="flex justify-between items-center">
-                                  <span className="text-gray-600 font-medium">Payment Due Date:</span>
-                                  <span className="text-gray-900 font-semibold">
-                                    {new Date(userMoreInformation.lastDate).toLocaleDateString()}
-                                  </span>
-                                </div>
-                                <div className="flex justify-between items-center">
-                                  <span className="text-gray-600 font-medium">Paid This Month:</span>
-                                  <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
-                                    userMoreInformation.paidForMonth 
-                                      ? 'bg-green-100 text-green-800' 
-                                      : 'bg-red-100 text-red-800'
-                                  }`}>
-                                    {userMoreInformation.paidForMonth ? "Yes" : "No"}
-                                  </span>
-                                </div>
-                                <div className="flex justify-between items-center">
-                                  <span className="text-gray-600 font-medium">Last Paid Month:</span>
-                                  <span className="text-gray-900 font-semibold">
-                                    {new Date(0, userMoreInformation.paidMonth).toLocaleString("default", { month: "long" })}
-                                  </span>
                                 </div>
                               </div>
                             </div>

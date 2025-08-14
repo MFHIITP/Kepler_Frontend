@@ -100,14 +100,6 @@ export const RouterFrontend = (authenticated: boolean, details: userdetails | un
           ),
         },
         {
-          path: "/admins/coreteam/executivecommittee",
-          element: (
-            <Suspense fallback={<div>Loading...</div>}>
-              <ContentTeam details={details} teamName = {"ExecutiveCommittee"}/>
-            </Suspense>
-          ),
-        },
-        {
           path: "/admins/liveusers",
           element: (
             <Suspense fallback={<div>Loading...</div>}>
@@ -124,42 +116,10 @@ export const RouterFrontend = (authenticated: boolean, details: userdetails | un
           ),
         },
         {
-          path: "/admins/coreteam/developmentteam",
+          path: "/admins/coreteam/:teamName",
           element: (
             <Suspense fallback={<div>Loading...</div>}>
-              <ContentTeam details={details} teamName = {"DevelopmentTeam"}/>
-            </Suspense>
-          ),
-        },
-        {
-          path: "/admins/coreteam/educatorsteam",
-          element: (
-            <Suspense fallback={<div>Loading...</div>}>
-              <ContentTeam details={details} teamName = {"EducatorsTeam"}/>
-            </Suspense>
-          ),
-        },
-        {
-          path: "/admins/coreteam/prteam",
-          element: (
-            <Suspense fallback={<div>Loading...</div>}>
-              <ContentTeam details={details} teamName = {"PrTeam"}/>
-            </Suspense>
-          ),
-        },
-        {
-          path: "/admins/coreteam/corecommittee",
-          element: (
-            <Suspense fallback={<div>Loading...</div>}>
-              <ContentTeam details={details} teamName = {"CoreCommittee"}/>
-            </Suspense>
-          ),
-        },
-        {
-          path: "/admins/coreteam/treasurycommittee",
-          element: (
-            <Suspense fallback={<div>Loading...</div>}>
-              <ContentTeam details={details} teamName = {"TreasuryCommittee"}/>
+              <ContentTeam details={details} />;
             </Suspense>
           ),
         },

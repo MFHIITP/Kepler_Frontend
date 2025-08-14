@@ -21,6 +21,8 @@ import {
   faPlus,
   faBookOpen,
   faGraduationCap,
+  faTrash,
+  faExclamationTriangle,
 } from "@fortawesome/free-solid-svg-icons";
 import toast from "react-hot-toast";
 
@@ -28,6 +30,15 @@ const getLibraryBooks = async (course: string) => {
   const { data } = await api.post(apiRoutes.library.getBooks, {
     course: course,
   });
+  return data;
+};
+
+const deleteLibraryBook = async ({bookId, course, email}:{bookId: string, course: string, email: string}) => {
+  const { data } = await api.post(apiRoutes.library.deleteBook, {
+    url: bookId,
+    course: course,
+    email: email
+  })
   return data;
 };
 
@@ -46,6 +57,11 @@ function Library(props: componentPropsInterface) {
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   
+  // Add delete confirmation modal state
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [bookToDelete, setBookToDelete] = useState<libraryBookInterface | null>(null);
+  const [deleting, setDeleting] = useState(false);
+  
   const context = useContext(MyContext);
   const adminemails = context?.adminemails;
   const navigate = useNavigate();
@@ -62,6 +78,26 @@ function Library(props: componentPropsInterface) {
     },
     onError: () => {
       setBookSearching(false);
+    },
+  });
+
+  // Add delete mutation
+  const { mutate: DeleteBookMutation } = useMutation({
+    mutationFn: (bookUrl: string) => deleteLibraryBook({bookId: bookUrl, course: course ?? "", email: props.details?.email ?? ""}),
+    onSuccess: () => {
+      toast.success("Book deleted successfully!");
+      setShowDeleteModal(false);
+      setBookToDelete(null);
+      setDeleting(false);
+      GetBookMutation(); 
+    },
+    onError: (error) => {
+      console.error("Delete failed:", error);
+      toast.error("Failed to delete book. Please try again.");
+      setDeleting(false);
+    },
+    onMutate: () => {
+      setDeleting(true);
     },
   });
 
@@ -85,6 +121,20 @@ function Library(props: componentPropsInterface) {
     const newurl = listed[listed.length - 1];
     localStorage.setItem("before_url", "image/upload/v1735395980");
     navigate(`/readbook/${newurl}`);
+  };
+
+  // Add delete confirmation handler
+  const handleDeleteClick = (book: libraryBookInterface, e: React.MouseEvent) => {
+    e.stopPropagation();
+    setBookToDelete(book);
+    setShowDeleteModal(true);
+  };
+
+  // Add delete confirmation handler
+  const confirmDelete = () => {
+    if (bookToDelete) {
+      DeleteBookMutation(bookToDelete.url);
+    }
   };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -126,6 +176,7 @@ function Library(props: componentPropsInterface) {
     }
 
     const response = await api.post(apiRoutes.library.postBooks, {
+      email: props.details?.email,
       course: course,
       title: title,
       author: Author,
@@ -149,8 +200,7 @@ function Library(props: componentPropsInterface) {
 
   const sortedAndFilteredBooks = React.useMemo(() => {
     let filtered = books && books.length > 0 ? books.filter((book) => {
-      const matchesSearch = book.title.toLowerCase().includes(search.toLowerCase()) ||
-                           book.author.toLowerCase().includes(search.toLowerCase());
+      const matchesSearch = book.title.toLowerCase().includes(search.toLowerCase()) || book.author.toLowerCase().includes(search.toLowerCase());
       return matchesSearch;
     }) : [];
 
@@ -187,16 +237,16 @@ function Library(props: componentPropsInterface) {
         <div className="container mx-auto px-6 py-12">
           <div className="text-center">
             <div className="w-20 h-20 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-6">
-              <FontAwesomeIcon className="text-4xl" />
+              <FontAwesomeIcon className="text-4xl" icon={"function"} />
             </div>
             <h1 className="text-4xl md:text-5xl font-bold mb-4">
               Digital Library
             </h1>
             <p className="text-xl text-emerald-100 mb-6 max-w-2xl mx-auto">
               Discover a comprehensive collection of educational resources for {" "}
-              <span className="font-semibold">
+              <div className="font-semibold">
                 {course === "College" ? "College Studies" : course}
-              </span>
+              </div>
             </p>
             <div className="flex items-center justify-center space-x-4 text-emerald-200">
               <FontAwesomeIcon icon={getCourseIcon(course || '')} />
@@ -283,7 +333,7 @@ function Library(props: componentPropsInterface) {
 
         {/* Books Grid/List */}
         {bookSearching ? (
-          <div className="flex items-center justify-center py-20">
+          <div className="flex items-center justify-center py-20 my-4">
             <div className="text-center">
               <div className="w-16 h-16 border-4 border-emerald-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
               <p className="text-xl text-gray-600 font-medium">Loading library...</p>
@@ -299,10 +349,21 @@ function Library(props: componentPropsInterface) {
             {sortedAndFilteredBooks.map((book, index) => (
               <div
                 key={index}
-                className={`group bg-white rounded-2xl shadow-lg hover:shadow-xl border border-gray-200 transition-all duration-300 hover:scale-105 hover:border-emerald-300 ${
+                className={`group bg-white rounded-2xl shadow-lg hover:shadow-xl border border-gray-200 transition-all duration-300 hover:scale-105 hover:border-emerald-300 my-4 ${
                   viewMode === 'list' ? 'p-4 flex items-center space-x-6' : 'p-6 flex flex-col'
-                }`}
+                } relative`}
               >
+                {/* Delete Button - Only visible to admins */}
+                {isAdmin && (
+                  <button
+                    onClick={(e) => handleDeleteClick(book, e)}
+                    className="absolute top-3 right-3 w-8 h-8 bg-red-100 hover:bg-red-200 text-red-600 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-200 hover:scale-110 z-10"
+                    title="Delete book"
+                  >
+                    <FontAwesomeIcon icon={faTrash} className="text-sm" />
+                  </button>
+                )}
+
                 <div
                   onClick={() => handleReadBook(book.url)}
                   className={`cursor-pointer ${
@@ -512,6 +573,58 @@ function Library(props: componentPropsInterface) {
                   </button>
                 </div>
               </form>
+            </div>
+          </div>
+        )}
+
+        {/* Delete Confirmation Modal */}
+        {showDeleteModal && bookToDelete && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+            <div className="bg-white rounded-2xl p-8 max-w-md w-full shadow-2xl">
+              <div className="text-center mb-6">
+                <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <FontAwesomeIcon icon={faExclamationTriangle} className="text-red-600 text-xl" />
+                </div>
+                <h2 className="text-2xl font-bold text-gray-800 mb-2">Delete Book</h2>
+                <p className="text-gray-600 mb-4">
+                  Are you sure you want to delete this book? This action cannot be undone.
+                </p>
+                
+                <div className="bg-gray-50 rounded-lg p-4 mb-6">
+                  <h3 className="font-semibold text-gray-800 mb-1">{bookToDelete.title}</h3>
+                  <p className="text-gray-600 text-sm">by {bookToDelete.author}</p>
+                </div>
+              </div>
+
+              <div className="flex space-x-4">
+                <button
+                  onClick={() => {
+                    setShowDeleteModal(false);
+                    setBookToDelete(null);
+                  }}
+                  className="flex-1 px-4 py-3 bg-gray-200 text-gray-800 rounded-lg font-medium hover:bg-gray-300 transition-colors duration-200"
+                  disabled={deleting}
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={confirmDelete}
+                  disabled={deleting}
+                  className="flex-1 px-4 py-3 bg-red-600 text-white rounded-lg font-medium hover:bg-red-700 disabled:bg-red-400 disabled:cursor-not-allowed transition-colors duration-200 flex items-center justify-center space-x-2"
+                >
+                  {deleting ? (
+                    <>
+                      <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                      <span>Deleting...</span>
+                    </>
+                  ) : (
+                    <>
+                      <FontAwesomeIcon icon={faTrash} />
+                      <span>Delete Book</span>
+                    </>
+                  )}
+                </button>
+              </div>
             </div>
           </div>
         )}
