@@ -272,19 +272,6 @@ const Talk: FC<TalkInterface> = ({
     });
   };
 
-  const getMessageTime = (dateString: string) => {
-    try {
-      const date = new Date(dateString);
-      return date.toLocaleTimeString("en-US", {
-        hour: "2-digit",
-        minute: "2-digit",
-        hour12: true,
-      });
-    } catch {
-      return dateString;
-    }
-  };
-
   const generateAvatar = (name: string) => {
     const colors = [
       "bg-red-500",
@@ -586,7 +573,7 @@ const Talk: FC<TalkInterface> = ({
                       }`}
                     >
                       <span className="text-xs">
-                        {getMessageTime(post.date)}
+                        {post.date}
                       </span>
                     </div>
                   </div>
