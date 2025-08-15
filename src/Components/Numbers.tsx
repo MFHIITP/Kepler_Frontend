@@ -83,7 +83,7 @@ function Numbers() {
       period: "/forever",
       description: "Perfect for getting started",
       features: [
-        "Daily Problem of the Day",
+        "Problem of the Day",
         "Basic coding resources",
         "Community access",
         "Basic tutorials"
@@ -113,7 +113,7 @@ function Numbers() {
       description: "Complete transformation package",
       features: [
         "Everything in Pro plan",
-        "All premium courses included",
+        "One premium course of choice",
         "Live interactive classes",
         "Comprehensive practice sets",
         "1-on-1 mentor sessions",

@@ -95,7 +95,7 @@ int main() {
   }, []);
 
   return (
-  <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
+  <div className="min-h-screen bg-gradient-to-br from-slate-900 via-indigo-700 to-slate-900">
       {/* Animated background elements */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute -top-40 -right-40 w-80 h-80 bg-purple-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse"></div>
@@ -116,17 +116,17 @@ int main() {
               </div>
 
               <h1 className="text-6xl lg:text-7xl font-bold">
-                <span className="bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
+                <span className="bg-gradient-to-r from-purple-600 to-violet-300 bg-clip-text text-transparent">
                   Welcome to
                 </span>
                 <br />
                 <span className="bg-gradient-to-r from-purple-400 via-pink-400 to-blue-400 bg-clip-text text-transparent">
-                  KEPLER
+                  <img src="/Images/Kepler_Logo_Without_Background.png" alt="" width={250} height={250} className="pt-4"/>
                 </span>
               </h1>
               <div className="space-y-6">
                 <h1 className="text-3xl lg:text-5xl font-black leading-tight">
-                  <span className="block bg-gradient-to-r from-purple-400 via-cyan-400 to-blue-400 bg-clip-text text-transparent">
+                  <span className="block bg-gradient-to-r from-blue-400 via-cyan-400 to-blue-400 bg-clip-text text-transparent">
                     Shape Your Future
                   </span>
                 </h1>
@@ -141,7 +141,7 @@ int main() {
               <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
                 {stats.map((stat, index) => (
                   <div key={index} className="text-center">
-                    <div className="text-3xl font-bold bg-gradient-to-r from-purple-400 to-cyan-400 bg-clip-text text-transparent">
+                    <div className="text-3xl font-bold bg-gradient-to-r from-pink-400 to-cyan-400 bg-clip-text text-transparent">
                       {stat.number}
                     </div>
                     <div className="text-gray-400 text-sm mt-1">{stat.label}</div>
@@ -170,7 +170,7 @@ int main() {
             </div>
 
             <div className="flex space-x-4">
-              <button className="px-8 py-4 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-semibold rounded-xl hover:from-purple-700 hover:to-pink-700 transition-all duration-200 transform hover:scale-105 shadow-lg"
+              <button className="px-8 py-4 bg-gradient-to-r from-green-600 to-teal-600 text-white font-semibold rounded-xl hover:from-purple-700 hover:to-pink-700 transition-all duration-200 transform hover:scale-105 shadow-lg"
               onClick={() => navigate("/problems/dailyProblems")}>
                 Start Coding
               </button>
@@ -182,8 +182,20 @@ int main() {
           </div>
 
           {/* Right side - Code Editor */}
-          <div className="relative">
-            <div className="bg-gray-900/90 backdrop-blur-xl rounded-2xl border border-gray-700/50 shadow-2xl overflow-hidden">
+          <div 
+            className="relative"
+            style={{
+              transform: 'perspective(1000px) rotateY(-6deg) rotateX(2deg)',
+              transformStyle: 'preserve-3d'
+            }}
+          >
+            <div 
+              className="bg-gray-900/90 backdrop-blur-xl rounded-2xl border border-gray-700/50 shadow-2xl overflow-hidden shadow-green-700"
+              style={{
+                transform: 'perspective(1000px) rotateY(8deg) rotateX(-2deg)',
+                transformStyle: 'preserve-3d'
+              }}
+            >
               {/* Editor Header */}
               <div className="flex items-center justify-between px-6 py-4 bg-gray-800/80 border-b border-gray-700">
                 <div className="flex items-center space-x-4">
@@ -247,9 +259,19 @@ int main() {
               </div>
             </div>
 
-            {/* Floating elements */}
-            <div className="absolute -z-10 top-8 -right-8 w-24 h-24 bg-purple-500/20 rounded-full blur-xl animate-bounce"></div>
-            <div className="absolute -z-10 -bottom-8 -left-8 w-32 h-32 bg-blue-500/20 rounded-full blur-xl animate-pulse"></div>
+            {/* Floating elements - these will also be affected by the tilt */}
+            <div 
+              className="absolute -z-10 top-8 -right-8 w-24 h-24 bg-purple-500/20 rounded-full blur-xl animate-bounce"
+              style={{
+                transform: 'perspective(1000px) rotateY(8deg) rotateX(-2deg)',
+              }}
+            ></div>
+            <div 
+              className="absolute -z-10 -bottom-8 -left-8 w-32 h-32 bg-blue-500/20 rounded-full blur-xl animate-pulse"
+              style={{
+                transform: 'perspective(1000px) rotateY(8deg) rotateX(-2deg)',
+              }}
+            ></div>
           </div>
         </div>
       </div>

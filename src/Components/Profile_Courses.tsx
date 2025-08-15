@@ -403,7 +403,7 @@ const Profile_Courses: React.FC<componentPropsInterfacePaymentProfile> = (props)
             </div>
 
             {/* Quick Stats Card */}
-            <div className="bg-gradient-to-r from-purple-500 to-pink-500 rounded-2xl p-6 text-white">
+            <div className="bg-gradient-to-r from-indigo-600 to-indigo-950 rounded-2xl p-6 text-white">
               <h3 className="text-lg font-bold mb-4">Quick Stats</h3>
               <div className="grid grid-cols-2 gap-4">
                 <div className="text-center">

@@ -19,7 +19,7 @@ const Footer = () => {
     { name: 'Practice Problems' }
   ];
   return (
-    <footer className="relative bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 text-white overflow-hidden">
+    <footer className="relative bg-gradient-to-br from-slate-900 via-indigo-800 to-slate-900 text-white overflow-hidden">
       {/* Background Elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute -top-40 -right-40 w-80 h-80 bg-purple-500 rounded-full mix-blend-multiply filter blur-xl opacity-10 animate-pulse"></div>

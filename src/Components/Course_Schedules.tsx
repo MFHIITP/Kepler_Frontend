@@ -104,6 +104,39 @@ const ProfessionalCourseSchedule = () => {
       rating: 4.7,
       startDate: "June 1st, 2024",
     },
+    dsa2: {
+      type: "Data Structures & Algorithms",
+      name: "DSA Mastery Program 2025",
+      teachers: "Expert Engineering Faculty",
+      description:
+        "Crack coding interviews with in-depth DSA coverage. Includes arrays, linked lists, trees, graphs, dynamic programming, and advanced problem-solving strategies.",
+      duration: "6 Months",
+      students: "8,500+",
+      rating: 4.7,
+      startDate: "June 1st, 2024",
+    },
+    fundamentals2: {
+      type: "Computer Fundamentals",
+      name: "Computer Science Fundamentals 2025",
+      teachers: "Expert Engineering Faculty",
+      description:
+        "Learn core CS concepts including Operating Systems, DBMS, Computer Networks, and OOP — essential for placements, interviews, and higher studies.",
+      duration: "4 Months",
+      students: "7,200+",
+      rating: 4.7,
+      startDate: "June 1st, 2024",
+    },
+    ml2: {
+      type: "Machine Learning & AI",
+      name: "Machine Learning & AI Program 2025",
+      teachers: "Expert Engineering Faculty",
+      description:
+        "Master machine learning algorithms, data preprocessing, deep learning, and AI applications. Hands-on projects with Python, TensorFlow, and scikit-learn.",
+      duration: "6 Months",
+      students: "6,800+",
+      rating: 4.7,
+      startDate: "June 1st, 2024",
+    },
   });
 
   const [scheduleData, setScheduleData] = useState({
@@ -199,6 +232,59 @@ const ProfessionalCourseSchedule = () => {
         status: "upcoming",
       },
     ],
+    webdev2: [
+      {
+        month: "SEP",
+        day: "2",
+        title: "Introduction to Web Development",
+        details: "HTTP, HTML5, CSS3",
+        topic: "Web Dev • Chapters 1 - 8",
+        type: "live",
+        status: "upcoming",
+      },
+      {
+        month: "SEP",
+        day: "6",
+        title: "ReactJS",
+        details: "ReactJS",
+        topic: "Web Dev • Chapters 9 - 16",
+        type: "test",
+        status: "upcoming",
+      },
+    ],
+    dsa2: [
+      {
+        month: "SEP",
+        day: "3",
+        title: "Introduction to Data Structures and Algorithms",
+        details: "Importance of DSA in Companies, Recursion",
+        topic: "DSA • Chapters 1 - 5",
+        type: "live",
+        status: "upcoming",
+      },
+    ],
+    fundamentals2: [
+      {
+        month: "SEP",
+        day: "4",
+        title: "Introduction to Computer Networks",
+        details: "Computer Networks, Types of Networking, Subnet, Layer wise Architechture in Networks",
+        topic: "fundamentals • CN 1 - 4",
+        type: "live",
+        status: "upcoming",
+      },
+    ],
+    ml2: [
+      {
+        month: "SEP",
+        day: "7",
+        title: "Introduction to Machine Learning and Importance of ML in real life",
+        details: "Introduction, MLDLC, Introduction to Data Gathering",
+        topic: "ML • Chapters 1 - 3",
+        type: "live",
+        status: "upcoming",
+      },
+    ],
   });
 
   // Sample syllabus data
@@ -242,6 +328,41 @@ const ProfessionalCourseSchedule = () => {
       "Natural Language Processing",
     ],
     fundamentals1: [
+      "Computer Networks",
+      "Database Management",
+      "Operating Systems",
+      "Computer Organization and Architechture",
+      "System Design",
+    ],
+    dsa2: [
+      "Recursion",
+      "Arrays",
+      "Sliding Window",
+      "Greedy",
+      "Binary Search",
+      "Trees",
+      "Graphs",
+      "Dynamic Programming",
+    ],
+    webdev2: [
+      "HTML5",
+      "CSS3",
+      "JavaScript",
+      "TypeScript",
+      "ReactJS",
+      "NodeJS",
+      "MongoDB",
+      "PostgreSQL"
+    ],
+    ml2: [
+      "Data Gathering",
+      "Data Processing",
+      "Data Analysis",
+      "Machine Learning Algorithms",
+      "Deep Learning",
+      "Natural Language Processing",
+    ],
+    fundamentals2: [
       "Computer Networks",
       "Database Management",
       "Operating Systems",

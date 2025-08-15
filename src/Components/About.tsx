@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 const About: FC<componentPropsInterface> = () => {
   const navigate = useNavigate();
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-gray-950 to-slate-900">
       {/* Hero Section */}
       <section className="relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-r from-blue-600/20 to-purple-600/20"></div>

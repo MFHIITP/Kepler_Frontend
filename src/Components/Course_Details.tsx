@@ -103,7 +103,75 @@ function ProfessionalCourseDetails() {
         students: "5,000+",
         description: "IIT alumnus with exceptional track record in JEE preparation. Expert in both Physics and Mathematics with innovative teaching methods."
       },
+      {
+        id: 2,
+        name: "Guest Faculty",
+        image: "/Images/College_Prep.webp",
+        subjects: ["ML", "AI", "DL", "LLM"],
+        experience: "6+ Years Teaching",
+        rating: 4.9,
+        students: "5,000+",
+        description: "IIT alumnus with exceptional track record in JEE preparation. Expert in both Physics and Mathematics with innovative teaching methods."
+      },
     ],
+    webdev2: [
+      {
+        id: 1,
+        name: "Farshid Hossain",
+        image: "/Images/College_Prep.webp",
+        subjects: ["Frontend", "Backend", "DataBase", "DevOps"],
+        experience: "6+ Years Teaching",
+        rating: 4.9,
+        students: "5,000+",
+        description: "IIT alumnus with exceptional track record in JEE preparation. Expert in both Physics and Mathematics with innovative teaching methods."
+      },
+    ],
+    dsa2: [
+      {
+        id: 1,
+        name: "Satwik Biswas",
+        image: "/Images/College_Prep.webp",
+        subjects: ["Arrays", "Linked Lists", "Binary Search", "Sliding Window", "Trees", "Graphs", "Dynamic Programming", "Tries"],
+        experience: "4+ Years Teaching",
+        rating: 4.8,
+        students: "2,100+",
+        description: "GATE expert with comprehensive knowledge of engineering mathematics and analytical problem solving."
+      },
+      {
+        id: 2,
+        name: "Irfan Gazi",
+        image: "/Images/College_Prep.webp",
+        subjects: ["Arrays", "Linked Lists", "Binary Search", "Sliding Window", "Trees", "Graphs", "Dynamic Programming", "Tries"],
+        experience: "4+ Years Teaching",
+        rating: 4.8,
+        students: "2,100+",
+        description: "GATE expert with comprehensive knowledge of engineering mathematics and analytical problem solving."
+      },
+    ],
+    fundamentals2: [
+      {
+        id: 1,
+        name: "Vivek Haldar",
+        image: "/Images/College_Prep.webp",
+        subjects: ["CN", "DBMS", "OS", "COA"],
+        experience: "6+ Years Teaching",
+        rating: 4.9,
+        students: "5,000+",
+        description: "IIT alumnus with exceptional track record in JEE preparation. Expert in both Physics and Mathematics with innovative teaching methods."
+      },
+    ],
+    ml2: [
+      {
+        id: 1,
+        name: "Dipan Mondal",
+        image: "/Images/College_Prep.webp",
+        subjects: ["ML", "AI", "DL", "LLM"],
+        experience: "6+ Years Teaching",
+        rating: 4.9,
+        students: "5,000+",
+        description: "IIT alumnus with exceptional track record in JEE preparation. Expert in both Physics and Mathematics with innovative teaching methods."
+      },
+    ]
   };
 
   const courseInfo = {
@@ -164,6 +232,34 @@ function ProfessionalCourseDetails() {
       rating: 4.7
     },
     ml1: {
+      title: "Complete ML masterclass package",
+      subtitle: "Targeted Preparation for all variations of ML questions in any job interview",
+      image: "/Images/Mentorship.webp",
+      highlights: [
+        "Complete guidance from experts in the industry",
+        "Interactive doubt-clearing sessions", 
+        "Comprehensive study materials",
+        "Regular assessments and feedback"
+      ],
+      duration: "6 months",
+      students: "150+", 
+      rating: 4.7
+    },
+    webdev2: {
+      title: "Complete Web Development package",
+      subtitle: "Complete Full Stack Web Development with Dev Ops Masterclass",
+      image: "/Images/Mentorship.webp",
+      highlights: [
+        "Complete guidance from experts in the industry",
+        "Interactive doubt-clearing sessions", 
+        "Comprehensive study materials",
+        "Regular assessments and feedback"
+      ],
+      duration: "6 months",
+      students: "150+", 
+      rating: 4.7
+    },
+    dsa2: {
       title: "Complete DSA masterclass package",
       subtitle: "Targeted Preparation for all variations of DSA questions in any job interview",
       image: "/Images/Mentorship.webp",
@@ -176,7 +272,35 @@ function ProfessionalCourseDetails() {
       duration: "6 months",
       students: "150+", 
       rating: 4.7
-    }
+    },
+    ml2: {
+      title: "Complete Machine Learning package",
+      subtitle: "Targeted Preparation for all variations of ML questions in any job interview",
+      image: "/Images/Mentorship.webp",
+      highlights: [
+        "Complete guidance from experts in the industry",
+        "Interactive doubt-clearing sessions", 
+        "Comprehensive study materials",
+        "Regular assessments and feedback"
+      ],
+      duration: "6 months",
+      students: "150+", 
+      rating: 4.7
+    },
+    fundamentals2: {
+      title: "Complete Computer Fundamentals Program",
+      subtitle: "Comprehensive preparation for Computer Networks, Database Management, Operating Systems and Computer Organization and Architechture",
+      image: "/Images/Mentorship.webp", 
+      highlights: [
+        "Complete guidance from experts in the industry",
+        "Interactive doubt-clearing sessions", 
+        "Comprehensive study materials",
+        "Regular assessments and feedback"
+      ],
+      duration: "6 months",
+      students: "150+",
+      rating: 4.9
+    },
   };
 
   const benefits: Benefit[] = [
