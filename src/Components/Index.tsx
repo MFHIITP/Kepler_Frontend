@@ -593,9 +593,6 @@ const Index: FC<componentPropsInterface> = ({ auth, details }) => {
                     <Link to="/notice/merchandise" className="block px-3 py-2 text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-md" onClick={() => setNavOpen(false)}>
                       Merchandise
                     </Link>
-                    <Link to="/notice/donation" className="block px-3 py-2 text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-md" onClick={() => setNavOpen(false)}>
-                      Donate Us
-                    </Link>
                   </div>
                 )}
               </div>

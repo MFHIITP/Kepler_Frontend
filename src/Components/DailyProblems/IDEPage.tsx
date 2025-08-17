@@ -184,7 +184,7 @@ const IDEPage: React.FC<IDEPageInterface> = ({ problem, email, name }) => {
     <div className="bg-gradient-to-br from-gray-900 via-slate-900 to-gray-800 rounded-2xl border border-white/10 overflow-hidden">
       {/* Header */}
       <div className="bg-gradient-to-r from-gray-800/50 to-slate-800/50 border-b border-white/10 p-6">
-        <div className="flex justify-between items-center">
+        <div className="flex flex-col md:flex-row gap-4 md:gap-0 justify-between items-center">
           {/* Language Selector */}
           <div className="flex items-center space-x-4">
             <div className="flex items-center space-x-2">

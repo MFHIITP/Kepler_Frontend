@@ -1,5 +1,6 @@
 import React, { useState, useRef } from "react";
 import Editor from "@monaco-editor/react";
+import toast from "react-hot-toast";
 
 interface CodeEditorPropsInterface {
     language: string;
@@ -76,7 +77,7 @@ const CodeEditor: React.FC<CodeEditorPropsInterface> = (props) => {
 
     const copyToClipboard = () => {
         navigator.clipboard.writeText(props.code).then(() => {
-            // Could show a toast notification here
+            toast.success("Copied");
         });
     };
 
@@ -96,8 +97,8 @@ const CodeEditor: React.FC<CodeEditorPropsInterface> = (props) => {
             } bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden flex flex-col`}
         >
             {/* Header Bar */}
-            <div className="bg-gray-50 border-b border-gray-200 px-4 py-2 flex items-center justify-between">
-                <div className="flex items-center space-x-3">
+            <div className="bg-gray-50 border-b border-gray-200 px-2 sm:px-4 py-2 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+                <div className="flex items-center space-x-2 sm:space-x-3">
                     {/* Language Badge */}
                     <div className={`${getLanguageColor(props.language)} text-white px-2 py-1 rounded text-xs font-semibold`}>
                         {getLanguageIcon(props.language)}
@@ -106,27 +107,27 @@ const CodeEditor: React.FC<CodeEditorPropsInterface> = (props) => {
                     {/* File Info */}
                     <div className="flex items-center space-x-2 text-sm text-gray-600">
                         <span className="w-2 h-2 bg-green-400 rounded-full"></span>
-                        <span>Code Editor</span>
+                        <span className="hidden sm:inline">Code Editor</span>
                     </div>
                 </div>
 
                 {/* Controls */}
-                <div className="flex items-center space-x-1">
+                <div className="flex items-center justify-between sm:justify-end space-x-1 sm:space-x-1">
                     {/* Font Size Controls */}
                     <div className="flex items-center border border-gray-300 rounded overflow-hidden">
                         <button
                             onClick={() => handleFontSizeChange(false)}
-                            className="px-2 py-1 text-xs text-gray-600 hover:bg-gray-100 transition-colors"
+                            className="px-1.5 sm:px-2 py-1 text-xs text-gray-600 hover:bg-gray-100 transition-colors"
                             title="Decrease font size"
                         >
                             A-
                         </button>
-                        <span className="px-2 py-1 text-xs text-gray-700 bg-gray-50 border-x border-gray-300">
+                        <span className="px-1.5 sm:px-2 py-1 text-xs text-gray-700 bg-gray-50 border-x border-gray-300">
                             {fontSize}px
                         </span>
                         <button
                             onClick={() => handleFontSizeChange(true)}
-                            className="px-2 py-1 text-xs text-gray-600 hover:bg-gray-100 transition-colors"
+                            className="px-1.5 sm:px-2 py-1 text-xs text-gray-600 hover:bg-gray-100 transition-colors"
                             title="Increase font size"
                         >
                             A+
@@ -136,10 +137,10 @@ const CodeEditor: React.FC<CodeEditorPropsInterface> = (props) => {
                     {/* Theme Toggle */}
                     <button
                         onClick={() => setTheme(theme === "vs-dark" ? "light" : "vs-dark")}
-                        className="p-1.5 text-gray-600 hover:bg-gray-100 rounded transition-colors"
+                        className="p-1 sm:p-1.5 text-gray-600 hover:bg-gray-100 rounded transition-colors"
                         title="Toggle theme"
                     >
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg className="w-3 h-3 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             {theme === "vs-dark" ? (
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
                             ) : (
@@ -151,14 +152,14 @@ const CodeEditor: React.FC<CodeEditorPropsInterface> = (props) => {
                     {/* Word Wrap Toggle */}
                     <button
                         onClick={() => setWordWrap(!wordWrap)}
-                        className={`p-1.5 rounded transition-colors ${
+                        className={`p-1 sm:p-1.5 rounded transition-colors ${
                             wordWrap 
                                 ? 'bg-blue-100 text-blue-600' 
                                 : 'text-gray-600 hover:bg-gray-100'
                         }`}
                         title="Toggle word wrap"
                     >
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg className="w-3 h-3 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h8m-8 6h16" />
                         </svg>
                     </button>
@@ -166,10 +167,10 @@ const CodeEditor: React.FC<CodeEditorPropsInterface> = (props) => {
                     {/* Copy Button */}
                     <button
                         onClick={copyToClipboard}
-                        className="p-1.5 text-gray-600 hover:bg-gray-100 rounded transition-colors"
+                        className="p-1 sm:p-1.5 text-gray-600 hover:bg-gray-100 rounded transition-colors"
                         title="Copy code"
                     >
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg className="w-3 h-3 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
                         </svg>
                     </button>
@@ -177,10 +178,10 @@ const CodeEditor: React.FC<CodeEditorPropsInterface> = (props) => {
                     {/* Format Button */}
                     <button
                         onClick={formatCode}
-                        className="p-1.5 text-gray-600 hover:bg-gray-100 rounded transition-colors"
+                        className="p-1 sm:p-1.5 text-gray-600 hover:bg-gray-100 rounded transition-colors"
                         title="Format code"
                     >
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg className="w-3 h-3 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4" />
                         </svg>
                     </button>
@@ -188,10 +189,10 @@ const CodeEditor: React.FC<CodeEditorPropsInterface> = (props) => {
                     {/* Fullscreen Button */}
                     <button
                         onClick={handleFullscreen}
-                        className="p-1.5 text-gray-600 hover:bg-gray-100 rounded transition-colors"
+                        className="p-1 sm:p-1.5 text-gray-600 hover:bg-gray-100 rounded transition-colors"
                         title={isFullscreen ? "Exit fullscreen" : "Enter fullscreen"}
                     >
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg className="w-3 h-3 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             {isFullscreen ? (
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 9V4.5M9 9H4.5M9 9L3.5 3.5M15 9V4.5M15 9h4.5M15 9l5.5-5.5M9 15v4.5M9 15H4.5M9 15l-5.5 5.5M15 15v4.5M15 15h4.5M15 15l5.5 5.5" />
                             ) : (
@@ -246,13 +247,13 @@ const CodeEditor: React.FC<CodeEditorPropsInterface> = (props) => {
             </div>
 
             {/* Footer Status Bar */}
-            <div className="bg-gray-50 border-t border-gray-200 px-4 py-1 flex items-center justify-between text-xs text-gray-500">
-                <div className="flex items-center space-x-4">
+            <div className="bg-gray-50 border-t border-gray-200 px-2 sm:px-4 py-1 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 sm:gap-0 text-xs text-gray-500">
+                <div className="flex items-center space-x-2 sm:space-x-4">
                     <span>Lines: {props.code.split('\n').length}</span>
-                    <span>Characters: {props.code.length}</span>
-                    <span>Theme: {theme === 'vs-dark' ? 'Dark' : 'Light'}</span>
+                    <span>Chars: {props.code.length}</span>
+                    <span className="hidden sm:inline">Theme: {theme === 'vs-dark' ? 'Dark' : 'Light'}</span>
                 </div>
-                <div className="flex items-center space-x-2">
+                <div className="flex items-center space-x-2 sm:justify-end">
                     <span className={`w-2 h-2 rounded-full ${props.code ? 'bg-green-400' : 'bg-gray-400'}`}></span>
                     <span>{props.code ? 'Ready' : 'Empty'}</span>
                 </div>
