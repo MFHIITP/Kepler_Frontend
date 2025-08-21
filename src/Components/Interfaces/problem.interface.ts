@@ -9,7 +9,7 @@ export interface problemInterface {
     }[],
     realTestCases: {
         input: string,
-        output: string
+        output: string | boolean | BigInt
     }[],
     inputFormat: string,
     outputFormat: string,

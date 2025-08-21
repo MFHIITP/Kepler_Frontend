@@ -293,7 +293,7 @@ const DailyProblemsPage: React.FC<componentPropsInterface> = ({ details }) => {
                               <div>
                                 <span className="font-semibold text-teal-300">Output:</span>
                                 <div className="mt-1 bg-black/30 p-2 rounded font-mono text-sm text-gray-100">
-                                  {test.outputReal}
+                                  {`${test.outputReal}`}
                                 </div>
                               </div>
                             </div>

@@ -379,7 +379,7 @@ const IDEPage: React.FC<IDEPageInterface> = ({ problem, email, name }) => {
                               <div className="space-y-2">
                                 <label className="block text-sm font-medium text-emerald-300">Expected Output:</label>
                                 <div className="px-4 py-3 bg-emerald-500/10 border border-emerald-500/20 rounded-lg text-emerald-100 font-mono">
-                                  {val.output}
+                                  { `${val.output}`}
                                 </div>
                               </div>
                               {providedOutputs.length > 0 && (
