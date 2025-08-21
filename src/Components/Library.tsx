@@ -156,8 +156,8 @@ function Library(props: componentPropsInterface) {
         headers: {
           "Content-Type": "multipart/form-data"
         },
-        timeout: 60_000
-      });
+        timeout: 120_000
+      }); 
       
       if (data.url) {
         bookurl = data.url;

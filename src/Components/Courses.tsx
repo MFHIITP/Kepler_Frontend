@@ -444,7 +444,7 @@ function ProfessionalEducationPage() {
 
                   {/* Features */}
                   <div className="grid grid-cols-2 gap-2 mb-6">
-                    {program.features.map((feature, idx) => (
+                    {program.features?.map((feature, idx) => (
                       <div
                         key={idx}
                         className="flex items-center gap-2 text-sm text-slate-600"

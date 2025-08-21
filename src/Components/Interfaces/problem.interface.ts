@@ -5,7 +5,7 @@ export interface problemInterface {
     difficulty: string,
     displayTestCases: {
         input: {},
-        outputReal: string
+        outputReal: string | boolean | BigInt
     }[],
     realTestCases: {
         input: string,
