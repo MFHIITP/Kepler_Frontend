@@ -15,7 +15,7 @@ function Part2() {
       icon: <Database className="w-8 h-8" />,
       color: "from-blue-500 to-cyan-500",
       level: "Beginner",
-      duration: "12 weeks"
+      duration: "6 - 9 months"
     },
     {
       title: "Web Dev - 1",
@@ -24,7 +24,7 @@ function Part2() {
       icon: <Globe className="w-8 h-8" />,
       color: "from-green-500 to-emerald-500",
       level: "Beginner",
-      duration: "16 weeks"
+      duration: "6 - 9 months"
     },
     {
       title: "Language",
@@ -33,7 +33,7 @@ function Part2() {
       icon: <Code className="w-8 h-8" />,
       color: "from-purple-500 to-pink-500",
       level: "All Levels",
-      duration: "20 weeks"
+      duration: "6 - 9 months"
     },
     {
       title: "Machine Learning - 1",
@@ -42,7 +42,7 @@ function Part2() {
       icon: <Brain className="w-8 h-8" />,
       color: "from-orange-500 to-red-500",
       level: "Intermediate",
-      duration: "14 weeks"
+      duration: "6 - 9 months"
     },
     {
       title: "Computer Fundamentals - 1",
@@ -51,7 +51,7 @@ function Part2() {
       icon: <Network className="w-8 h-8" />,
       color: "from-teal-500 to-blue-500",
       level: "Beginner",
-      duration: "10 weeks"
+      duration: "6 - 9 months"
     },
     {
       title: "DSA - 2",
@@ -60,7 +60,7 @@ function Part2() {
       icon: <Database className="w-8 h-8" />,
       color: "from-indigo-500 to-purple-500",
       level: "Advanced",
-      duration: "14 weeks"
+      duration: "6 - 9 months"
     },
   ];
 

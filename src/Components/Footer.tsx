@@ -5,7 +5,8 @@ import { useNavigate } from "react-router-dom";
 
 const Footer = () => {
   const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    document.documentElement.scrollTop = 0; // For most browsers
+   document.body.scrollTop = 0;            // For Safari
   };
 
   const navigate = useNavigate();

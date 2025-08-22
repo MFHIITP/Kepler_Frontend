@@ -44,7 +44,7 @@ interface CourseInfo {
 }
 
 const ProfessionalCourseSchedule = () => {
-  const { exam } = useParams();
+  const { examname } = useParams();
   
   const navigate = useNavigate();
 
@@ -55,10 +55,10 @@ const ProfessionalCourseSchedule = () => {
       teachers: "Purnendu Kumar Mishra",
       description:
         "Master core programming languages like C, C++, Java, Python, and JavaScript from scratch to advanced. Build a strong foundation for software development, competitive coding, and interviews.",
-      duration: "6 Months",
+      duration: "6 - 9 Months",
       students: "12,500+",
       rating: 4.8,
-      startDate: "January 1st, 2025",
+      startDate: "September 1st, 2025",
     },
     webdev1: {
       type: "Web Development",
@@ -69,7 +69,7 @@ const ProfessionalCourseSchedule = () => {
       duration: "8 Months",
       students: "25,000+",
       rating: 4.9,
-      startDate: "April 1st, 2024",
+      startDate: "September 1st, 2024",
     },
     dsa1: {
       type: "Data Structures & Algorithms",
@@ -77,10 +77,10 @@ const ProfessionalCourseSchedule = () => {
       teachers: "Expert Engineering Faculty",
       description:
         "Crack coding interviews with in-depth DSA coverage. Includes arrays, linked lists, trees, graphs, dynamic programming, and advanced problem-solving strategies.",
-      duration: "6 Months",
+      duration: "6 - 9 Months",
       students: "8,500+",
       rating: 4.7,
-      startDate: "June 1st, 2024",
+      startDate: "September 1st, 2024",
     },
     fundamentals1: {
       type: "Computer Fundamentals",
@@ -91,7 +91,7 @@ const ProfessionalCourseSchedule = () => {
       duration: "4 Months",
       students: "7,200+",
       rating: 4.7,
-      startDate: "June 1st, 2024",
+      startDate: "September 1st, 2024",
     },
     ml1: {
       type: "Machine Learning & AI",
@@ -99,10 +99,10 @@ const ProfessionalCourseSchedule = () => {
       teachers: "Expert Engineering Faculty",
       description:
         "Master machine learning algorithms, data preprocessing, deep learning, and AI applications. Hands-on projects with Python, TensorFlow, and scikit-learn.",
-      duration: "6 Months",
+      duration: "6 - 9 Months",
       students: "6,800+",
       rating: 4.7,
-      startDate: "June 1st, 2024",
+      startDate: "September 1st, 2024",
     },
     dsa2: {
       type: "Data Structures & Algorithms",
@@ -110,10 +110,10 @@ const ProfessionalCourseSchedule = () => {
       teachers: "Expert Engineering Faculty",
       description:
         "Crack coding interviews with in-depth DSA coverage. Includes arrays, linked lists, trees, graphs, dynamic programming, and advanced problem-solving strategies.",
-      duration: "6 Months",
+      duration: "6 - 9 Months",
       students: "8,500+",
       rating: 4.7,
-      startDate: "June 1st, 2024",
+      startDate: "September 1st, 2024",
     },
     fundamentals2: {
       type: "Computer Fundamentals",
@@ -124,7 +124,7 @@ const ProfessionalCourseSchedule = () => {
       duration: "4 Months",
       students: "7,200+",
       rating: 4.7,
-      startDate: "June 1st, 2024",
+      startDate: "September 1st, 2024",
     },
     ml2: {
       type: "Machine Learning & AI",
@@ -132,10 +132,10 @@ const ProfessionalCourseSchedule = () => {
       teachers: "Expert Engineering Faculty",
       description:
         "Master machine learning algorithms, data preprocessing, deep learning, and AI applications. Hands-on projects with Python, TensorFlow, and scikit-learn.",
-      duration: "6 Months",
+      duration: "6 - 9 Months",
       students: "6,800+",
       rating: 4.7,
-      startDate: "June 1st, 2024",
+      startDate: "September 1st, 2024",
     },
   });
 
@@ -371,9 +371,9 @@ const ProfessionalCourseSchedule = () => {
     ],
   });
 
-  const currentCourse = courseData[exam as string] || courseData.languages;
-  const currentSchedule = scheduleData[exam as string] || scheduleData.languages;
-  const currentSyllabus = syllabusData[exam as string] || syllabusData.languages;
+  const currentCourse = courseData[examname as string] || courseData.languages;
+  const currentSchedule = scheduleData[examname as string] || scheduleData.languages;
+  const currentSyllabus = syllabusData[examname as string] || syllabusData.languages;
 
   const handleSubscriptionClick = () => {
     navigate("/profiles");
@@ -480,7 +480,7 @@ const ProfessionalCourseSchedule = () => {
                       <Calendar className="w-5 h-5 text-blue-600" />
                     </div>
                     <div>
-                      <div className="text-sm text-slate-600">Started on</div>
+                      <div className="text-sm text-slate-600">Starts on</div>
                       <div className="font-semibold text-slate-800">
                         {currentCourse.startDate}
                       </div>
@@ -528,7 +528,7 @@ const ProfessionalCourseSchedule = () => {
             {/* Playlist placeholder */}
             <div className="bg-slate-50 rounded-2xl p-0 md:p-6 text-center border-2 border-dashed border-slate-300">
               <div className="my-8 h-screen md:h-[30rem] bg-gray-200 shadow-lg rounded-lg p-0 md:p-4">
-                <Playlist exam={exam} />
+                <Playlist exam={examname} />
               </div>
             </div>
           </div>

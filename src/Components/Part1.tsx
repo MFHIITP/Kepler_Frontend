@@ -19,9 +19,9 @@ function Part1() {
   const navigate = useNavigate();
 
   const stats = [
-    { number: "50K+", label: "Active Learners" },
-    { number: "1000+", label: "Coding Challenges" },
-    { number: "95%", label: "Job Success Rate" },
+    { number: "50+", label: "Active Learners" },
+    { number: "500+", label: "Coding Challenges" },
+    { number: "92.5%", label: "Job Success Rate" },
     { number: "24/7", label: "Expert Support" }
   ];
 

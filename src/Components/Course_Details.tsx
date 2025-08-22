@@ -50,10 +50,10 @@ function ProfessionalCourseDetails() {
         name: "Purnendu Kumar Misra",
         image: "/Images/Shubhayan_image.jpg",
         subjects: ["Java", "C++"],
-        experience: "5+ Years Teaching",
+        experience: "1+ Years Teaching",
         rating: 4.9,
-        students: "2,500+",
-        description: "Specializes in Complex Analysis with extensive experience in university-level mathematics. Currently pursuing PhD in Mathematics from Jadavpur University."
+        students: "50+",
+        description: "Specializes in Object Oriented Programming concepts and principles, with extensive experience in C++, Java and Python. Currently endeavouring to share his extensive knowledge with the enthusiasts on the platform."
       },
     ],
     webdev1: [
@@ -62,10 +62,10 @@ function ProfessionalCourseDetails() {
         name: "Farshid Hossain",
         image: "/Images/College_Prep.webp",
         subjects: ["Frontend", "Backend", "DataBase", "DevOps"],
-        experience: "6+ Years Teaching",
+        experience: "1+ Years Teaching",
         rating: 4.9,
-        students: "5,000+",
-        description: "IIT alumnus with exceptional track record in JEE preparation. Expert in both Physics and Mathematics with innovative teaching methods."
+        students: "50+",
+        description: "Learn from experts in the field of Full Stack Development and devOps, and prepare projects and applications that would leave everyone mesmerized."
       },
     ],
     dsa1: [
@@ -74,10 +74,10 @@ function ProfessionalCourseDetails() {
         name: "Satwik Biswas",
         image: "/Images/College_Prep.webp",
         subjects: ["Arrays", "Linked Lists", "Binary Search", "Sliding Window", "Trees", "Graphs", "Dynamic Programming", "Tries"],
-        experience: "4+ Years Teaching",
+        experience: "1+ Years Teaching",
         rating: 4.8,
-        students: "2,100+",
-        description: "GATE expert with comprehensive knowledge of engineering mathematics and analytical problem solving."
+        students: "50+",
+        description: "With his unbound expertise in the field of Data Structures and Algorithms, expect nothing less than the best when it comes to solving coding challenges like a pro."
       }
     ],
     fundamentals1: [
@@ -86,10 +86,10 @@ function ProfessionalCourseDetails() {
         name: "Vivek Haldar",
         image: "/Images/College_Prep.webp",
         subjects: ["CN", "DBMS", "OS", "COA"],
-        experience: "6+ Years Teaching",
+        experience: "1+ Years Teaching",
         rating: 4.9,
-        students: "5,000+",
-        description: "IIT alumnus with exceptional track record in JEE preparation. Expert in both Physics and Mathematics with innovative teaching methods."
+        students: "50+",
+        description: "With his direct and to the point approach to the principles of OOPS, DBMS, OS and System Design, get ready to sharpen and hone your skills in CS Fundamentals, and get a solid grasp on the domain."
       },
     ],
     ml1: [
@@ -98,21 +98,21 @@ function ProfessionalCourseDetails() {
         name: "Dipan Mondal",
         image: "/Images/College_Prep.webp",
         subjects: ["ML", "AI", "DL", "LLM"],
-        experience: "6+ Years Teaching",
+        experience: "1+ Years Teaching",
         rating: 4.9,
-        students: "5,000+",
-        description: "IIT alumnus with exceptional track record in JEE preparation. Expert in both Physics and Mathematics with innovative teaching methods."
+        students: "50+",
+        description: "With his no nonsense approach the the field of Machine Learning, Deep Learning, Data Science and its associated principles, you would be able to dive deep into this ever widening field with a level of confidence that you have never had before."
       },
-      {
-        id: 2,
-        name: "Guest Faculty",
-        image: "/Images/College_Prep.webp",
-        subjects: ["ML", "AI", "DL", "LLM"],
-        experience: "6+ Years Teaching",
-        rating: 4.9,
-        students: "5,000+",
-        description: "IIT alumnus with exceptional track record in JEE preparation. Expert in both Physics and Mathematics with innovative teaching methods."
-      },
+      // {
+      //   id: 2,
+      //   name: "Guest Faculty",
+      //   image: "/Images/College_Prep.webp",
+      //   subjects: ["ML", "AI", "DL", "LLM"],
+      //   experience: "6+ Years Teaching",
+      //   rating: 4.9,
+      //   students: "5,000+",
+      //   description: "IIT alumnus with exceptional track record in JEE preparation. Expert in both Physics and Mathematics with innovative teaching methods."
+      // },
     ],
     webdev2: [
       {
@@ -120,10 +120,10 @@ function ProfessionalCourseDetails() {
         name: "Farshid Hossain",
         image: "/Images/College_Prep.webp",
         subjects: ["Frontend", "Backend", "DataBase", "DevOps"],
-        experience: "6+ Years Teaching",
+        experience: "1+ Years Teaching",
         rating: 4.9,
-        students: "5,000+",
-        description: "IIT alumnus with exceptional track record in JEE preparation. Expert in both Physics and Mathematics with innovative teaching methods."
+        students: "50+",
+        description: "Learn from experts in the field of Full Stack Development and devOps, and prepare projects and applications that would leave everyone mesmerized."
       },
     ],
     dsa2: [
@@ -131,21 +131,21 @@ function ProfessionalCourseDetails() {
         id: 1,
         name: "Satwik Biswas",
         image: "/Images/College_Prep.webp",
-        subjects: ["Arrays", "Linked Lists", "Binary Search", "Sliding Window", "Trees", "Graphs", "Dynamic Programming", "Tries"],
-        experience: "4+ Years Teaching",
-        rating: 4.8,
-        students: "2,100+",
-        description: "GATE expert with comprehensive knowledge of engineering mathematics and analytical problem solving."
+        subjects: ["Arrays", "Linked Lists", "Binary Search", "Sliding Window", "Trees", "Graphs", "Dynamic Programming"],
+        experience: "1+ Years Teaching",
+        rating: 4.9,
+        students: "50+",
+        description: "With his unbound expertise in the field of Data Structures and Algorithms, expect nothing less than the best when it comes to solving coding challenges like a pro."
       },
       {
         id: 2,
         name: "Irfan Gazi",
         image: "/Images/College_Prep.webp",
-        subjects: ["Arrays", "Linked Lists", "Binary Search", "Sliding Window", "Trees", "Graphs", "Dynamic Programming", "Tries"],
-        experience: "4+ Years Teaching",
-        rating: 4.8,
-        students: "2,100+",
-        description: "GATE expert with comprehensive knowledge of engineering mathematics and analytical problem solving."
+        subjects: ["Tries", "Fenwick Trees", "Segment Trees", "Competetive Programming"],
+        experience: "1+ Years Teaching",
+        rating: 4.9,
+        students: "50+",
+        description: "Learn from the master of codeforces and an expert in the field of Competetive Programming and get ready to join the top 1% of coders club on the platform in specific, and in your locale in general."
       },
     ],
     fundamentals2: [
@@ -157,7 +157,7 @@ function ProfessionalCourseDetails() {
         experience: "6+ Years Teaching",
         rating: 4.9,
         students: "5,000+",
-        description: "IIT alumnus with exceptional track record in JEE preparation. Expert in both Physics and Mathematics with innovative teaching methods."
+        description: "With his direct and to the point approach to the principles of OOPS, DBMS, OS and System Design, get ready to sharpen and hone your skills in CS Fundamentals, and get a solid grasp on the domain.."
       },
     ],
     ml2: [
@@ -185,8 +185,8 @@ function ProfessionalCourseDetails() {
         "Comprehensive study materials",
         "Regular assessments and feedback"
       ],
-      duration: "6 months",
-      students: "150+",
+      duration: "6 - 9 months",
+      students: "50+",
       rating: 4.8
     },
     fundamentals1: {
@@ -199,8 +199,8 @@ function ProfessionalCourseDetails() {
         "Comprehensive study materials",
         "Regular assessments and feedback"
       ],
-      duration: "6 months",
-      students: "150+",
+      duration: "6 - 9 months",
+      students: "50+",
       rating: 4.9
     },
     webdev1: {
@@ -213,8 +213,8 @@ function ProfessionalCourseDetails() {
         "Comprehensive study materials",
         "Regular assessments and feedback"
       ],
-      duration: "6 months",
-      students: "150+", 
+      duration: "6 - 9 months",
+      students: "50+", 
       rating: 4.7
     },
     dsa1: {
@@ -227,8 +227,8 @@ function ProfessionalCourseDetails() {
         "Comprehensive study materials",
         "Regular assessments and feedback"
       ],
-      duration: "6 months",
-      students: "150+", 
+      duration: "6 - 9 months",
+      students: "50+", 
       rating: 4.7
     },
     ml1: {
@@ -241,8 +241,8 @@ function ProfessionalCourseDetails() {
         "Comprehensive study materials",
         "Regular assessments and feedback"
       ],
-      duration: "6 months",
-      students: "150+", 
+      duration: "6 - 9 months",
+      students: "50+", 
       rating: 4.7
     },
     webdev2: {
@@ -255,8 +255,8 @@ function ProfessionalCourseDetails() {
         "Comprehensive study materials",
         "Regular assessments and feedback"
       ],
-      duration: "6 months",
-      students: "150+", 
+      duration: "6 - 9 months",
+      students: "50+", 
       rating: 4.7
     },
     dsa2: {
@@ -269,8 +269,8 @@ function ProfessionalCourseDetails() {
         "Comprehensive study materials",
         "Regular assessments and feedback"
       ],
-      duration: "6 months",
-      students: "150+", 
+      duration: "6 - 9 months",
+      students: "50+", 
       rating: 4.7
     },
     ml2: {
@@ -283,8 +283,8 @@ function ProfessionalCourseDetails() {
         "Comprehensive study materials",
         "Regular assessments and feedback"
       ],
-      duration: "6 months",
-      students: "150+", 
+      duration: "6 - 9 months",
+      students: "50+", 
       rating: 4.7
     },
     fundamentals2: {
@@ -297,8 +297,8 @@ function ProfessionalCourseDetails() {
         "Comprehensive study materials",
         "Regular assessments and feedback"
       ],
-      duration: "6 months",
-      students: "150+",
+      duration: "6 - 9 months",
+      students: "50+",
       rating: 4.9
     },
   };
@@ -563,8 +563,7 @@ function ProfessionalCourseDetails() {
                   Refer friends and earn cashback rewards:
                 </p>
                 <div className="space-y-2 mb-6">
-                  <p className="text-blue-100">• ₹200 cashback for Higher Secondary referrals</p>
-                  <p className="text-blue-100">• ₹100 cashback for College student referrals</p>
+                  <p className="text-blue-100">• ₹200 cashback for referring to your friends</p>
                 </div>
                 <button
                   onClick={handleReferClick}
