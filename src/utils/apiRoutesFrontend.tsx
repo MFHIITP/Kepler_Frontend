@@ -45,7 +45,7 @@ export const RouterFrontend = (authenticated: boolean, details: userdetails | un
             <Suspense>
               <div>
                 <Popping>
-                  <Part1 />
+                  <Part1 auth = {authenticated}/>
                 </Popping>
                 <Part2 />
                 <Numbers />

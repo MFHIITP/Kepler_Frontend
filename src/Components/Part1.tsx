@@ -5,6 +5,11 @@ import { Play, Code, BookOpen, Zap } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 function Part1() {
+  const [code, setCode] = useState("");
+  const [output, setOutput] = useState("");
+  const [isTyping, setIsTyping] = useState(false);
+  const [isRunning, setIsRunning] = useState(false);
+  const navigate = useNavigate();
   useEffect(() => {
     if (localStorage.getItem("toast_message")) {
       const value = localStorage.getItem("toast_message");
@@ -12,11 +17,6 @@ function Part1() {
     }
     localStorage.removeItem("toast_message");
   }, []);
-  const [code, setCode] = useState("");
-  const [output, setOutput] = useState("");
-  const [isTyping, setIsTyping] = useState(false);
-  const [isRunning, setIsRunning] = useState(false);
-  const navigate = useNavigate();
 
   const stats = [
     { number: "50+", label: "Active Learners" },
@@ -37,7 +37,7 @@ int main() {
     return 0;
 }`;
 
-  const typeCode = async (text, delay = 50) => {
+  const typeCode = async (text: string, delay = 50) => {
     setIsTyping(true);
     setCode("");
     for (let i = 0; i <= text.length; i++) {
