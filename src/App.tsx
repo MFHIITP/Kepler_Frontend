@@ -99,7 +99,8 @@ function App() {
 
   useEffect(() => {
     (async () => {
-      if(signInRequest && !authenticated){
+      const path = window.location.pathname
+      if(signInRequest && !authenticated && (path !== '/login' && path !== '/authlogin' && path !== '/signup' && path !== '/authsignup' && path != '/authlogin/:email')){
         const signInAlert = await showSignInAlert();
         
         if (signInAlert.isConfirmed) {

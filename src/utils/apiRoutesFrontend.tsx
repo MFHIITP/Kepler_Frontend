@@ -1,6 +1,7 @@
 import { lazy, Suspense } from "react";
 import { userdetails } from "../Components/Interfaces/Details.interface";
 import { createBrowserRouter } from "react-router-dom";
+import AllProblems from "../Components/AllProblems";
 const DailyProblemsPage = lazy(() => import("../Components/DailyProblems/DailyProblemsPage"));
 
 const MainLayout = lazy(()=>import("./MainLayout"))
@@ -250,10 +251,18 @@ export const RouterFrontend = (authenticated: boolean, details: userdetails | un
           ),
         },
         {
-          path: "/problems/dailyProblems",
+          path: "/problems/allProblems/dailyProblems/:problemName",
           element: (
             <>
               <DailyProblemsPage details = {details}/>
+            </>
+          )
+        },
+        {
+          path: '/problems/allProblems',
+          element: (
+            <>
+              <AllProblems details = {details} />
             </>
           )
         }

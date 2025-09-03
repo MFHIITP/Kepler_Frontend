@@ -82,6 +82,7 @@ const apiRoutes = {
         codingProfile: '/problems/codingProfile',
         leaderboard: '/problems/leaderboard',
         getComments: '/problems/getComments',
+        getAllProblems: '/problems/getAllProblems'
     }
 }
 export default apiRoutes

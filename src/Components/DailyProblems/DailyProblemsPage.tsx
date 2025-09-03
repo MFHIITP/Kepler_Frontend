@@ -8,22 +8,12 @@ import IDEPage from "./IDEPage";
 import { commentDataInterface } from "../Interfaces/CommentData.interface";
 import toast from "react-hot-toast";
 import { Clock, MessageSquare, Code2, Trophy, CheckCircle2, XCircle, AlertCircle, Send, User, Calendar, Zap, Target, Timer, HardDrive } from "lucide-react";
+import { useParams } from "react-router-dom";
 
 const webSocketAddress = import.meta.env.VITE_WEBS_ADDR
 
-const todayIsSameDay = (givenDate: Date) => {
-    const PastDate = new Date(givenDate);
-    const today = new Date();
-    PastDate.setHours(0, 0, 0, 0);
-    today.setHours(0, 0, 0, 0);
-
-    return PastDate.getTime() == today.getTime();
-};
-
-const getProblem = async (): Promise<problemInterface> => {
-  const { data } = await api.get<problemInterface>(
-    apiRoutes.problems.getProblem
-  );
+const getProblem = async ({problemName}: {problemName: string}): Promise<problemInterface> => {
+  const { data } = await api.get<problemInterface>(`${apiRoutes.problems.getProblem}/${problemName}`);
   return data;
 };
 
@@ -41,23 +31,15 @@ const DailyProblemsPage: React.FC<componentPropsInterface> = ({ details }) => {
   const [socket, setSocket] = useState<WebSocket | null>(null)
   const [loading, setLoading] = useState(false);
   const [dailyProblemStatus, setDailyProblemStatus] = useState<string>("");
+  const {problemName} = useParams();
 
   const {data: problem, isLoading, isError} = useQuery({
     queryKey: ["dailyProblem"],
-    queryFn: getProblem,
+    queryFn: () => getProblem({ problemName: problemName ?? "" }),
   });
 
   useEffect(() => {
-    if(localStorage.getItem("dailyProblemDate")){
-      const solutionDate = JSON.parse(localStorage.getItem("dailyProblemDate") ?? "");
-      if(todayIsSameDay(solutionDate)){
-        setDailyProblemStatus(localStorage.getItem("dailyProblemStatus") ?? "");
-      }
-      else{
-        localStorage.removeItem("dailyProblemDate");
-        localStorage.removeItem("dailyProblemStatus");
-      }
-    }
+    
   }, [])
   
 
