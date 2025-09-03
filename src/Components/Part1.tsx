@@ -171,7 +171,7 @@ int main() {
 
             <div className="flex space-x-4">
               <button className="px-8 py-4 bg-gradient-to-r from-green-600 to-teal-600 text-white font-semibold rounded-xl hover:from-purple-700 hover:to-pink-700 transition-all duration-200 transform hover:scale-105 shadow-lg"
-              onClick={() => navigate("/problems/dailyProblems")}>
+              onClick={() => navigate("/problems/allProblems")}>
                 Start Coding
               </button>
               <button className="px-8 py-4 bg-white/10 backdrop-blur-sm text-white font-semibold rounded-xl border border-white/20 hover:bg-white/20 transition-all duration-200"
