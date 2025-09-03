@@ -31,34 +31,59 @@ interface problemInterface {
 interface AllProblemsTypeInterface {
   problemList: problemInterface[];
   dailyProblem: problemInterface;
-  streak: number,
-  keplerBits: number,
-  solved: number
+  streak: number;
+  keplerBits: number;
+  solved: number;
 }
 
-const getAllProblems = async ({ email, problemName, filter, problemLevel}: { email: string; problemName: string; filter: string[]; problemLevel: string[] }): Promise<AllProblemsTypeInterface | null> => {
-  const { data } = await api.post<AllProblemsTypeInterface>(`${apiRoutes.problems.getAllProblems}/${problemName}`, {
+const getAllProblems = async ({
+  email,
+  problemName,
+  filter,
+  problemLevel,
+}: {
+  email: string;
+  problemName: string;
+  filter: string[];
+  problemLevel: string[];
+}): Promise<AllProblemsTypeInterface | null> => {
+  const { data } = await api.post<AllProblemsTypeInterface>(
+    `${apiRoutes.problems.getAllProblems}/${problemName}`,
+    {
       emailId: email,
       filter: filter,
       problemLevel: problemLevel,
-    });
+    }
+  );
   return data;
 };
 
 const AllProblems: React.FC<AllProblemsInterface> = ({ details }) => {
   const [problemSet, setProblemSet] = useState<problemInterface[]>([]);
-  const [dailyProblem, setDailyProblem] = useState<problemInterface | null>(null);
+  const [dailyProblem, setDailyProblem] = useState<problemInterface | null>(
+    null
+  );
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState<string[]>([]);
   const [problemLevel, setProblemLevel] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
-  const [streakValue, setstreakValue] = useState(0)
+  const [streakValue, setstreakValue] = useState(0);
   const [keplerBitsValue, setKeplerBitsValue] = useState(0);
-  const [solved, setSolved] = useState(0)
+  const [solved, setSolved] = useState(0);
   const navigate = useNavigate();
 
   const { mutate: getAllProblemsMutation } = useMutation({
-    mutationFn: ({ email, problemName, filter, problemLevel }: { email: string; problemName: string; filter: string[]; problemLevel: string[] }) =>
+    mutationFn: ({
+      email,
+      problemName,
+      filter,
+      problemLevel,
+    }: {
+      email: string;
+      problemName: string;
+      filter: string[];
+      problemLevel: string[];
+    }) =>
       getAllProblems({
         email: email,
         problemName: problemName,
@@ -69,9 +94,9 @@ const AllProblems: React.FC<AllProblemsInterface> = ({ details }) => {
     onSuccess: (data) => {
       setProblemSet(data?.problemList ?? []);
       setDailyProblem(data?.dailyProblem ?? null);
-      setstreakValue(data?.streak ?? 0)
-      setKeplerBitsValue(data?.keplerBits ?? 0)
-      setSolved(data?.solved ?? 0)
+      setstreakValue(data?.streak ?? 0);
+      setKeplerBitsValue(data?.keplerBits ?? 0);
+      setSolved(data?.solved ?? 0);
       setLoading(false);
     },
     onError: () => {
@@ -143,6 +168,11 @@ const AllProblems: React.FC<AllProblemsInterface> = ({ details }) => {
       default:
         return <Code2 className="w-4 h-4" />;
     }
+  };
+
+  const handleDashboardNavigate = async () => {
+    localStorage.setItem("profileOption", "keplerBoard");
+    navigate("/profiles");
   };
 
   return (
@@ -477,26 +507,54 @@ const AllProblems: React.FC<AllProblemsInterface> = ({ details }) => {
             </div>
 
             {/* Stats Card */}
-            <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-white/20">
-              <h3 className="font-semibold text-gray-900 mb-4">
-                Your Progress
-              </h3>
-              <div className="space-y-3">
-                <div className="flex justify-between items-center">
-                  <span className="text-sm text-gray-600">Submissions</span>
-                  <span className="font-semibold text-gray-900">{solved}</span>
+            <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200/60 hover:shadow-md transition-shadow duration-200">
+              <div className="flex justify-between items-center mb-6">
+                <h3 className="text-lg font-semibold text-gray-900">
+                  Your Progress
+                </h3>
+                <button
+                  className="text-blue-600 hover:text-blue-800 font-medium text-sm transition-colors duration-200"
+                  onClick={handleDashboardNavigate}
+                >
+                  View Dashboard
+                </button>
+              </div>
+
+              <div className="space-y-4">
+                <div className="flex justify-between items-center py-2">
+                  <span className="text-sm font-medium text-gray-600">
+                    Submissions
+                  </span>
+                  <span className="text-lg font-semibold text-gray-900">
+                    {solved}
+                  </span>
                 </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-sm text-gray-600">Success Rate</span>
-                  <span className="font-semibold text-gray-900">--%</span>
+
+                <div className="flex justify-between items-center py-2 border-t border-gray-100">
+                  <span className="text-sm font-medium text-gray-600">
+                    Success Rate
+                  </span>
+                  <span className="text-lg font-semibold text-gray-900">
+                    --%
+                  </span>
                 </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-sm text-gray-600">Current Streak</span>
-                  <span className="font-semibold text-gray-900">{streakValue} days</span>
+
+                <div className="flex justify-between items-center py-2 border-t border-gray-100">
+                  <span className="text-sm font-medium text-gray-600">
+                    Current Streak
+                  </span>
+                  <span className="text-lg font-semibold text-gray-900">
+                    {streakValue} days
+                  </span>
                 </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-sm text-gray-600">Kepler Bits</span>
-                  <span className="font-semibold text-gray-900">{keplerBitsValue} days</span>
+
+                <div className="flex justify-between items-center py-2 border-t border-gray-100">
+                  <span className="text-sm font-medium text-gray-600">
+                    Kepler Bits
+                  </span>
+                  <span className="text-lg font-semibold text-gray-900">
+                    {keplerBitsValue}
+                  </span>
                 </div>
               </div>
             </div>

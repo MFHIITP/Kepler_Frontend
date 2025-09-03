@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import User_Details from './User_Details'
 import Profile_Courses from "./Profile_Courses.jsx";
 import Profile from "./Profile";
@@ -11,6 +11,15 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 const Landing: React.FC<componentPropsInterface> = (props) => {
   const [option, setOption] = useState("courses");
   const [mobileView, setMobileView] = useState("courses")
+
+  useEffect(() => {
+    if(localStorage.getItem('profileOption')){
+      setOption(localStorage.getItem('profileOption') ?? "courses");
+      setMobileView(localStorage.getItem('profileOption') ?? "courses");
+      localStorage.removeItem('profileOption')
+    }
+  }, [])
+  
   
   // Professional navigation structure
   const navigationItems = [
