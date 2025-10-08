@@ -4,17 +4,14 @@ import { useQuery } from "@tanstack/react-query";
 import api from "../utils/api";
 import apiRoutes from "../utils/Routes/apiRoutes";
 import { useNavigate } from "react-router-dom";
+import { userdetails } from "./Interfaces/Details.interface";
 
-// Your original interfaces and API logic
 interface LibraryResponseInterface{
   data: [string]
 }
 
 interface componentPropsInterface {
-  details: {
-    email: string;
-    name?: string;
-  };
+  details: userdetails | undefined;
 }
 
 interface LibraryResponseInterface{
@@ -28,12 +25,12 @@ const getLibraryList = async (email: string) => {
   return data?.data;
 };
 
-const Library_main: React.FC<componentPropsInterface> = (props) => {
+const Library_main: React.FC<componentPropsInterface> = ({details}: {details: userdetails | undefined}) => {
   const [search, setSearch] = useState<string>("");
 
   const { data: libraryList, isLoading, error } = useQuery({
-    queryKey: ["libraryCourses", props.details?.email],
-    queryFn: () => getLibraryList(props.details.email),
+    queryKey: ["libraryCourses", details?.email],
+    queryFn: () => getLibraryList(details?.email ?? ""),
     staleTime: 30 * 60 * 1000,
   });
 
@@ -156,8 +153,8 @@ const Library_main: React.FC<componentPropsInterface> = (props) => {
                 <p className="text-3xl font-bold text-slate-800">{filteredlist.length}</p>
               </div>
               <div className="text-right">
-                <p className="text-sm font-medium text-slate-600">{props.details.email}</p>
-                <p className="text-lg font-semibold text-indigo-600">{props.details?.name}</p>
+                <p className="text-sm font-medium text-slate-600">{details?.email}</p>
+                <p className="text-lg font-semibold text-indigo-600">{details?.name}</p>
               </div>
             </div>
           </div>

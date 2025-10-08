@@ -4,7 +4,7 @@ import Swal from "sweetalert2";
 import { Play, Code, BookOpen, Zap } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
-function Part1() {
+function Part1({auth}: {auth: boolean}) {
   const [code, setCode] = useState("");
   const [output, setOutput] = useState("");
   const [isTyping, setIsTyping] = useState(false);

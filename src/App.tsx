@@ -1,4 +1,4 @@
-import { useState, useEffect, lazy, Suspense, useRef, useMemo } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import { RouterProvider } from "react-router-dom";
 import toast, {Toaster} from 'react-hot-toast'
 import "./App.css";
@@ -100,11 +100,10 @@ function App() {
   useEffect(() => {
     (async () => {
       const path = window.location.pathname
-      if(signInRequest && !authenticated && (path !== '/login' && path !== '/authlogin' && path !== '/signup' && path !== '/authsignup' && path != '/authlogin/:email')){
+      if(signInRequest && !authenticated && (path !== '/login' && path !== '/authlogin' && path !== '/register' && path !== '/authsignup' && path != '/authlogin/:email')){
         const signInAlert = await showSignInAlert();
         
         if (signInAlert.isConfirmed) {
-          // Add a success toast before redirecting
           toast.success('Redirecting to sign in...', {
             duration: 2000,
             style: {

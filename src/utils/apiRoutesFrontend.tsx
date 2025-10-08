@@ -34,7 +34,6 @@ const AuthRegister = lazy(() => import("../Components/AuthRegister"));
 const Footer = lazy(() => import("../Components/Footer"));
 
 export const RouterFrontend = (authenticated: boolean, details: userdetails | undefined) => {
-  console.log(authenticated);
   return createBrowserRouter([
     {
       path: "/",

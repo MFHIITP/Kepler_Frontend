@@ -40,6 +40,10 @@ html {
   scroll-behavior: smooth;
 }
 
+.elements {
+  will-change: transform, opacity;
+}
+
 *, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
