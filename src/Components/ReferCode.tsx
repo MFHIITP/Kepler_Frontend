@@ -12,14 +12,44 @@ import {
   Trophy,
   ArrowRight
 } from "lucide-react";
+import api from "../utils/api";
+import apiRoutes from "../utils/Routes/apiRoutes";
+import { useMutation } from "@tanstack/react-query";
+import toast from "react-hot-toast";
 
-function ReferCode(props) {
-  const [refercode, setRefercode] = useState(props.details.refercode || "REFER2024");
-  const [isopen, setIsopen] = useState(false);
+const getreferCode = async(emailID: string) => {
+  const { data } = await api.post(apiRoutes.courses.referCode.getReferCode, {
+    email: emailID
+  })
+  return data;
+}
+
+function referCode(props) {
+  const [referCode, setReferCode] = useState<string | null>(null);
+  const [isOpen, setisOpen] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [numberLeft, setNumberLeft] = useState(0);
+
+  const { mutate: getreferCodeMutation } = useMutation({
+    mutationFn: () => getreferCode(props.details.email),
+    onSuccess: (data) => {
+      setReferCode(data.referCode);
+      setNumberLeft(data.numberLeft);
+    },
+    onError: (error) => {
+      toast.error("Error fetching refer code");
+    }
+  })
+
+  useEffect(() => {
+    if(props.details?.email){
+      getreferCodeMutation();
+    }
+  }, [])
+  
 
   const handlecopy = async () => {
-    await window.navigator.clipboard.writeText(refercode);
+    await window.navigator.clipboard.writeText(referCode!);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
     // Replace with your toast implementation
@@ -27,7 +57,7 @@ function ReferCode(props) {
   };
 
   const toggle = () => {
-    setIsopen(!isopen);
+    setisOpen(!isOpen);
   };
   
   return (
@@ -79,7 +109,7 @@ function ReferCode(props) {
                   <p className="text-sm font-medium text-slate-600 mb-1">Your referral code</p>
                   <div className="flex items-center">
                     <span className="text-2xl font-bold text-slate-800 font-mono">
-                      {refercode}
+                      {referCode}
                     </span>
                   </div>
                 </div>
@@ -105,12 +135,12 @@ function ReferCode(props) {
                     className="w-full lg:w-auto px-6 py-3 bg-gradient-to-r from-slate-700 to-slate-800 text-white rounded-xl font-semibold hover:from-slate-800 hover:to-slate-900 transition-all duration-200 flex items-center justify-center space-x-2"
                     onClick={toggle}
                   >
-                    {isopen ? <X className="w-4 h-4" /> : <Share2 className="w-4 h-4" />}
-                    <span>{isopen ? 'CLOSE' : 'SHARE'}</span>
+                    {isOpen ? <X className="w-4 h-4" /> : <Share2 className="w-4 h-4" />}
+                    <span>{isOpen ? 'CLOSE' : 'SHARE'}</span>
                   </button>
 
                   {/* Share Dropdown */}
-                  {isopen && (
+                  {isOpen && (
                     <div className="absolute top-14 left-0 right-0 lg:left-auto lg:right-0 lg:w-80 z-20 bg-white rounded-2xl shadow-2xl border border-slate-200 p-6 animate-in slide-in-from-top-2 duration-200">
                       <div className="flex items-center mb-4">
                         <Share2 className="w-5 h-5 text-slate-600 mr-2" />
@@ -121,7 +151,7 @@ function ReferCode(props) {
                         {/* WhatsApp */}
                         <a
                           href={`https://api.whatsapp.com/send?text=${encodeURIComponent(
-                            `Hey! Join me on this amazing learning platform with my referral code: ${refercode}`
+                            `Hey! Join me on this amazing learning platform with my referral code: ${referCode}`
                           )}`}
                           target="_blank"
                           rel="noopener noreferrer"
@@ -137,7 +167,7 @@ function ReferCode(props) {
                           href={`mailto:?subject=${encodeURIComponent(
                             "Join me on this learning platform!"
                           )}&body=${encodeURIComponent(
-                            `I found this amazing learning platform and thought you'd love it! Use my referral code: ${refercode} to get started.`
+                            `I found this amazing learning platform and thought you'd love it! Use my referral code: ${referCode} to get started.`
                           )}`}
                           className="flex items-center p-3 rounded-xl bg-blue-50 hover:bg-blue-100 text-blue-600 transition-colors duration-200 group"
                         >
@@ -166,7 +196,7 @@ function ReferCode(props) {
                   <div className="flex items-center">
                     <div className="bg-gradient-to-r from-orange-100 to-amber-100 border border-orange-200 rounded-xl px-4 py-2">
                       <span className="text-lg font-bold text-orange-700">
-                        {props.details?.usenumber || '5'}
+                        {numberLeft || '5'}
                       </span>
                     </div>
                     <Users className="w-5 h-5 text-orange-500 ml-2" />
@@ -238,4 +268,4 @@ function ReferCode(props) {
   );
 }
 
-export default ReferCode;
+export default referCode;

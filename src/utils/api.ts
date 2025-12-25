@@ -52,15 +52,13 @@ api.interceptors.response.use(
       });
       originalRequest.headers.AuthorizationAccessToken = `Bearer ${data.accessToken}`;
       return api(originalRequest);
-    } else if (error.response.status == 403) {
-      const profileInfoToken = Cookies.get("ProfileInfo");
-      const decodedProfile = decodeURIComponent(
-        profileInfoToken?.substring(2) ?? ""
-      );
-      const profile = JSON.parse(decodedProfile);
-      const email = profile.email;
-      const response = await logoutRequest(email);
-      if (response.status == 200) {
+    } 
+    else if (error.response.status == 403) {
+      try {
+        const profileInfoToken = Cookies.get("ProfileInfo");
+        const profile = JSON.parse(profileInfoToken ?? "{}");
+        const email = profile.email;
+        const response = await logoutRequest(email);
         Cookies.remove("AccessToken", {
           path: "/",
         });
@@ -70,8 +68,12 @@ api.interceptors.response.use(
         Cookies.remove("ProfileInfo", {
           path: "/",
         });
+        localStorage.removeItem("email")
         localStorage.setItem("toast_message", "Logout Successful!");
         window.location.href = "/";
+      }
+      catch(error) {
+        console.log(error);
       }
     }
   }

@@ -2,6 +2,7 @@ import { lazy, Suspense } from "react";
 import { userdetails } from "../Components/Interfaces/Details.interface";
 import { createBrowserRouter } from "react-router-dom";
 import AllProblems from "../Components/AllProblems";
+import Connection_Landing from "../Components/Connections/Connection_Landing";
 const DailyProblemsPage = lazy(() => import("../Components/DailyProblems/DailyProblemsPage"));
 
 const MainLayout = lazy(()=>import("./MainLayout"))
@@ -245,7 +246,7 @@ export const RouterFrontend = (authenticated: boolean, details: userdetails | un
           path: "/courses/:examname/details",
           element: (
             <>
-              <Course_Schedules />
+              <Suspense fallback = {<>Loading...</>}><Course_Schedules /></Suspense>
             </>
           ),
         },
@@ -253,7 +254,7 @@ export const RouterFrontend = (authenticated: boolean, details: userdetails | un
           path: "/problems/allProblems/dailyProblems/:problemName",
           element: (
             <>
-              <DailyProblemsPage details = {details}/>
+              <Suspense fallback = {<>Loading...</>}><DailyProblemsPage details = {details}/></Suspense>
             </>
           )
         },
@@ -261,7 +262,15 @@ export const RouterFrontend = (authenticated: boolean, details: userdetails | un
           path: '/problems/allProblems',
           element: (
             <>
-              <AllProblems details = {details} />
+              <Suspense fallback = {<>Loading...</>}><AllProblems details = {details} /></Suspense>
+            </>
+          )
+        },
+        {
+          path: '/notice/connection',
+          element: (
+            <>
+              <Suspense fallback = {<>Loading...</>}><Connection_Landing details = {details}></Connection_Landing></Suspense>
             </>
           )
         }

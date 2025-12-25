@@ -31,14 +31,23 @@ function Register() {
     password: "",
     confirmPassword: "",
     phone: "",
+    country: "",
+    state: "",
+    city: "",
     educationType: "",
     school: "",
     school_year: "",
     college: "",
     college_stream: "",
     college_year: "",
-    country: "",
+    college_department: "",
     university: "",
+    work_country: "",
+    work_state: "",
+    work_city: "",
+    work_company: "",
+    work_position: "",
+    work_duration: "",
   });
 
   useEffect(() => {
@@ -55,7 +64,7 @@ function Register() {
         setUniversities(selectedUniversities);
       })
       .catch((err) => toast.error("Failed to load universities"));
-  }, [formData.country]);
+  }, [formData.country, formData.work_country]);
 
   const [loading, setLoading] = useState(false);
 
@@ -85,22 +94,21 @@ function Register() {
         email: formData.email,
         password: formData.password,
         phone: formData.phone,
-        school:
-          formData.educationType === "school" ? formData.school : undefined,
-        school_year:
-          formData.educationType === "school"
-            ? formData.school_year
-            : undefined,
-        college:
-          formData.educationType === "college" ? formData.college : undefined,
-        college_stream:
-          formData.educationType === "college"
-            ? formData.college_stream
-            : undefined,
-        college_year:
-          formData.educationType === "college"
-            ? formData.college_year
-            : undefined,
+        education_type: formData.educationType,
+        school: formData.educationType === "school" ? formData.school : undefined,
+        school_year: formData.educationType === "school" ? formData.school_year : undefined,
+        college: formData.educationType === "college" ? formData.college : undefined,
+        college_stream: formData.educationType === "college" ? formData.college_stream : undefined,
+        college_year: formData.educationType === "college" ? formData.college_year : undefined,
+        country: formData.country,
+        state: formData.state,
+        city: formData.city,
+        work_country: formData.educationType === "working" ? formData.work_country : undefined,
+        work_state: formData.educationType === "working" ? formData.work_state : undefined,
+        work_city: formData.educationType === "working" ? formData.work_city : undefined,
+        work_company: formData.educationType === "working" ? formData.work_company : undefined,
+        work_position: formData.educationType === "working" ? formData.work_position : undefined,
+        work_duration: formData.educationType === "working" ? formData.work_duration : undefined,
       });
 
       if (response.status === 200) {
@@ -257,13 +265,38 @@ function Register() {
                 </select>
               </div>
 
+              {/* State and City */}
+              <div className="grid md:grid-cols-2 gap-6">
+                {["state", "city"].map((id) => (
+                  <div key={id} className="space-y-2">
+                    <label
+                      htmlFor={id}
+                      className="block text-sm font-semibold text-slate-700"
+                    >
+                      {id === "state" ? "State" : "City"}
+                    </label>
+                    <input
+                      type="city"
+                      id={id}
+                      value={formData[id]}
+                      onChange={handleChange}
+                      className="w-full px-4 py-3 bg-slate-50 border-2 border-slate-200 rounded-xl text-slate-800 placeholder-slate-400 focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-4 focus:ring-blue-500/10 transition-all duration-200"
+                      placeholder={
+                        id === "city" ? "Enter your city" : "Enter your state"
+                      }
+                      required
+                    />
+                  </div>
+                ))}
+              </div>
+
               {/* Education Type */}
               <div className="space-y-4">
                 <label className="block text-sm font-semibold text-slate-700">
                   Education Level
                 </label>
                 <div className="flex gap-4">
-                  {["school", "college"].map((type) => (
+                  {["school", "college", "working"].map((type) => (
                     <label
                       key={type}
                       className="relative flex-1 cursor-pointer"
@@ -409,6 +442,79 @@ function Register() {
                         </select>
                       </div>
                     )}
+                    
+                  <div className="space-y-2">
+                    <label className="block text-sm font-semibold text-slate-700">
+                      Department 
+                    </label>
+                    <input
+                      type="text"
+                      id="college_department"
+                      value={formData.college_department}
+                      onChange={handleChange}
+                      className="w-full px-4 py-3 bg-white border-2 border-slate-200 rounded-xl text-slate-800 placeholder-slate-400 focus:border-blue-500 focus:outline-none focus:ring-4 focus:ring-blue-500/10 transition-all duration-200"
+                      placeholder="Enter your department"
+                      required
+                    />
+                  </div>  
+
+                </div>
+              )}
+              {/* Working fields */}
+              {formData.educationType === "working" && (
+                <div className="space-y-6 p-6 bg-gradient-to-r from-purple-50 to-pink-50 rounded-2xl border border-purple-100">
+                  <div className="flex items-center space-x-2 mb-4">
+                    <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
+                    <h3 className="text-lg font-semibold text-slate-800">
+                      Work Information
+                    </h3>
+                  </div>
+                  <div className="space-y-4">
+                    <label className="block text-sm font-semibold text-slate-700">
+                      Country
+                    </label>
+                    <select
+                      id="work_country"
+                      value={formData.work_country}
+                      onChange={handleChange}
+                      className="w-full px-4 py-3 bg-white border-2 border-slate-200 rounded-xl text-slate-800 focus:border-indigo-500 focus:outline-none focus:ring-4 focus:ring-indigo-500/10 transition-all duration-200"
+                      required
+                    >
+                      <option value="">Select Country</option>
+                      {countries.map((country) => (
+                        <option key={country} value={country}>
+                          {country}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <div className="grid md:grid-cols-2 gap-6">
+                    {[
+                      { id: "work_state", label: "State" },
+                      { id: "work_city", label: "City" },
+                      { id: "work_company", label: "Company Name" },
+                      { id: "work_position", label: "Position" },
+                      { id: "work_duration", label: "Duration" },
+                    ].map(({ id, label }) => (
+                      <div key={id} className="space-y-2">
+                        <label
+                          htmlFor={id}
+                          className="block text-sm font-semibold text-slate-700"
+                        >
+                          {label}
+                        </label>
+                        <input
+                          type="text"
+                          id={id}
+                          value={formData[id]}
+                          onChange={handleChange}
+                          className="w-full px-4 py-3 bg-slate-50 border-2 border-slate-200 rounded-xl text-slate-800 placeholder-slate-400 focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-4 focus:ring-blue-500/10 transition-all duration-200"
+                          placeholder={`Enter your ${label.toLowerCase()}`}
+                          required
+                        />
+                      </div>
+                    ))}
+                  </div>
                 </div>
               )}
 

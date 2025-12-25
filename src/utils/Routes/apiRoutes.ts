@@ -44,6 +44,7 @@ const apiRoutes = {
             numberOfUsers: `/users/usernumber`
         },
         updateProfile: `/users/update`,
+        getProfile: '/users/getProfileDetails',
         removeProfile: `/removeprofile`
     },
     library: {
@@ -59,6 +60,9 @@ const apiRoutes = {
             currentCourses: `/payment/getCurrentCourses`,
             appliedCourses: `/payment/applyCourses`,
             userInformation: `/payment/getUserInformation`
+        },
+        referCode: {
+            getReferCode: `/referCode/getReferCode`
         }
     },
     getAllCourses: '/users/getAllCourses',
@@ -83,6 +87,17 @@ const apiRoutes = {
         leaderboard: '/problems/leaderboard',
         getComments: '/problems/getComments',
         getAllProblems: '/problems/getAllProblems'
+    },
+    connection: {
+        getPersonalDetails: '/connections/getPersonalDetails',
+        savePersonalDetails: '/connections/savePersonalDetails',
+        acceptRejectConnectionRequest: '/connections/acceptRejectConnectionRequest',
+        deleteConnectionRequest: '/connections/deleteConnectionRequest',
+        getConnectionDetailsRequest: '/connections/getConnectionDetailsRequest',
+        getPersonalConnections: 'connections/getPersonalConnections',   // important not to keep the leading slash
+        sendConnectionRequest: '/connections/sendConnectionRequest',
+        getConnectionSuggestions: 'connections/getConnectionSuggestions',  //important not to keep the leading slash
+        getDetailsNewConnection: "/connections/getDetailsNewConnection"
     }
 }
 export default apiRoutes

@@ -30,5 +30,6 @@ export interface userInformation {
     value1: String,
     value2: String,
     value3: String
-  }]
+  }],
+  referCode: String | Number
 }

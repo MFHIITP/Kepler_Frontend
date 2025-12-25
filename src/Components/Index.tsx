@@ -32,17 +32,12 @@ const Index: FC<componentPropsInterface> = ({ auth, details }) => {
         email: details?.email,
       });
     if (response.status == 200) {
-      Cookies.remove("AccessToken", {
-        path: '/'
-      })
-      Cookies.remove("RefreshToken", {
-        path: '/'
-      })
-      Cookies.remove("ProfileInfo", {
-        path: '/'
-      })
+      Cookies.remove("AccessToken", { path: '/'})
+      Cookies.remove("RefreshToken", { path: '/'})
+      Cookies.remove("ProfileInfo", { path: '/'})
       localStorage.setItem("toast_message", "Logout Successful!");
       localStorage.removeItem("userCode");
+      localStorage.removeItem("email");
       setLoading(false);
       window.location.href = '/';
     } else {
@@ -281,8 +276,8 @@ const Index: FC<componentPropsInterface> = ({ auth, details }) => {
                       >
                         Notice and Circulars
                       </Link>
-                      <Link to="/notice/merchandise" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                        Merchandise
+                      <Link to="/notice/connection" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                        Connections
                       </Link>
                     </div>
                   </div>

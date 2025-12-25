@@ -156,9 +156,7 @@ const ClockIcon = () => (
   </svg>
 );
 
-const User_Details: React.FC<componentPropsInterfacePaymentProfile> = (
-  props
-) => {
+const User_Details: React.FC<componentPropsInterfacePaymentProfile> = (props) => {
   const navigate = useNavigate();
   const [userdetails, setUserdetails] = useState<userInformation | null>(null);
   const [loading, setLoading] = useState(true);
@@ -509,7 +507,7 @@ const User_Details: React.FC<componentPropsInterfacePaymentProfile> = (
                     Referral Code
                   </div>
                   <div className="text-lg font-bold text-purple-700">
-                    {props.details?.refercode}
+                    {userdetails?.referCode ?? "N/A"}
                   </div>
                 </div>
                 <div className="bg-gradient-to-r from-blue-100 to-indigo-100 rounded-lg p-3 border border-blue-200">

@@ -5,13 +5,7 @@ import apiRoutes from "../utils/Routes/apiRoutes";
 import Cookies from "js-cookie";
 import { useMutation } from "@tanstack/react-query";
 
-const handleLogin = async ({
-  email,
-  password,
-}: {
-  email: string;
-  password: string;
-}) => {
+const handleLogin = async ({ email, password }: { email: string, password: string }) => {
   const { data } = await api.post(apiRoutes.auth.login.signInLogin, {
     email: email,
     password: password,
@@ -36,8 +30,7 @@ function Login() {
   }, []);
 
   const { mutate: handleLoginMutation } = useMutation({
-    mutationFn: ({ email, password }: { email: string; password: string }) =>
-      handleLogin({ email: email, password: password }),
+    mutationFn: ({ email, password }: { email: string; password: string }) => handleLogin({ email: email, password: password }),
     onMutate: () => setLoading(true),
     onSuccess: async (data) => {
       if (data.accessToken != null && data.refreshToken != null) {
@@ -57,10 +50,7 @@ function Login() {
           secure: true,
           sameSite: "None",
         });
-        localStorage.setItem(
-          "toast_message",
-          `Login Successful! Welcome to Kepler ${data.profileinfo.name}`
-        );
+        localStorage.setItem("toast_message", `Login Successful! Welcome to Kepler ${data.profileinfo.name}`);
         localStorage.setItem("sendAlert", data.sendAlert);
         localStorage.setItem("paymentLastDate", data.lastDate);
         localStorage.setItem("pendingCourses", JSON.stringify(data.courses));
@@ -95,7 +85,7 @@ function Login() {
         {/* Main Login Card */}
         <div className=" bg-white/80 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/20 p-8 space-y-6 md:min-w-max">
           <div className="text-center">
-            `{/* Logo/Brand Section */}
+            {/* Logo/Brand Section */}
             <div className="mb-6 flex justify-center items-center gap-6">
               <div className="flex items-center justify-center w-12 h-10 mt-4 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl mb-4 shadow-lg">
                 <svg
@@ -145,6 +135,7 @@ function Login() {
                   className="w-full px-4 py-3 text-gray-900 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 placeholder-gray-400"
                   placeholder="Enter your email"
                   required
+                  autoComplete="email"
                 />
                 <div className="absolute inset-y-0 right-0 flex items-center pr-3">
                   <svg
@@ -181,6 +172,7 @@ function Login() {
                   className="w-full px-4 py-3 text-gray-900 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 placeholder-gray-400 pr-12"
                   placeholder="Enter your password"
                   required
+                  autoComplete="current-password"
                 />
                 <button
                   type="button"
@@ -288,13 +280,7 @@ function Login() {
           </div>
 
           {/* Google Login Button */}
-          <button
-            onClick={handleGoogleLogin}
-            disabled={loading}
-            className="w-full flex items-center justify-center px-4 py-3 border border-gray-200 rounded-xl 
-                     bg-white hover:bg-gray-50 transition-all duration-200 font-semibold text-gray-700 
-                     hover:shadow-md active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
-          >
+          <button onClick={handleGoogleLogin} disabled={loading} className="w-full flex items-center justify-center px-4 py-3 border border-gray-200 rounded-xl bg-white hover:bg-gray-50 transition-all duration-200 font-semibold text-gray-700 hover:shadow-md active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed">
             <svg
               className="w-5 h-5 mr-3"
               viewBox="0 0 533.5 544.3"
