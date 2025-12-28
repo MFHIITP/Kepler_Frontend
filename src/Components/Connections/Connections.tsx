@@ -6,8 +6,9 @@ import { acceptRejectConnectionRequest, getConnectionDetailsRequest, getDetailsN
 import apiRoutes from '../../utils/Routes/apiRoutes';
 import Cookies from 'js-cookie';
 import toast from 'react-hot-toast';
+import { messageFormatInterface } from './ConnectionMessages.interface';
 
-const Connection: React.FC<{ details: UserDetails | [], refetch: () => void, email: string, connectionRequests: any[], setConnectionRequests: React.Dispatch<React.SetStateAction<any[]>>, newConnectionAcceptances: any[] }> = ({ details: initialDetails, refetch, email, connectionRequests, setConnectionRequests, newConnectionAcceptances }) => {
+const Connection: React.FC<{ details: UserDetails | [], refetch: () => void, email: string, connectionRequests: any[], setConnectionRequests: React.Dispatch<React.SetStateAction<any[]>>, newConnectionAcceptances: any[], messages: messageFormatInterface[] }> = ({ details: initialDetails, refetch, email, connectionRequests, setConnectionRequests, newConnectionAcceptances, messages }) => {
   const [details, setDetails] = useState<UserDetails>(initialDetails as UserDetails);
   const [isEditMode, setIsEditMode] = useState(false);
   const [editForm, setEditForm] = useState<UserDetails>(initialDetails as UserDetails);
@@ -30,6 +31,8 @@ const Connection: React.FC<{ details: UserDetails | [], refetch: () => void, ema
   const [filterTech, setFilterTech] = useState<string>('');
   const [showFilters, setShowFilters] = useState(false);
   const [fetchLoading, setFetchLoading] = useState(false);
+  const [currentMessage, setCurrentMessage] = useState<string>('');
+  const [activeChatUser, setActiveChatUser] = useState<ConnectionUser | null>(null);
 
   const [myConnections, setMyConnections] = useState<ConnectionUser[] | []>([]);
 
@@ -51,13 +54,21 @@ const Connection: React.FC<{ details: UserDetails | [], refetch: () => void, ema
 
   const {mutate: acceptRejectMutation} = useMutation({
     mutationFn: ({senderEmail, receiverEmail, status}: {senderEmail: string, receiverEmail: string, status: boolean}) => acceptRejectConnectionRequest(senderEmail, receiverEmail, status),
-    onSuccess: () => {
-      toast.success("Connection Accepted");
+    onSuccess: (data) => {
+      toast.success(data.message);
     },
     onError: () => {
       toast.error("Failed to accept connection");
     }
   })
+
+  useEffect(() => {
+    if(initialDetails){
+      setDetails(initialDetails as UserDetails);
+    }
+    return;
+  }, [initialDetails])
+  
 
   useEffect(() => {
     if(newConnectionAcceptances.length == 0){
@@ -201,6 +212,7 @@ const Connection: React.FC<{ details: UserDetails | [], refetch: () => void, ema
   
   const handleConnect = (user: ConnectionUser) => {
     sendRequestMutation({senderEmail: email, receiverEmail: user.email});
+    setSuggestedConnections(suggestedConnections.filter(connection => connection.email !== user.email));
   };
 
   const handleAcceptRequest = (user: ConnectionUser) => {
@@ -346,9 +358,30 @@ const Connection: React.FC<{ details: UserDetails | [], refetch: () => void, ema
   };
 
   const getLocation = () => {
-    const parts = [details.city || details.work_city, details.state || details.work_state, details.country || details.work_country];
+    const parts = [details?.city || details?.work_city, details?.state || details?.work_state, details?.country || details?.work_country];
     return parts.filter(Boolean).join(', ');
   };
+
+  const openChat = (user: ConnectionUser) => {
+    setActiveChatUser(user);
+  }
+  const closeChat = () => {
+    setActiveChatUser(null);
+  }
+
+  const handleSendMessages = () => {
+    if(currentMessage.trim() && activeChatUser){
+      const newMessage: messageFormatInterface = {
+        sender: "me" as const,
+        messageText: currentMessage.trim(),
+        timeStamp: new Date()
+      }
+
+      // logic to send the message
+
+      setCurrentMessage('');
+    }
+  }
 
   const ConnectionCard: React.FC<{ user: ConnectionUser; isConnected: boolean; isRequest?: boolean }> = ({ user, isConnected, isRequest }) => (
     <div className="bg-white rounded-lg border border-gray-200 hover:shadow-lg transition-all duration-200">
@@ -522,7 +555,7 @@ const Connection: React.FC<{ details: UserDetails | [], refetch: () => void, ema
               <span>Accept</span>
             </button>
             <button
-              onClick={() => handleRejectRequest(user.id)}
+              onClick={() => handleRejectRequest(user)}
               className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-gray-200 text-gray-700 rounded-lg font-medium hover:bg-gray-300 transition-colors"
             >
               Decline
@@ -551,13 +584,99 @@ const Connection: React.FC<{ details: UserDetails | [], refetch: () => void, ema
               )}
             </button>
             {isConnected && (
-              <button className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg font-medium hover:bg-gray-200 transition-colors">
+              <button onClick={() => openChat(user)} className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg font-medium hover:bg-gray-200 transition-colors">
                 <MessageSquare size={18} />
               </button>
             )}
           </div>
         )}
       </div>
+      {/* Chat Window */}
+      {activeChatUser && (
+        <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg shadow-2xl w-full max-w-2xl h-[600px] flex flex-col">
+            {/* Chat Header */}
+            <div className="bg-gradient-to-r from-blue-600 to-blue-700 p-4 rounded-t-lg flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="text-3xl">{activeChatUser.avatar || '👤'}</div>
+                <div className="text-white">
+                  <h3 className="font-semibold">{activeChatUser.name}</h3>
+                  <p className="text-sm text-blue-100">{activeChatUser.headline}</p>
+                </div>
+              </div>
+              <button
+                onClick={closeChat}
+                className="text-white hover:bg-white hover:bg-opacity-20 rounded-lg p-2 transition-colors"
+              >
+                <X size={24} />
+              </button>
+            </div>
+
+            {/* Messages Area */}
+            <div className="flex-1 overflow-y-auto p-4 bg-gray-50">
+              {(!messages || messages.length === 0) ? (
+                <div className="flex flex-col items-center justify-center h-full text-gray-400">
+                  <MessageSquare size={48} className="mb-2" />
+                  <p>No messages yet. Start the conversation!</p>
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  {messages.map((msg, idx) => (
+                    <div
+                      key={idx}
+                      className={`flex ${msg.sender === 'me' ? 'justify-end' : 'justify-start'}`}
+                    >
+                      <div
+                        className={`max-w-[70%] rounded-lg px-4 py-2 ${
+                          msg.sender === 'me'
+                            ? 'bg-blue-600 text-white'
+                            : 'bg-white border border-gray-200 text-gray-900'
+                        }`}
+                      >
+                        <p className="text-sm">{msg.messageText}</p>
+                        <p
+                          className={`text-xs mt-1 ${
+                            msg.sender === 'me' ? 'text-blue-100' : 'text-gray-500'
+                          }`}
+                        >
+                          {msg.timeStamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* Message Input */}
+            <div className="p-4 border-t border-gray-200 bg-white rounded-b-lg">
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  value={currentMessage}
+                  onChange={(e) => setCurrentMessage(e.target.value)}
+                  onKeyDown={(e) => {
+                    if(e.key == 'Enter'){
+                      e.preventDefault();
+                      handleSendMessages();
+                    }
+                  }}
+                  placeholder="Type a message..."
+                  className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
+                />
+                <button
+                  onClick={handleSendMessages}
+                  disabled={!currentMessage.trim()}
+                  className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors flex items-center gap-2"
+                >
+                  <span>Send</span>
+                  <MessageSquare size={18} />
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 
@@ -629,8 +748,8 @@ const Connection: React.FC<{ details: UserDetails | [], refetch: () => void, ema
             <div className="flex items-start gap-6">
               <div className="text-6xl bg-white rounded-lg p-4 shadow-lg">👨‍💻</div>
               <div className="flex-1 text-white">
-                <h2 className="text-3xl font-bold mb-2">{details.name}</h2>
-                <p className="text-lg text-blue-100 mb-3">{details.headline || 'Software Developer'}</p>
+                <h2 className="text-3xl font-bold mb-2">{details?.name || "Name not found"}</h2>
+                <p className="text-lg text-blue-100 mb-3">{details?.headline || 'Software Developer'}</p>
                 <div className="flex flex-wrap gap-4 text-sm mb-4">
                   {getLocation() && (
                     <div className="flex items-center gap-2">
@@ -638,20 +757,20 @@ const Connection: React.FC<{ details: UserDetails | [], refetch: () => void, ema
                       <span>{getLocation()}</span>
                     </div>
                   )}
-                  {details.work_company && (
+                  {details?.work_company && (
                     <div className="flex items-center gap-2">
                       <Briefcase size={16} />
-                      <span>{details.work_company}</span>
+                      <span>{details?.work_company}</span>
                     </div>
                   )}
                   <div className="flex items-center gap-2">
                     <Mail size={16} />
-                    <span>{details.email}</span>
+                    <span>{details?.email}</span>
                   </div>
                 </div>
-                {details.techstack && details.techstack.length > 0 && (
+                {details?.techstack && details?.techstack.length > 0 && (
                   <div className="flex flex-wrap gap-2">
-                    {details.techstack.map((tech, idx) => (
+                    {details?.techstack.map((tech, idx) => (
                       <span key={idx} className="bg-white bg-opacity-20 backdrop-blur-sm px-3 py-1 rounded-full text-sm font-medium">
                         {tech}
                       </span>
@@ -686,27 +805,27 @@ const Connection: React.FC<{ details: UserDetails | [], refetch: () => void, ema
         <div className="bg-gray-100 rounded-lg shadow-lg mb-6 p-6">
           <div className="space-y-6">
             {/* Bio */}
-            {details.bio && (
+            {details?.bio && (
               <div>
                 <h3 className="text-lg font-semibold text-gray-900 mb-2">About</h3>
-                <p className="text-gray-700">{details.bio}</p>
+                <p className="text-gray-700">{details?.bio}</p>
               </div>
             )}
 
             {/* Work Experience */}
-            {(details.work_company || details.work_position) && (
+            {(details?.work_company || details?.work_position) && (
               <div>
                 <h3 className="text-lg font-semibold text-gray-900 mb-3 flex items-center gap-2">
                   <Briefcase size={20} />
                   Experience
                 </h3>
                 <div className="bg-gray-50 p-4 rounded-lg">
-                  <p className="font-medium text-gray-900">{details.work_position}</p>
-                  <p className="text-gray-700">{details.work_company}</p>
-                  {details.work_duration && <p className="text-sm text-gray-500">{details.work_duration}</p>}
-                  {(details.work_city || details.work_state || details.work_country) && (
+                  <p className="font-medium text-gray-900">{details?.work_position}</p>
+                  <p className="text-gray-700">{details?.work_company}</p>
+                  {details?.work_duration && <p className="text-sm text-gray-500">{details?.work_duration}</p>}
+                  {(details?.work_city || details?.work_state || details?.work_country) && (
                     <p className="text-sm text-gray-500 mt-1">
-                      {[details.work_city, details.work_state, details.work_country].filter(Boolean).join(', ')}
+                      {[details?.work_city, details?.work_state, details?.work_country].filter(Boolean).join(', ')}
                     </p>
                   )}
                 </div>
@@ -714,25 +833,25 @@ const Connection: React.FC<{ details: UserDetails | [], refetch: () => void, ema
             )}
 
             {/* Education */}
-            {(details.college || details.school) && (
+            {(details?.college || details?.school) && (
               <div>
                 <h3 className="text-lg font-semibold text-gray-900 mb-3 flex items-center gap-2">
                   <GraduationCap size={20} />
                   Education
                 </h3>
                 <div className="bg-gray-50 p-4 rounded-lg">
-                  {details.education_type === 'college' && details.college ? (
+                  {details?.education_type === 'college' && details?.college ? (
                     <>
-                      <p className="font-medium text-gray-900">{details.college}</p>
+                      <p className="font-medium text-gray-900">{details?.college}</p>
                       <p className="text-gray-700">
-                        {[details.college_stream, details.college_department].filter(Boolean).join(', ')}
+                        {[details?.college_stream, details?.college_department].filter(Boolean).join(', ')}
                       </p>
-                      {details.college_year && <p className="text-sm text-gray-500">Class of {details.college_year}</p>}
+                      {details?.college_year && <p className="text-sm text-gray-500">Class of {details?.college_year}</p>}
                     </>
-                  ) : details.school ? (
+                  ) : details?.school ? (
                     <>
-                      <p className="font-medium text-gray-900">{details.school}</p>
-                      {details.school_year && <p className="text-sm text-gray-500">Class of {details.school_year}</p>}
+                      <p className="font-medium text-gray-900">{details?.school}</p>
+                      {details?.school_year && <p className="text-sm text-gray-500">Class of {details?.school_year}</p>}
                     </>
                   ) : null}
                 </div>
@@ -740,14 +859,14 @@ const Connection: React.FC<{ details: UserDetails | [], refetch: () => void, ema
             )}
 
             {/* Tech Stack */}
-            {details.techstack && details.techstack.length > 0 && (
+            {details?.techstack && details?.techstack.length > 0 && (
               <div>
                 <h3 className="text-lg font-semibold text-gray-900 mb-3 flex items-center gap-2">
                   <Code size={20} />
                   Tech Stack
                 </h3>
                 <div className="flex flex-wrap gap-2">
-                  {details.techstack.map((tech, idx) => (
+                  {details?.techstack.map((tech, idx) => (
                     <span key={idx} className="bg-blue-50 text-blue-700 px-3 py-1 rounded-lg border border-blue-200 font-medium">
                       {tech}
                     </span>
@@ -757,14 +876,14 @@ const Connection: React.FC<{ details: UserDetails | [], refetch: () => void, ema
             )}
 
             {/* Skills */}
-            {details.skills && details.skills.length > 0 && (
+            {details?.skills && details?.skills.length > 0 && (
               <div>
                 <h3 className="text-lg font-semibold text-gray-900 mb-3 flex items-center gap-2">
                   <Award size={20} />
                   Top Skills
                 </h3>
                 <div className="flex flex-wrap gap-2">
-                  {details.skills.map((skill, idx) => (
+                  {details?.skills.map((skill, idx) => (
                     <span key={idx} className="bg-gray-100 text-gray-700 px-3 py-1 rounded-lg font-medium">
                       {skill}
                     </span>
@@ -774,31 +893,31 @@ const Connection: React.FC<{ details: UserDetails | [], refetch: () => void, ema
             )}
 
             {/* Social Links */}
-            {(details.githuburl || details.linkedinurl || details.portfoliourl) && (
+            {(details?.githuburl || details?.linkedinurl || details?.portfoliourl) && (
               <div>
                 <h3 className="text-lg font-semibold text-gray-900 mb-3 flex items-center gap-2">
                   <Link2 size={20} />
                   Links
                 </h3>
                 <div className="flex gap-4">
-                  {details.githuburl && (
-                    <a href={details.githuburl} target="_blank" rel="noopener noreferrer" 
+                  {details?.githuburl && (
+                    <a href={details?.githuburl} target="_blank" rel="noopener noreferrer" 
                        className="flex items-center gap-2 text-gray-700 hover:text-blue-600 transition-colors">
                       <Github size={20} />
                       <span>GitHub</span>
                       <ExternalLink size={14} />
                     </a>
                   )}
-                  {details.linkedinurl && (
-                    <a href={details.linkedinurl} target="_blank" rel="noopener noreferrer"
+                  {details?.linkedinurl && (
+                    <a href={details?.linkedinurl} target="_blank" rel="noopener noreferrer"
                        className="flex items-center gap-2 text-gray-700 hover:text-blue-600 transition-colors">
                       <Linkedin size={20} />
                       <span>LinkedIn</span>
                       <ExternalLink size={14} />
                     </a>
                   )}
-                  {details.portfoliourl && (
-                    <a href={details.portfoliourl} target="_blank" rel="noopener noreferrer"
+                  {details?.portfoliourl && (
+                    <a href={details?.portfoliourl} target="_blank" rel="noopener noreferrer"
                        className="flex items-center gap-2 text-gray-700 hover:text-blue-600 transition-colors">
                       <Globe size={20} />
                       <span>Portfolio</span>
@@ -810,14 +929,14 @@ const Connection: React.FC<{ details: UserDetails | [], refetch: () => void, ema
             )}
 
             {/* Projects */}
-            {details.projects && details.projects.length > 0 && (
+            {details?.projects && details?.projects.length > 0 && (
               <div>
                 <h3 className="text-lg font-semibold text-gray-900 mb-3 flex items-center gap-2">
                   <Code size={20} />
                   Featured Projects
                 </h3>
                 <div className="space-y-4">
-                  {details.projects.map((project, idx) => (
+                  {details?.projects.map((project, idx) => (
                     <div key={idx} className="bg-gray-50 p-4 rounded-lg border border-gray-200">
                       <h4 className="font-semibold text-gray-900 mb-2">{project.name}</h4>
                       <p className="text-sm text-gray-700 mb-3">{project.description}</p>
@@ -853,7 +972,7 @@ const Connection: React.FC<{ details: UserDetails | [], refetch: () => void, ema
             )}
 
             {/* Open to Work Status */}
-            {details.isOpenToWork && (
+            {details?.isOpenToWork && (
               <div className="flex items-center gap-3 p-4 bg-green-50 rounded-lg border border-green-200">
                 <TrendingUp size={20} className="text-green-600" />
                 <span className="text-gray-900 font-medium">Open to work opportunities</span>

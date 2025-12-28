@@ -192,7 +192,7 @@ const Library_main: React.FC<componentPropsInterface> = ({details}: {details: us
                       </div>
                       
                       <h3 className="text-xl font-bold mb-2 leading-tight">
-                        {val.replace(/^Computer Science\s*/, "")}
+                        {val.replace(/^Computer Science - \s*/, "")}
                       </h3>
                       
                       {val === 'Executive Group' && (

@@ -5,6 +5,7 @@ import { useMutation } from '@tanstack/react-query';
 import { componentPropsInterface } from '../Interfaces/ComponentProps.interface';
 import Cookies from 'js-cookie';
 import { getConnectionDetailsRequest, getCurrentUserDetails, getDetailsNewConnection } from './ConnectionRawRequests';
+import { messageFormatInterface } from './ConnectionMessages.interface';
 
 const LandingConnectionPage: React.FC<componentPropsInterface> = ({ details }) => {
 
@@ -12,9 +13,11 @@ const LandingConnectionPage: React.FC<componentPropsInterface> = ({ details }) =
   const [loading, setLoading] = useState(false);
   const [fetch, setFetch] = useState(false);
   const [connectionRequests, setConnectionRequests] = useState<any[]>([]);
-  const [newConnectionAcceptances, setNewConnectionAcceptances] = useState<any[]>([])
+  const [newConnectionAcceptances, setNewConnectionAcceptances] = useState<any[]>([]);
+  const [messages, setMessages] = useState<messageFormatInterface[] | []>([]);
 
   const token = Cookies.get("AccessToken");
+  
   const ws = new WebSocket(`${import.meta.env.VITE_WEBS_ADDR}/?token=${token}`);
   ws.onopen = () => {
     console.log("Websocket connection established for the connections page");
@@ -78,7 +81,7 @@ const LandingConnectionPage: React.FC<componentPropsInterface> = ({ details }) =
     return <div className='flex justify-center items-center text-2xl h-[10vh]'>Fetching Connection Details....</div>
   }
 
-  return <Connection details={currentUserDetails} refetch = {refetch} email={details?.email ?? ""} connectionRequests = {connectionRequests} setConnectionRequests = {setConnectionRequests} newConnectionAcceptances = {newConnectionAcceptances}/>;
+  return <Connection details={currentUserDetails} refetch = {refetch} email={details?.email ?? ""} connectionRequests = {connectionRequests} setConnectionRequests = {setConnectionRequests} newConnectionAcceptances = {newConnectionAcceptances} messages = {messages}/>;
 }
 
 export default LandingConnectionPage;
