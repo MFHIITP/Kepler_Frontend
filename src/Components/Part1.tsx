@@ -20,8 +20,8 @@ function Part1({auth}: {auth: boolean}) {
 
   const stats = [
     { number: "50+", label: "Active Learners" },
-    { number: "500+", label: "Coding Challenges" },
-    { number: "92.5%", label: "Job Success Rate" },
+    { number: "100+", label: "Coding Challenges" },
+    { number: "99.1%", label: "Job Success Rate" },
     { number: "24/7", label: "Expert Support" }
   ];
 
@@ -141,7 +141,7 @@ int main() {
               <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
                 {stats.map((stat, index) => (
                   <div key={index} className="text-center">
-                    <div className="text-3xl font-bold bg-gradient-to-r from-pink-400 to-cyan-400 bg-clip-text text-transparent">
+                    <div className="text-3xl font-bold bg-gradient-to-r from-blue-400 via-cyan-400 to-blue-400 bg-clip-text text-transparent">
                       {stat.number}
                     </div>
                     <div className="text-gray-400 text-sm mt-1">{stat.label}</div>

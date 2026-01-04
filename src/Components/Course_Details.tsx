@@ -59,8 +59,8 @@ function ProfessionalCourseDetails() {
     webdev1: [
       {
         id: 1,
-        name: "Farshid Hossain",
-        image: "/Images/College_Prep.webp",
+        name: "Vivek Haldar",
+        image: "/Images/VivekHaldar.jpg",
         subjects: ["Frontend", "Backend", "DataBase", "DevOps"],
         experience: "1+ Years Teaching",
         rating: 4.9,
@@ -71,8 +71,8 @@ function ProfessionalCourseDetails() {
     dsa1: [
       {
         id: 1,
-        name: "Satwik Biswas",
-        image: "/Images/College_Prep.webp",
+        name: "Irfan Gazi",
+        image: "/Images/IrfanGazi.png",
         subjects: ["Arrays", "Linked Lists", "Binary Search", "Sliding Window", "Trees", "Graphs", "Dynamic Programming", "Tries"],
         experience: "1+ Years Teaching",
         rating: 4.8,
@@ -83,9 +83,9 @@ function ProfessionalCourseDetails() {
     fundamentals1: [
       {
         id: 1,
-        name: "Vivek Haldar",
-        image: "/Images/College_Prep.webp",
-        subjects: ["CN", "DBMS", "OS", "COA"],
+        name: "Farshid Hossain",
+        image: "/Images/FarshidHossain.jpg",
+        subjects: ["CN", "DBMS", "OS", "COA", "OOPS"],
         experience: "1+ Years Teaching",
         rating: 4.9,
         students: "50+",
@@ -96,7 +96,7 @@ function ProfessionalCourseDetails() {
       {
         id: 1,
         name: "Dipan Mondal",
-        image: "/Images/College_Prep.webp",
+        image: "/Images/DipanMondal.jpg",
         subjects: ["ML", "AI", "DL", "LLM"],
         experience: "1+ Years Teaching",
         rating: 4.9,
@@ -117,8 +117,8 @@ function ProfessionalCourseDetails() {
     webdev2: [
       {
         id: 1,
-        name: "Farshid Hossain",
-        image: "/Images/College_Prep.webp",
+        name: "Vivek Haldar",
+        image: "/Images/VivekHaldar.jpg",
         subjects: ["Frontend", "Backend", "DataBase", "DevOps"],
         experience: "1+ Years Teaching",
         rating: 4.9,
@@ -129,18 +129,8 @@ function ProfessionalCourseDetails() {
     dsa2: [
       {
         id: 1,
-        name: "Satwik Biswas",
-        image: "/Images/College_Prep.webp",
-        subjects: ["Arrays", "Linked Lists", "Binary Search", "Sliding Window", "Trees", "Graphs", "Dynamic Programming"],
-        experience: "1+ Years Teaching",
-        rating: 4.9,
-        students: "50+",
-        description: "With his unbound expertise in the field of Data Structures and Algorithms, expect nothing less than the best when it comes to solving coding challenges like a pro."
-      },
-      {
-        id: 2,
         name: "Irfan Gazi",
-        image: "/Images/College_Prep.webp",
+        image: "/Images/IrfanGazi.png",
         subjects: ["Tries", "Fenwick Trees", "Segment Trees", "Competetive Programming"],
         experience: "1+ Years Teaching",
         rating: 4.9,
@@ -151,9 +141,9 @@ function ProfessionalCourseDetails() {
     fundamentals2: [
       {
         id: 1,
-        name: "Vivek Haldar",
-        image: "/Images/College_Prep.webp",
-        subjects: ["CN", "DBMS", "OS", "COA"],
+        name: "Farshid Hossain",
+        image: "/Images/FarshidHossain.jpg",
+        subjects: ["CN", "DBMS", "OS", "COA", "OOPS"],
         experience: "6+ Years Teaching",
         rating: 4.9,
         students: "5,000+",
@@ -164,12 +154,12 @@ function ProfessionalCourseDetails() {
       {
         id: 1,
         name: "Dipan Mondal",
-        image: "/Images/College_Prep.webp",
+        image: "/Images/DipanMondal.jpg",
         subjects: ["ML", "AI", "DL", "LLM"],
         experience: "6+ Years Teaching",
         rating: 4.9,
         students: "5,000+",
-        description: "IIT alumnus with exceptional track record in JEE preparation. Expert in both Physics and Mathematics with innovative teaching methods."
+        description: "With his no nonsense approach the the field of Machine Learning, Deep Learning, Data Science and its associated principles, you would be able to dive deep into this ever widening field with a level of confidence that you have never had before."
       },
     ]
   };
@@ -178,7 +168,7 @@ function ProfessionalCourseDetails() {
     languages: {
       title: "Computer Languages Mastery Program",
       subtitle: "Comprehensive preparation for all object oriented programming languages",
-      image: "/Images/Mentorship.webp",
+      image: "/Images/AllTeachers.jpg",
       highlights: [
         "Complete guidance from experts in the industry",
         "Interactive doubt-clearing sessions", 
@@ -192,7 +182,7 @@ function ProfessionalCourseDetails() {
     fundamentals1: {
       title: "Complete Computer Fundamentals Program",
       subtitle: "Comprehensive preparation for Computer Networks, Database Management, Operating Systems and Computer Organization and Architechture",
-      image: "/Images/Mentorship.webp", 
+      image: "/Images/AllTeachers.jpg", 
       highlights: [
         "Complete guidance from experts in the industry",
         "Interactive doubt-clearing sessions", 
@@ -206,7 +196,7 @@ function ProfessionalCourseDetails() {
     webdev1: {
       title: "Complete Web Development package",
       subtitle: "Complete Full Stack Web Development with Dev Ops Masterclass",
-      image: "/Images/Mentorship.webp",
+      image: "/Images/AllTeachers.jpg",
       highlights: [
         "Complete guidance from experts in the industry",
         "Interactive doubt-clearing sessions", 
@@ -220,7 +210,7 @@ function ProfessionalCourseDetails() {
     dsa1: {
       title: "Complete DSA masterclass package",
       subtitle: "Targeted Preparation for all variations of DSA questions in any job interview",
-      image: "/Images/Mentorship.webp",
+      image: "/Images/AllTeachers.jpg",
       highlights: [
         "Complete guidance from experts in the industry",
         "Interactive doubt-clearing sessions", 
@@ -234,7 +224,7 @@ function ProfessionalCourseDetails() {
     ml1: {
       title: "Complete ML masterclass package",
       subtitle: "Targeted Preparation for all variations of ML questions in any job interview",
-      image: "/Images/Mentorship.webp",
+      image: "/Images/AllTeachers.jpg",
       highlights: [
         "Complete guidance from experts in the industry",
         "Interactive doubt-clearing sessions", 
@@ -248,7 +238,7 @@ function ProfessionalCourseDetails() {
     webdev2: {
       title: "Complete Web Development package",
       subtitle: "Complete Full Stack Web Development with Dev Ops Masterclass",
-      image: "/Images/Mentorship.webp",
+      image: "/Images/AllTeachers.jpg",
       highlights: [
         "Complete guidance from experts in the industry",
         "Interactive doubt-clearing sessions", 
@@ -262,7 +252,7 @@ function ProfessionalCourseDetails() {
     dsa2: {
       title: "Complete DSA masterclass package",
       subtitle: "Targeted Preparation for all variations of DSA questions in any job interview",
-      image: "/Images/Mentorship.webp",
+      image: "/Images/AllTeachers.jpg",
       highlights: [
         "Complete guidance from experts in the industry",
         "Interactive doubt-clearing sessions", 
@@ -276,7 +266,7 @@ function ProfessionalCourseDetails() {
     ml2: {
       title: "Complete Machine Learning package",
       subtitle: "Targeted Preparation for all variations of ML questions in any job interview",
-      image: "/Images/Mentorship.webp",
+      image: "/Images/AllTeachers.jpg",
       highlights: [
         "Complete guidance from experts in the industry",
         "Interactive doubt-clearing sessions", 
@@ -290,7 +280,7 @@ function ProfessionalCourseDetails() {
     fundamentals2: {
       title: "Complete Computer Fundamentals Program",
       subtitle: "Comprehensive preparation for Computer Networks, Database Management, Operating Systems and Computer Organization and Architechture",
-      image: "/Images/Mentorship.webp", 
+      image: "/Images/AllTeachers.jpg", 
       highlights: [
         "Complete guidance from experts in the industry",
         "Interactive doubt-clearing sessions", 
@@ -352,7 +342,7 @@ function ProfessionalCourseDetails() {
         <div className="absolute bottom-0 left-0 w-96 h-96 bg-emerald-100/20 rounded-full blur-3xl transform -translate-x-1/2 translate-y-1/2"></div>
       </div>
 
-      <div className="relative max-w-7xl mx-auto px-6 py-12">
+      <div className="relative max-w-[80rem] mx-auto py-12">
         
         {/* Header Section */}
         <div className="text-center mb-16">
@@ -457,11 +447,11 @@ function ProfessionalCourseDetails() {
           <div className="bg-white rounded-3xl border border-slate-200 shadow-lg overflow-hidden">
             <div className="lg:flex">
               {/* Course Image */}
-              <div className="lg:w-1/2 relative">
+              <div className="lg:w-[75%] relative">
                 <img
                   src={course.image}
                   alt={course.title}
-                  className="w-full h-80 lg:h-full object-cover"
+                  className="w-full bg-black h-80 lg:h-full object-fill"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
                 <div className="absolute top-6 left-6">
@@ -490,7 +480,7 @@ function ProfessionalCourseDetails() {
               </div>
 
               {/* Course Details */}
-              <div className="lg:w-1/2 p-8 lg:p-12">
+              <div className="lg:w-1/2 px-8 py-5 lg:px-12">
                 <div className="mb-6">
                   <div className="inline-flex items-center gap-2 bg-gradient-to-r from-blue-100 to-purple-100 text-purple-700 px-4 py-2 rounded-full text-sm font-semibold mb-4">
                     <Award className="w-4 h-4" />

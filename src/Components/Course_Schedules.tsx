@@ -63,13 +63,14 @@ const ProfessionalCourseSchedule = () => {
     webdev1: {
       type: "Web Development",
       name: "Full Stack Web Development Bootcamp 2025",
-      teachers: "IIT Alumni Faculty Team",
+      teachers: "Faculty from Tier 1 Institutes",
       description:
         "Learn front-end, back-end, and database development with real-world projects. Covers HTML, CSS, JavaScript, React, Node.js, Express, MongoDB, and deployment best practices.",
       duration: "8 Months",
       students: "25,000+",
       rating: 4.9,
       startDate: "September 1st, 2024",
+      image: "/Images/WebDev1InternalImage.jpg",
     },
     dsa1: {
       type: "Data Structures & Algorithms",
@@ -81,6 +82,7 @@ const ProfessionalCourseSchedule = () => {
       students: "8,500+",
       rating: 4.7,
       startDate: "September 1st, 2024",
+      image: "/Images/DSA1InternalImage.jpg",
     },
     fundamentals1: {
       type: "Computer Fundamentals",
@@ -92,6 +94,7 @@ const ProfessionalCourseSchedule = () => {
       students: "7,200+",
       rating: 4.7,
       startDate: "September 1st, 2024",
+      image: "/Images/CSFundamentals1InternalImage.jpg",
     },
     ml1: {
       type: "Machine Learning & AI",
@@ -103,6 +106,7 @@ const ProfessionalCourseSchedule = () => {
       students: "6,800+",
       rating: 4.7,
       startDate: "September 1st, 2024",
+      image: "/Images/ML1InternalImage.gif",
     },
     dsa2: {
       type: "Data Structures & Algorithms",
@@ -114,6 +118,7 @@ const ProfessionalCourseSchedule = () => {
       students: "8,500+",
       rating: 4.7,
       startDate: "September 1st, 2024",
+      image: "/Images/DSA1InternalImage.jpg",
     },
     fundamentals2: {
       type: "Computer Fundamentals",
@@ -125,6 +130,7 @@ const ProfessionalCourseSchedule = () => {
       students: "7,200+",
       rating: 4.7,
       startDate: "September 1st, 2024",
+      image: "/Images/CSFundamentals1InternalImage.jpg",
     },
     ml2: {
       type: "Machine Learning & AI",
@@ -136,6 +142,19 @@ const ProfessionalCourseSchedule = () => {
       students: "6,800+",
       rating: 4.7,
       startDate: "September 1st, 2024",
+      image: "/Images/ML1InternalImage.gif",
+    },
+    webdev2: {
+      type: "Web Development",
+      name: "Full Stack Web Development Bootcamp 2025",
+      teachers: "Faculty from Tier 1 Institutes",
+      description:
+        "Learn front-end, back-end, and database development with real-world projects. Covers HTML, CSS, JavaScript, React, Node.js, Express, MongoDB, and deployment best practices.",
+      duration: "8 Months",
+      students: "25,000+",
+      rating: 4.9,
+      startDate: "September 1st, 2024",
+      image: "/Images/WebDev1InternalImage.jpg",
     },
   });
 
@@ -421,7 +440,7 @@ const ProfessionalCourseSchedule = () => {
               {/* Course Image */}
               <div className="lg:w-2/5 relative">
                 <img
-                  src="/Images/Monitoring.webp"
+                  src={currentCourse.image}
                   alt="Course"
                   className="w-full h-80 lg:h-full object-cover"
                 />

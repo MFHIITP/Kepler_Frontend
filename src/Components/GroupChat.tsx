@@ -200,7 +200,7 @@ const GroupChat: React.FC<componentPropsInterface> = (props) => {
                   setGroupdescription(val.description);
                   setMobileView(val.name);
                 }}
-                title={val.name.replace(/^Computer Science\s*/, "")}
+                title={val.name.replace(/^Computer Science - \s*/, "")}
                 className={`group relative flex items-center p-3 rounded-xl cursor-pointer transition-all duration-200 hover:bg-gray-50 ${
                   val.name === name 
                     ? "bg-emerald-50 border-2 border-emerald-200 shadow-md" 
@@ -221,7 +221,7 @@ const GroupChat: React.FC<componentPropsInterface> = (props) => {
                     <h3 className={`font-semibold truncate ${
                       val.name === name ? "text-emerald-700" : "text-gray-800"
                     }`}>
-                      {val.name.replace(/^Computer Science\s*/, "")}
+                      {val.name.replace(/^Computer Science - \s*/, "")}
                     </h3>
                     <span className="text-xs text-gray-500">12:34 PM</span>
                   </div>

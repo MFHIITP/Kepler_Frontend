@@ -85,7 +85,7 @@ const Profile_Courses: React.FC<componentPropsInterfacePaymentProfile> = (props)
       };
       setChoices(filteredChoices);
       const allPossibleCourses = data.allPossibleCourses
-      const filteredComputerCourses = allPossibleCourses.filter((val) => String(val).startsWith("Computer Science")).map(val => val.replace(/^Computer Science\s*/, ""))
+      const filteredComputerCourses = allPossibleCourses.filter((val) => String(val).startsWith("Computer Science")).map(val => val.replace(/^Computer Science - \s*/, ""))
       setAllComputerCourses({
         "Computer Science": filteredComputerCourses
       })

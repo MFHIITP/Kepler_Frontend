@@ -92,11 +92,12 @@ function Numbers() {
       color: "from-gray-500 to-gray-600"
     },
     {
-      tier: "PRO",
-      price: "₹499",
+      tier: "PLUS",
+      price: "₹199",
       period: "/month",
       description: "Enhanced learning experience",
       features: [
+        "Everything in Free Plan",
         "Complete practice sheet access",
         "Detailed editorials & solutions",
         "Priority community support",
@@ -107,7 +108,7 @@ function Numbers() {
       color: "from-blue-500 to-purple-500"
     },
     {
-      tier: "BUNDLE",
+      tier: "PRO",
       price: "₹999",
       period: "/month",
       description: "Complete transformation package",

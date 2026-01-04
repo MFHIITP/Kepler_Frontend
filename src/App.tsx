@@ -117,14 +117,14 @@ function App() {
           }, 500);
         } else {
           // Show a subtle reminder toast
-          toast('We\'ll remind you again in 30 seconds', {
+          toast('We\'ll remind you again in 5 minutes', {
             icon: '⏰',
             duration: 3000,
           });
           
           setTimeout(() => {
             setSignInRequest(true);
-          }, 30000);
+          }, 300000);
         }
       }
     })();

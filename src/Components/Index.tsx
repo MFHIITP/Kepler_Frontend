@@ -238,7 +238,7 @@ const Index: FC<componentPropsInterface> = ({ auth, details }) => {
               </Link>
 
               <Link 
-                to="https://sites.google.com/d/1YIiDDXlB4EW7wCFTASiACXPuoZ6JQRqL/edit"
+                to="https://kepler-22b.vercel.app"
                 className={`flex items-center text-sm font-medium transition-colors hover:text-blue-600 ${
                   window.location.pathname.startsWith("/gallery") ? "text-blue-600" : "text-gray-700"
                 }`}
