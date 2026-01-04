@@ -1,5 +1,6 @@
 export interface messageFormatInterface{
     sender: string,
-    messageText: string,
-    timeStamp: Date
+    receiver: string,
+    chatmessage: string,
+    date: string
 }

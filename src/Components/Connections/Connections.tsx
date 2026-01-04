@@ -2,13 +2,15 @@ import React, { useEffect, useState } from 'react';
 import { Users, Github, Linkedin, Mail, Phone, Code, Link2, UserPlus, UserCheck, ExternalLink, MapPin, Briefcase, GraduationCap, Star, MessageSquare, Search, Filter, TrendingUp, Award, Calendar, Globe, Edit2, Save, X, Plus, Trash2 } from 'lucide-react';
 import { UserDetails, ConnectionUser, Project, ProfileDetailsInterface, StreamEvent } from './Connection.interface';
 import { useMutation } from '@tanstack/react-query';
-import { acceptRejectConnectionRequest, getConnectionDetailsRequest, getDetailsNewConnection, savePersonalDetails, sendConnectionRequest } from './ConnectionRawRequests';
+import { acceptRejectConnectionRequest, getConnectionChats, getConnectionDetailsRequest, getDetailsNewConnection, savePersonalDetails, sendConnectionChat, sendConnectionRequest } from './ConnectionRawRequests';
 import apiRoutes from '../../utils/Routes/apiRoutes';
 import Cookies from 'js-cookie';
 import toast from 'react-hot-toast';
 import { messageFormatInterface } from './ConnectionMessages.interface';
+import ConnectionCard from './ConnectionCard';
+import ChatModal from './ChatModal';
 
-const Connection: React.FC<{ details: UserDetails | [], refetch: () => void, email: string, connectionRequests: any[], setConnectionRequests: React.Dispatch<React.SetStateAction<any[]>>, newConnectionAcceptances: any[], messages: messageFormatInterface[] }> = ({ details: initialDetails, refetch, email, connectionRequests, setConnectionRequests, newConnectionAcceptances, messages }) => {
+const Connection: React.FC<{ details: UserDetails | [], refetch: () => void, email: string, connectionRequests: any[], setConnectionRequests: React.Dispatch<React.SetStateAction<any[]>>, newConnectionAcceptances: any[], messages: messageFormatInterface[], setMessages: React.Dispatch<React.SetStateAction<any[]>> }> = ({ details: initialDetails, refetch, email, connectionRequests, setConnectionRequests, newConnectionAcceptances, messages, setMessages }) => {
   const [details, setDetails] = useState<UserDetails>(initialDetails as UserDetails);
   const [isEditMode, setIsEditMode] = useState(false);
   const [editForm, setEditForm] = useState<UserDetails>(initialDetails as UserDetails);
@@ -255,6 +257,32 @@ const Connection: React.FC<{ details: UserDetails | [], refetch: () => void, ema
     }
   })
 
+  const {mutate: getChatsMutation} = useMutation({
+    mutationFn: ({senderEmail, receiverEmail}: {senderEmail: string, receiverEmail: string}) => getConnectionChats(senderEmail, receiverEmail),
+    onMutate: () => setLoading(true),
+    onSuccess: (data) => {
+      setMessages(data.chatMessages);
+      setLoading(false);
+    },
+    onError: (error) => {
+      setLoading(false);
+      console.log(error);
+    }
+  })
+  
+  const {mutate: sendChatsMutation} = useMutation({
+    mutationFn: ({senderEmail, receiverEmail, messageBody}:{senderEmail: string, receiverEmail: string, messageBody: string}) => sendConnectionChat(senderEmail, receiverEmail, messageBody),
+    onMutate: () => setLoading(true),
+    onSuccess: () => {
+      setLoading(false);
+    },
+    onError: (error) => {
+      toast.error("Failed to send chats");
+      console.log(error);
+      setLoading(false);
+    }
+  })
+
   const handleSaveProfile = () => {
     setDetails(editForm);
     const formDetails = {
@@ -363,6 +391,7 @@ const Connection: React.FC<{ details: UserDetails | [], refetch: () => void, ema
   };
 
   const openChat = (user: ConnectionUser) => {
+    getChatsMutation({senderEmail: email, receiverEmail: user.email});
     setActiveChatUser(user);
   }
   const closeChat = () => {
@@ -372,313 +401,20 @@ const Connection: React.FC<{ details: UserDetails | [], refetch: () => void, ema
   const handleSendMessages = () => {
     if(currentMessage.trim() && activeChatUser){
       const newMessage: messageFormatInterface = {
-        sender: "me" as const,
-        messageText: currentMessage.trim(),
-        timeStamp: new Date()
+        sender: email,
+        receiver:  activeChatUser.email,
+        chatmessage: currentMessage.trim(),
+        date: new Date().toLocaleString("en-IN"),
       }
 
-      // logic to send the message
+      sendChatsMutation({senderEmail: email, receiverEmail: activeChatUser.email, messageBody: currentMessage.trim()});
+      setMessages((messages) => {
+        return [...messages, newMessage];
+      })
 
       setCurrentMessage('');
     }
   }
-
-  const ConnectionCard: React.FC<{ user: ConnectionUser; isConnected: boolean; isRequest?: boolean }> = ({ user, isConnected, isRequest }) => (
-    <div className="bg-white rounded-lg border border-gray-200 hover:shadow-lg transition-all duration-200">
-      <div className="p-6">
-        <div className="flex gap-4 mb-4">
-          <div className="text-5xl flex-shrink-0">{user.avatar || '👤'}</div>
-          <div className="flex-1 min-w-0">
-            <div className="flex items-start justify-between mb-1">
-              <div className="flex-1">
-                <h3 className="font-semibold text-lg text-gray-900 truncate">{user.name}</h3>
-                <div className="flex items-center gap-1 text-sm text-gray-600 mb-3">
-                  <Mail size={14} />
-                  <span>{user.email}</span>
-                </div> 
-                {user.isOpenToWork && (
-                  <span className="inline-flex items-center gap-1 text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full mt-1">
-                    <TrendingUp size={12} />
-                    Open to Work
-                  </span>
-                )}
-              </div>
-            </div>
-            <p className="text-sm text-gray-700 font-medium mb-1">{user.headline}</p>
-            {user.location && (
-              <div className="flex items-center gap-1 text-sm text-gray-500 mb-1">
-                <MapPin size={14} />
-                <span>{user.location}</span>
-              </div>
-            )}
-            {user.company && (
-              <div className="flex items-center gap-1 text-sm text-gray-500">
-                <Briefcase size={14} />
-                <span>{user.company}</span>
-              </div>
-            )}
-          </div>
-        </div>
-
-        {user.bio && (
-          <p className="text-sm text-gray-600 mb-4 line-clamp-2">{user.bio}</p>
-        )}
-
-        {isConnected && (
-          <>
-            {user.phone && (
-              <div className="flex items-center gap-1 text-sm text-gray-600 mb-3">
-                <Phone size={14} />
-                <span>{user.phone}</span>
-              </div>
-            )}
-            {user.education && (
-              <div className="flex items-center gap-1 text-sm text-gray-600 mb-3">
-                <GraduationCap size={14} />
-                <span>{user.education}</span>
-              </div>
-            )}
-          </>
-        )}
-
-        {user.mutualConnections && user.mutualConnections > 0 && (
-          <div className="flex items-center gap-1 text-xs text-gray-500 mb-3">
-            <Users size={14} />
-            <span>{user.mutualConnections} mutual connections</span>
-          </div>
-        )}
-
-        {user.techstack && user.techstack.length > 0 && (
-          <div className="mb-4">
-            <div className="flex items-center gap-1 text-xs font-medium text-gray-700 mb-2">
-              <Code size={14} />
-              <span>Tech Stack</span>
-            </div>
-            <div className="flex flex-wrap gap-1">
-              {user.techstack.slice(0, 5).map((tech, idx) => (
-                <span key={idx} className="bg-blue-50 text-blue-700 text-xs px-2 py-1 rounded border border-blue-200">
-                  {tech}
-                </span>
-              ))}
-              {user.techstack.length > 5 && (
-                <span className="text-xs text-gray-500 px-2 py-1">+{user.techstack.length - 5} more</span>
-              )}
-            </div>
-          </div>
-        )}
-
-        {isConnected && user.skills && user.skills.length > 0 && (
-          <div className="mb-4">
-            <div className="flex items-center gap-1 text-xs font-medium text-gray-700 mb-2">
-              <Award size={14} />
-              <span>Top Skills</span>
-            </div>
-            <div className="flex flex-wrap gap-1">
-              {user.skills.slice(0, 3).map((skill, idx) => (
-                <span key={idx} className="bg-gray-100 text-gray-700 text-xs px-2 py-1 rounded">
-                  {skill}
-                </span>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {user.endorsements && (
-          <div className="flex items-center gap-1 text-xs text-gray-600 mb-4">
-            <Star size={14} className="text-yellow-500" />
-            <span className="font-medium">{user.endorsements}</span>
-            <span>endorsements</span>
-          </div>
-        )}
-
-        {isConnected && (
-          <div className="flex gap-2 mb-4 pb-4 border-b border-gray-200">
-            {user.githuburl && (
-              <a href={user.githuburl} target="_blank" rel="noopener noreferrer" 
-                 className="flex items-center gap-1 text-sm text-gray-700 hover:text-blue-600 transition-colors">
-                <Github size={16} />
-                <ExternalLink size={12} />
-              </a>
-            )}
-            {user.linkedinurl && (
-              <a href={user.linkedinurl} target="_blank" rel="noopener noreferrer"
-                 className="flex items-center gap-1 text-sm text-gray-700 hover:text-blue-600 transition-colors">
-                <Linkedin size={16} />
-                <ExternalLink size={12} />
-              </a>
-            )}
-            {user.portfoliourl && (
-              <a href={user.portfoliourl} target="_blank" rel="noopener noreferrer"
-                 className="flex items-center gap-1 text-sm text-gray-700 hover:text-blue-600 transition-colors">
-                <Globe size={16} />
-                <ExternalLink size={12} />
-              </a>
-            )}
-          </div>
-        )}
-
-        {isConnected && user.projects && user.projects.length > 0 && (
-          <div className="mb-4">
-            <div className="flex items-center gap-1 text-xs font-medium text-gray-700 mb-2">
-              <Link2 size={14} />
-              <span>Featured Projects</span>
-            </div>
-            {user.projects.map((project, idx) => (
-              <div key={idx} className="mb-2 p-2 bg-gray-50 rounded border border-gray-100">
-                <a href={project.githuburl} target="_blank" rel="noopener noreferrer"
-                   className="text-sm font-medium text-blue-600 hover:underline flex items-center gap-1">
-                  {project.name}
-                  <ExternalLink size={12} />
-                </a>
-                <p className="text-xs text-gray-600 mt-1">{project.description}</p>
-                {project.technologies && (
-                  <div className="flex flex-wrap gap-1 mt-2">
-                    {project.technologies.map((tech, tidx) => (
-                      <span key={tidx} className="text-xs bg-white text-gray-600 px-2 py-0.5 rounded border border-gray-200">
-                        {tech}
-                      </span>
-                    ))}
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
-        )}
-
-        {isRequest ? (
-          <div className="flex gap-2">
-            <button
-              onClick={() => handleAcceptRequest(user)}
-              className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors"
-            >
-              <UserCheck size={18} />
-              <span>Accept</span>
-            </button>
-            <button
-              onClick={() => handleRejectRequest(user)}
-              className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-gray-200 text-gray-700 rounded-lg font-medium hover:bg-gray-300 transition-colors"
-            >
-              Decline
-            </button>
-          </div>
-        ) : (
-          <div className="flex gap-2">
-            <button
-              onClick={() => isConnected ? null : handleConnect(user)}
-              className={`flex-1 flex items-center justify-center gap-2 px-4 py-2 rounded-lg font-medium transition-colors ${
-                isConnected
-                  ? 'bg-white border-2 border-blue-600 text-blue-600 hover:bg-blue-50'
-                  : 'bg-blue-600 text-white hover:bg-blue-700'
-              }`}
-            >
-              {isConnected ? (
-                <>
-                  <UserCheck size={18} />
-                  <span>Connected</span>
-                </>
-              ) : (
-                <>
-                  <UserPlus size={18} />
-                  <span>Connect</span>
-                </>
-              )}
-            </button>
-            {isConnected && (
-              <button onClick={() => openChat(user)} className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg font-medium hover:bg-gray-200 transition-colors">
-                <MessageSquare size={18} />
-              </button>
-            )}
-          </div>
-        )}
-      </div>
-      {/* Chat Window */}
-      {activeChatUser && (
-        <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-lg shadow-2xl w-full max-w-2xl h-[600px] flex flex-col">
-            {/* Chat Header */}
-            <div className="bg-gradient-to-r from-blue-600 to-blue-700 p-4 rounded-t-lg flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="text-3xl">{activeChatUser.avatar || '👤'}</div>
-                <div className="text-white">
-                  <h3 className="font-semibold">{activeChatUser.name}</h3>
-                  <p className="text-sm text-blue-100">{activeChatUser.headline}</p>
-                </div>
-              </div>
-              <button
-                onClick={closeChat}
-                className="text-white hover:bg-white hover:bg-opacity-20 rounded-lg p-2 transition-colors"
-              >
-                <X size={24} />
-              </button>
-            </div>
-
-            {/* Messages Area */}
-            <div className="flex-1 overflow-y-auto p-4 bg-gray-50">
-              {(!messages || messages.length === 0) ? (
-                <div className="flex flex-col items-center justify-center h-full text-gray-400">
-                  <MessageSquare size={48} className="mb-2" />
-                  <p>No messages yet. Start the conversation!</p>
-                </div>
-              ) : (
-                <div className="space-y-3">
-                  {messages.map((msg, idx) => (
-                    <div
-                      key={idx}
-                      className={`flex ${msg.sender === 'me' ? 'justify-end' : 'justify-start'}`}
-                    >
-                      <div
-                        className={`max-w-[70%] rounded-lg px-4 py-2 ${
-                          msg.sender === 'me'
-                            ? 'bg-blue-600 text-white'
-                            : 'bg-white border border-gray-200 text-gray-900'
-                        }`}
-                      >
-                        <p className="text-sm">{msg.messageText}</p>
-                        <p
-                          className={`text-xs mt-1 ${
-                            msg.sender === 'me' ? 'text-blue-100' : 'text-gray-500'
-                          }`}
-                        >
-                          {msg.timeStamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                        </p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-
-            {/* Message Input */}
-            <div className="p-4 border-t border-gray-200 bg-white rounded-b-lg">
-              <div className="flex gap-2">
-                <input
-                  type="text"
-                  value={currentMessage}
-                  onChange={(e) => setCurrentMessage(e.target.value)}
-                  onKeyDown={(e) => {
-                    if(e.key == 'Enter'){
-                      e.preventDefault();
-                      handleSendMessages();
-                    }
-                  }}
-                  placeholder="Type a message..."
-                  className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
-                />
-                <button
-                  onClick={handleSendMessages}
-                  disabled={!currentMessage.trim()}
-                  className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors flex items-center gap-2"
-                >
-                  <span>Send</span>
-                  <MessageSquare size={18} />
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-    </div>
-  );
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -1331,7 +1067,7 @@ const Connection: React.FC<{ details: UserDetails | [], refetch: () => void, ema
             ) : (
               <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {filteredConnections.map(user => (
-                  <ConnectionCard key={user.id} user={user} isConnected={true} />
+                  <ConnectionCard key={user.id} user={user} isConnected={true} handleConnect={handleConnect} handleAcceptRequest={handleAcceptRequest} handleRejectRequest={handleRejectRequest} openChat={openChat} />
                 ))}
               </div>
             )}
@@ -1349,7 +1085,7 @@ const Connection: React.FC<{ details: UserDetails | [], refetch: () => void, ema
             ) : (
               <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {filteredSuggestions.map(user => (
-                  <ConnectionCard key={user.email} user={user} isConnected={false} />
+                  <ConnectionCard key={user.email} user={user} isConnected={false}  handleConnect={handleConnect} handleAcceptRequest={handleAcceptRequest} handleRejectRequest={handleRejectRequest} openChat={openChat} />
                 ))}
               </div>
             )}
@@ -1367,11 +1103,22 @@ const Connection: React.FC<{ details: UserDetails | [], refetch: () => void, ema
             ) : (
               <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {connectionRequests.map(user => (
-                  <ConnectionCard key={user.email} user={user} isConnected={false} isRequest={true} />
+                  <ConnectionCard key={user.email} user={user} isConnected={false} isRequest={true}  handleConnect={handleConnect} handleAcceptRequest={handleAcceptRequest} handleRejectRequest={handleRejectRequest} openChat={openChat} />
                 ))}
               </div>
             )}
           </div>
+        )}
+        {activeChatUser && (
+          <ChatModal
+            activeChatUser={activeChatUser}
+            closeChat={closeChat}
+            messages={messages}
+            currentMessage={currentMessage}
+            setCurrentMessage={setCurrentMessage}
+            handleSendMessages={handleSendMessages}
+            email = {email}
+          />
         )}
       </div>
     </div>

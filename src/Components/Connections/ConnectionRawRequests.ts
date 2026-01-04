@@ -65,3 +65,20 @@ export const getDetailsNewConnection = async(emailId: string) => {
     })
     return data;
 }
+
+export const sendConnectionChat = async(senderEmail: string, receiverEmail: string, messageBody: string) => {
+    const { data } = await api.post(apiRoutes.connection.connectionChats.sendConnectionChats, {
+        senderEmail: senderEmail,
+        receiverEmail: receiverEmail,
+        messageBody: messageBody
+    })
+    return data;
+}
+
+export const getConnectionChats = async(senderEmail: string, receiverEmail: string) => {
+    const { data } = await api.post(apiRoutes.connection.connectionChats.getConnectionChats, {
+        senderEmail: senderEmail,
+        receiverEmail: receiverEmail,
+    })
+    return data;
+} 

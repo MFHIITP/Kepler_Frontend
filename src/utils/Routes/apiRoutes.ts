@@ -97,7 +97,11 @@ const apiRoutes = {
         getPersonalConnections: 'connections/getPersonalConnections',   // important not to keep the leading slash
         sendConnectionRequest: '/connections/sendConnectionRequest',
         getConnectionSuggestions: 'connections/getConnectionSuggestions',  //important not to keep the leading slash
-        getDetailsNewConnection: "/connections/getDetailsNewConnection"
+        getDetailsNewConnection: "/connections/getDetailsNewConnection",
+        connectionChats: {
+            getConnectionChats: "/connections/getConnectionChats",
+            sendConnectionChats: "/connections/sendConnectionChats"
+        }
     }
 }
 export default apiRoutes

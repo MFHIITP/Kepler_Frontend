@@ -90,6 +90,7 @@ const Talk: FC<TalkInterface> = ({
   const context = useContext(MyContext);
   const adminemails = context?.adminemails;
   const webs_addr = import.meta.env.VITE_WEBS_ADDR;
+  const wsRef = useRef<WebSocket | null>(null);
   const navigate = useNavigate();
 
   const { mutate: getChatsMutation } = useMutation({
@@ -133,7 +134,12 @@ const Talk: FC<TalkInterface> = ({
   }, [allmessages]);
 
   useEffect(() => {
+    if(wsRef.current){
+      return;
+    }
     const ws = new WebSocket(`${webs_addr}`);
+    wsRef.current = ws;
+
     setSocket(ws);
     ws.onmessage = async (event) => {
       const data = await JSON.parse(event.data);

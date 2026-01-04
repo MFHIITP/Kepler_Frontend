@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { componentPropsInterface } from "../Interfaces/ComponentProps.interface";
 import api from "../../utils/api";
 import apiRoutes from "../../utils/Routes/apiRoutes";
@@ -32,6 +32,7 @@ const DailyProblemsPage: React.FC<componentPropsInterface> = ({ details }) => {
   const [loading, setLoading] = useState(false);
   const [dailyProblemStatus, setDailyProblemStatus] = useState<string>("");
   const {problemName} = useParams();
+  const wsRef = useRef<WebSocket | null>(null);
 
   const {data: problem, isLoading, isError} = useQuery({
     queryKey: ["dailyProblem"],
@@ -44,7 +45,13 @@ const DailyProblemsPage: React.FC<componentPropsInterface> = ({ details }) => {
   
 
   useEffect(() => {
+    if(wsRef.current){
+      return;
+    }
+
     const ws = new WebSocket(webSocketAddress);
+    wsRef.current = ws;
+
     setSocket(ws);
     ws.onmessage = async(event) => {
       const data = await JSON.parse(event.data);
