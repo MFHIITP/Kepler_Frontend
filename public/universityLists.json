@@ -8,6 +8,14 @@
     "state-province": null
   },
   {
+    "name": "Graphics Era University",
+    "domains": ["student.eit.edu.au"],
+    "web_pages": ["https://www.eit.edu.au/"],
+    "country": "India",
+    "alpha_two_code": "IN",
+    "state-province": null
+  },
+  {
     "name": "Universitas Nusa Putra",
     "domains": ["nusaputra.ac.id"],
     "web_pages": ["https://nusaputra.ac.id"],

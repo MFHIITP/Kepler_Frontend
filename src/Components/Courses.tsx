@@ -49,31 +49,31 @@ function ProfessionalEducationPage() {
   const heroImages = [
     {
       id: 0,
-      src: "/Images/Live_Classes.webp",
+      src: "/Images/SlidingImage1_LiveClasses.png",
       alt: "Live Interactive Classes",
       title: "Live Interactive Classes",
     },
     {
       id: 1,
-      src: "/Images/Comminity_Networks.webp",
+      src: "/Images/SlidingImage2_CommunityNetwork.jpg",
       alt: "Community Learning",
       title: "Community Learning Network",
     },
     {
       id: 2,
-      src: "/Images/Mentorship.webp",
+      src: "/Images/SlidingImage3_ExpertMentoship.jpg",
       alt: "Expert Mentorship",
       title: "Expert Mentorship Program",
     },
     {
       id: 3,
-      src: "/Images/Monitoring.webp",
+      src: "/Images/SlidingImage4_ProgressTracker.png",
       alt: "Progress Monitoring",
       title: "Smart Progress Tracking",
     },
     {
       id: 4,
-      src: "/Images/Practive_Revise.webp",
+      src: "/Images/SlidingImage5_AdaptiveLearning.jpg",
       alt: "Practice & Revision",
       title: "Adaptive Practice System",
     },
