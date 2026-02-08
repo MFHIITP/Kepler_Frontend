@@ -10,9 +10,9 @@ import { StreamEvent } from "./Connections/Connection.interface";
 
 interface Referral {
   referCode: string;
-  refereeName: string;
-  refereeEmail: string;
-  refereePhone: string;
+  name: string;
+  email: string;
+  phoneNumber: string;
   dateReferred: string;
   status: "pending" | "confirmed" | "rejected";
   amount: number;
@@ -119,6 +119,7 @@ const ReferralManagement: React.FC<referralPropsInterface> = ({
     onSuccess: (data) => {
       setLoading(false);
       toast.success(`Referral ${data.status}`);
+      setPendingReferrals((prev) => prev.filter((referral) => referral.referCode !== data.referralCodeAcceptedOrRejected));
     },
     onError: () => {
       (setLoading(false), toast.error("Failed to process Referral decision"));
@@ -171,6 +172,7 @@ const ReferralManagement: React.FC<referralPropsInterface> = ({
     if (activeTab == "pending") {
       getPendingReferralsMutation(details?.email!);
     } else if (activeTab == "completed") {
+      setCompletedReferrals([]);
       const controller = new AbortController();
       const startStream = async () => {
         try {
@@ -368,9 +370,6 @@ const ReferralManagement: React.FC<referralPropsInterface> = ({
                       Date Referred
                     </th>
                     <th className="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
-                      Verified Date
-                    </th>
-                    <th className="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
                       Status
                     </th>
                     <th className="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
@@ -389,26 +388,17 @@ const ReferralManagement: React.FC<referralPropsInterface> = ({
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="text-sm font-medium text-gray-900">
-                          {referral?.refereeName}
+                          {referral?.name}
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                        {referral?.refereeEmail}
+                        {referral?.email}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                        {referral?.refereePhone}
+                        {referral?.phoneNumber}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                        {new Date(referral?.dateReferred).toLocaleDateString(
-                          "en-IN",
-                        )}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                        {referral?.verifiedDate
-                          ? new Date(referral?.verifiedDate).toLocaleDateString(
-                              "en-IN",
-                            )
-                          : "-"}
+                        {referral?.dateReferred}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         {referral?.status === "confirmed" ? (

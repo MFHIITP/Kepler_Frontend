@@ -239,8 +239,14 @@ const User_Details: React.FC<componentPropsInterfacePaymentProfile> = (props) =>
   };
 
   const handlePayment = async () => {
+    if(referralCode == userdetails?.referCode){
+      toast.error("Referral Code is Not Valid. Please do not try to be too clever!");
+      return;
+    }
+
     const amount = userdetails?.amount.value;
     const dt = new Date();
+
     dt.setDate(dt.getDate() + 30);
     const result = await MySwal.fire({
       title: "",
