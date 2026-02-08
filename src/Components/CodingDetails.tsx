@@ -4,10 +4,9 @@ import apiRoutes from "../utils/Routes/apiRoutes";
 import { useMutation } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import { userdetails } from "./Interfaces/Details.interface";
-import { Link } from "react-router-dom";
+import { componentPropsInterface } from "./Interfaces/ComponentProps.interface";
 
-interface CodingDetailsInterface {
-  details: userdetails | undefined;
+interface CodingDetailsInterface extends componentPropsInterface {
   goToPage: Dispatch<SetStateAction<string>>;
 }
 

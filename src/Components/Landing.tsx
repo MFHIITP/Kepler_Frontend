@@ -7,6 +7,7 @@ import CodingDetails from "./CodingDetails";
 import Leaderboard from "./Leaderboard";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import ReferralManagement from "./ReferralManagement";
 
 const Landing: React.FC<componentPropsInterface> = (props) => {
   const [option, setOption] = useState("courses");
@@ -37,6 +38,11 @@ const Landing: React.FC<componentPropsInterface> = (props) => {
       key: "profile",
       label: "Profile",
       sublabel: "Account Management"
+    },
+    {
+      key: "Referral Management",
+      label: "Referral Management",
+      sublabel: "Referral Management"
     }
   ];
 
@@ -175,6 +181,7 @@ const Landing: React.FC<componentPropsInterface> = (props) => {
                 {option === "keplerBoard" && "Interactive coding practice and skill development"}
                 {option === "leaderboard" && "Performance rankings and competitive analytics"}
                 {option === "settings" && "System configuration and user preferences"}
+                {option == "Referral Management" && "Manage your referrals and wallet"}
               </p>
             </div>
           </div>
@@ -205,6 +212,11 @@ const Landing: React.FC<componentPropsInterface> = (props) => {
           {option === "leaderboard" && (
             <div className="h-full overflow-y-auto">
               <Leaderboard details={props.details} goToPage={setOption} />
+            </div>
+          )}
+          {option === "Referral Management" && (
+            <div className="h-full overflow-y-auto">
+              <ReferralManagement details={props.details} goToPage={setOption} />
             </div>
           )}
           {option === "settings" && (

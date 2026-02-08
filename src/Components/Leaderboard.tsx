@@ -4,10 +4,10 @@ import api from '../utils/api'
 import apiRoutes from '../utils/Routes/apiRoutes'
 import { useMutation } from '@tanstack/react-query'
 import toast from 'react-hot-toast'
+import { componentPropsInterface } from './Interfaces/ComponentProps.interface'
 
-interface leaderboardInterface {
-    details: userdetails,
-    goToPage: Dispatch<SetStateAction<string>>
+interface leaderboardInterface extends componentPropsInterface {
+    goToPage: Dispatch<SetStateAction<string>>;
 }
 
 interface responseInterface {

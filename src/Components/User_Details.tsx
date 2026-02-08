@@ -160,6 +160,7 @@ const User_Details: React.FC<componentPropsInterfacePaymentProfile> = (props) =>
   const navigate = useNavigate();
   const [userdetails, setUserdetails] = useState<userInformation | null>(null);
   const [loading, setLoading] = useState(true);
+  const [referralCode, setReferralCode] = useState<string | null>(null);
 
   const handlecopyclick = async (val: string) => {
     await navigator.clipboard.writeText(val);
@@ -199,6 +200,7 @@ const User_Details: React.FC<componentPropsInterfacePaymentProfile> = (props) =>
     const orderRes = await api.post(apiRoutes.razorpay.payment.createOrder, {
       amount: parseInt(amountPayment as unknown as string),
     });
+    console.log(orderRes.data.data.id);
     const orderData = orderRes.data.data;
 
     const options = {
@@ -217,9 +219,11 @@ const User_Details: React.FC<componentPropsInterfacePaymentProfile> = (props) =>
             razorpay_payment_id: response.razorpay_payment_id,
             razorpay_order_id: response.razorpay_order_id,
             razorpay_signature: response.razorpay_signature,
+            referralCode_giver: referralCode,
           }
         );
         if (verifyRes.status == 200) {
+
           toast.success("Payment Successful! Enjoy your studies with Kepler");
           navigate("/");
         } else {
@@ -797,14 +801,23 @@ const User_Details: React.FC<componentPropsInterfacePaymentProfile> = (props) =>
 
           {/* Upcoming Payment */}
           <div className="bg-white/80 backdrop-blur-sm shadow-xl rounded-2xl border border-white/20 p-6">
-            <div className="flex items-center justify-between mb-6">
+            <div className="grid grid-cols-[3fr_1fr] items-center mb-6">
               <div className="flex items-center gap-3">
                 <div className="p-2 bg-gradient-to-r from-green-500 to-emerald-500 rounded-lg text-white">
                   <CalendarIcon />
                 </div>
-                <h2 className="text-xl font-bold text-gray-800">
+                <h2 className="text-xl flex-nowrap font-bold text-gray-800">
                   Upcoming Payment
                 </h2>
+                <div className="grid grid-cols-2 gap-2">
+                  <input
+                    type="text" 
+                    placeholder="Enter Referral Code (if any)..."
+                    onChange={(e) => setReferralCode(e.target.value)}
+                    value={referralCode}
+                    className="border border-gray-300 rounded-lg px-4 py-2 bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 hover:shadow-md min-w-[220px]" 
+                  />
+                </div>
               </div>
               <button
                 onClick={handlePayment}

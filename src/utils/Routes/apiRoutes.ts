@@ -102,6 +102,12 @@ const apiRoutes = {
             getConnectionChats: "/connections/getConnectionChats",
             sendConnectionChats: "/connections/sendConnectionChats"
         }
+    },
+    referrals: {
+        getPendingReferrals: '/referCode/getPendingReferrals',
+        acceptRejectReferral: '/referCode/acceptRejectReferral',
+        getAcceptedReferrals: 'referCode/getAcceptedReferrals',
+        saveBankDetails: '/referCode/saveReferralBankDetails'
     }
 }
 export default apiRoutes

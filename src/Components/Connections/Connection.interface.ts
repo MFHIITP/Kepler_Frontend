@@ -69,6 +69,7 @@ export type StreamEvent =
   | {
     type: "start";
     total: number;
+    walletBalance: number;
   }
   | {
     type: "connection";
@@ -85,5 +86,5 @@ export type StreamEvent =
     type: "Connection";
     message: string;
     responseData: any;
-  };
+  }
 
