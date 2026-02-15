@@ -9,62 +9,84 @@ function Part2() {
 
   const courses = [
     {
-      title: "DSA - 1",
+      title: "DSA for Placements & Contests",
       exam: 'dsa1',
-      description: "UpSkill your DSA skills from scratch to top industry level.",
+      description: "A contest and industry oriented tracker with structured DSA and CP practice, advanced variations, and an upsolving system that builds real competitive strength and gears students towards the industry.",
       icon: <Database className="w-8 h-8" />,
       color: "from-blue-500 to-cyan-500",
-      level: "Beginner",
-      duration: "6 - 9 months"
+      level: "Beginner to Advanced",
+      duration: "5 months",
+      price: (
+      <>
+        <span className="line-through text-gray-400">₹999</span>{" "}
+        <span className="text-purple-600 font-semibold">₹249</span>
+      </>)
     },
     {
-      title: "Web Dev - 1",
+      title: "Development Crash Course: Projects Made Easier",
       exam: 'webdev1',
-      description: "Start making websites from personal projects to industry projects.",
+      description: "Build projects faster with a guided web development roadmap, structured milestones, code reviews, and deployment focused learning to get you industry ready.",
       icon: <Globe className="w-8 h-8" />,
       color: "from-green-500 to-emerald-500",
-      level: "Beginner",
-      duration: "6 - 9 months"
+      level: "Beginner to Intermediary",
+      duration: "5 months",
+      price: (
+      <>
+        <span className="line-through text-gray-400">₹999</span>{" "}
+        <span className="text-purple-600 font-semibold">₹249</span>
+      </>)
     },
     {
-      title: "Language",
-      exam: 'language',
-      description: "Learn all the languages necessary for industries in one go.",
-      icon: <Code className="w-8 h-8" />,
-      color: "from-purple-500 to-pink-500",
-      level: "All Levels",
-      duration: "6 - 9 months"
-    },
-    {
-      title: "Machine Learning - 1",
-      exam: 'ml1',
-      description: "Hands-on ML with real datasets and competitions.",
-      icon: <Brain className="w-8 h-8" />,
-      color: "from-orange-500 to-red-500",
-      level: "Intermediate",
-      duration: "6 - 9 months"
-    },
-    {
-      title: "Computer Fundamentals - 1",
+      title: "Fundamentals Course: Crack GATE With Ease",
       exam: 'fundamentals1',
-      description: "Learn Computer Networks and Wireless technologies.",
+      description: "A structured fundamentals tracker covering core CS topics with revision cycles, quizzes, and evaluation driven preparation",
       icon: <Network className="w-8 h-8" />,
       color: "from-teal-500 to-blue-500",
       level: "Beginner",
-      duration: "6 - 9 months"
+      duration: "5 months",
+      price: (
+      <>
+        <span className="line-through text-gray-400">₹999</span>{" "}
+        <span className="text-purple-600 font-semibold">₹249</span>
+      </>)
     },
     {
-      title: "DSA - 2",
+      title: "Artificial Intelligence: Explore the Future",
+      exam: 'ml1',
+      description: "Learn machine learning foundations, deep learning basics, and practical AI workflows through guided labs and mini projects",
+      icon: <Brain className="w-8 h-8" />,
+      color: "from-orange-500 to-red-500",
+      level: "Intermediary",
+      duration: "5 months",
+      price: (
+      <>
+        <span className="line-through text-gray-400">₹999</span>{" "}
+        <span className="text-purple-600 font-semibold">₹249</span>
+      </>)
+    },
+    {
+      title: "Placements Made Easier",
       exam: 'dsa2',
-      description: "Focus on non-linear Data Structures to complete industry oriented DSA.",
+      description: "A structured tracker combining DSA, Web Development, and CS Fundamentals so you can build projects, clear interviews, and prepare your resume with confidence",
       icon: <Database className="w-8 h-8" />,
       color: "from-indigo-500 to-purple-500",
-      level: "Advanced",
-      duration: "6 - 9 months"
+      level: "Beginner to Advanced",
+      duration: "5 months",
+      price: (
+      <>
+        <span className="line-through text-gray-400">₹2499</span>{" "}
+        <span className="text-purple-600 font-semibold">₹599</span>
+      </>)
     },
   ];
 
   const keplerBenefits = [
+    {
+      title: "From Basics to Placements",
+      description: "Complete journey from beginner to job-ready.",
+      icon: <Star className="w-12 h-12" />,
+      color: "from-yellow-500 to-orange-500"
+    },
     {
       title: "Code-Centric Curriculum",
       description: "Practical learning over theory. Build real projects from day one.",
@@ -76,12 +98,6 @@ function Part2() {
       description: "Learn at your own pace with clear milestones and badges.",
       icon: <Target className="w-12 h-12" />,
       color: "from-green-500 to-teal-500"
-    },
-    {
-      title: "From Basics to Internships",
-      description: "Complete journey from beginner to job-ready.",
-      icon: <Star className="w-12 h-12" />,
-      color: "from-yellow-500 to-orange-500"
     },
     {
       title: "Mentor Support + Live Doubts",
@@ -135,6 +151,14 @@ function Part2() {
     navigate(`/courses/${course.exam}`);
   };
 
+   const topBenefit = keplerBenefits.find(
+    (b) => b.title === "From Basics to Placements"
+  );
+
+  const remainingBenefits = keplerBenefits.filter(
+    (b) => b.title !== "From Basics to Placements"
+  );
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50">
       {/* Hero Search Section */}
@@ -175,28 +199,31 @@ function Part2() {
             <div className="w-24 h-1 bg-gradient-to-r from-purple-500 to-pink-500 mx-auto rounded-full"></div>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className={`grid grid-cols-1 md:grid-cols-2 gap-8`}>
             {filteredList.map((course, index) => (
               <div
                 key={index}
-                className="group relative bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 cursor-pointer border border-gray-100 hover:border-gray-200 transform hover:-translate-y-2"
+                className={`group relative rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 cursor-pointer border border-gray-100 hover:border-gray-200 transform hover:-translate-y-2 ${course.exam === "dsa2" ? 'md:col-span-2 md:justify-self-center md:max-w-3xl w-full radiant-border bg-blue-100' : 'bg-white'}`}
                 onClick={() => handleCourseClick(course)}
               >
                 {/* Course Icon with Gradient Background */}
-                <div className={`inline-flex p-4 rounded-2xl bg-gradient-to-r ${course.color} text-white mb-6 group-hover:scale-110 transition-transform duration-300`}>
+                <div className={`p-4 rounded-2xl bg-gradient-to-r ${course.color} text-white mb-6 group-hover:scale-110 transition-transform duration-300 ${course.exam === 'dsa2' ? 'flex justify-self-center' : 'inline-flex'}`}>
                   {course.icon}
                 </div>
                 
                 {/* Course Content */}
-                <h4 className="text-xl font-bold text-gray-800 mb-3 group-hover:text-purple-600 transition-colors">
+                <h4 className={`font-bold text-gray-800 mb-3 group-hover:text-purple-600 transition-colors ${course.exam === 'dsa2' ? 'flex justify-self-center text-3xl' : 'text-xl'}`}>
                   {course.title}
                 </h4>
-                <p className="text-gray-600 mb-6 leading-relaxed">
+                <p className={`text-gray-600 mb-6 leading-relaxed ${course.exam === 'dsa2' ? 'text-xl' : ''}`}>
                   {course.description}
                 </p>
+                <div className="mt-3 text-lg">
+                  {course.price}
+                </div>
                 
                 {/* Course Meta Info */}
-                <div className="flex items-center justify-between text-sm text-gray-500 mb-4">
+                <div className={`flex items-center justify-between text-gray-500 mb-4 ${course.exam === 'dsa2' ? 'text-xl' : 'text-sm'}`}>
                   <span className="bg-gray-100 px-3 py-1 rounded-full">{course.level}</span>
                   <span>{course.duration}</span>
                 </div>
@@ -249,30 +276,50 @@ function Part2() {
               </p>
               <div className="w-24 h-1 bg-gradient-to-r from-purple-500 to-pink-500 mx-auto mt-6 rounded-full"></div>
             </div>
-            
+
+            {/* TOP CENTER BOX */}
+            <div className="flex justify-center mb-16">
+              <div className="w-full max-w-md">
+                <div className="group relative bg-gradient-to-br from-gray-50 to-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-100 hover:border-gray-200 transform hover:-translate-y-1">
+                  <div className={`inline-flex p-4 rounded-2xl bg-gradient-to-r ${topBenefit?.color} text-white mb-6`}>
+                    {topBenefit?.icon}
+                  </div>
+
+                  <h3 className="text-xl font-bold text-gray-800 mb-4">
+                    {topBenefit?.title}
+                  </h3>
+
+                  <p className="text-gray-600 leading-relaxed">
+                    {topBenefit?.description}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* 3x3 GRID BELOW */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {keplerBenefits.map((benefit, idx) => (
+              {remainingBenefits.map((benefit, idx) => (
                 <div
                   key={idx}
                   className="group relative bg-gradient-to-br from-gray-50 to-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-100 hover:border-gray-200 transform hover:-translate-y-1"
                 >
-                  {/* Icon with Gradient Background */}
                   <div className={`inline-flex p-4 rounded-2xl bg-gradient-to-r ${benefit.color} text-white mb-6 group-hover:scale-110 transition-transform duration-300`}>
                     {benefit.icon}
                   </div>
-                  
+
                   <h3 className="text-xl font-bold text-gray-800 mb-4 group-hover:text-purple-600 transition-colors">
                     {benefit.title}
                   </h3>
+
                   <p className="text-gray-600 leading-relaxed">
                     {benefit.description}
                   </p>
-                  
-                  {/* Subtle Glow Effect */}
+
                   <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-purple-500 to-pink-500 opacity-0 group-hover:opacity-5 transition-opacity duration-300"></div>
                 </div>
               ))}
             </div>
+
           </div>
         </section>
       </Popping>

@@ -76,7 +76,12 @@ const apiRoutes = {
         userlist: '/users/admins',
         removeUser: '/users/deleteuser',
         getInformation: '/users/moreInformation',
-        removeUserCourse: '/users/removeCourse'
+        removeUserCourse: '/users/removeCourse',
+        adminMoneyTracker: {
+            getAllReferralMoneyApprovals: '/referralMoneyTracker/getAllMoneyTransfers',
+            approveReferralMoney: '/referralMoneyTracker/confirmMoneyTransfer',
+            checkAdminApproval: '/referralMoneyTracker/checkAdminApproval',
+        }
     },
     homePage: '/api/homePage',
     problems: {

@@ -3,6 +3,7 @@ import { userdetails } from "../Components/Interfaces/Details.interface";
 import { createBrowserRouter } from "react-router-dom";
 import AllProblems from "../Components/AllProblems";
 import Connection_Landing from "../Components/Connections/Connection_Landing";
+import AdminDashboard from "../Components/AdminDashboard/AdminDashboard";
 const DailyProblemsPage = lazy(() => import("../Components/DailyProblems/DailyProblemsPage"));
 
 const MainLayout = lazy(()=>import("./MainLayout"))
@@ -133,6 +134,16 @@ export const RouterFrontend = (authenticated: boolean, details: userdetails | un
           ) : (
             <></>
           ),
+        },
+        {
+          path: "/admins/adminDashboard",
+          element: authenticated ? (
+            <Suspense fallback={<div>Loading...</div>}>
+              <AdminDashboard details = {details} />
+            </Suspense>
+          ) : (
+            <></>
+          )
         },
         {
           path: "/profiles",

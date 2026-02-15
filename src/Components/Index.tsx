@@ -180,6 +180,14 @@ const Index: FC<componentPropsInterface> = ({ auth, details }) => {
                       >
                         User History
                       </Link>
+                      <Link 
+                        to="/admins/adminDashboard" 
+                        className={`block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 ${
+                          auth ? "" : "hidden"
+                        } ${adminemails.includes(details?.email ?? "") ? "" : "hidden"}`}
+                      >
+                        Admin Dashboard
+                      </Link>
                     </div>
                   </div>
                 )}

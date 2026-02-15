@@ -14,4 +14,9 @@ export default {
   variants: {
     scrollbar: ['rounded'], 
   },
+  extend: {
+    animation: {
+      "spin-slow": "spin 8s linear infinite",
+    },
+  }
 };
