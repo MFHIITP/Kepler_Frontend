@@ -161,6 +161,8 @@ const User_Details: React.FC<componentPropsInterfacePaymentProfile> = (props) =>
   const [userdetails, setUserdetails] = useState<userInformation | null>(null);
   const [loading, setLoading] = useState(true);
   const [referralCode, setReferralCode] = useState<string | null>(null);
+  const [coursesBought, setCoursesBought] = useState<string[] | []>([]);
+  const [additionalCourses, setAdditionalCourses] = useState<string[] | []>([])
 
   const handlecopyclick = async (val: string) => {
     await navigator.clipboard.writeText(val);
@@ -174,6 +176,9 @@ const User_Details: React.FC<componentPropsInterfacePaymentProfile> = (props) =>
     onSuccess: (data) => {
       setLoading(false);
       setUserdetails(data.data);
+      const courses = userdetails?.course_details.map((course) => course.name);
+      setCoursesBought(courses);
+      setAdditionalCourses(userdetails?.additionalCourses)
     },
     onError: () => {
       setLoading(false);
@@ -220,6 +225,8 @@ const User_Details: React.FC<componentPropsInterfacePaymentProfile> = (props) =>
             razorpay_order_id: response.razorpay_order_id,
             razorpay_signature: response.razorpay_signature,
             referralCode_giver: referralCode,
+            coursesBought: coursesBought,
+            additionalCourses: additionalCourses
           }
         );
         if (verifyRes.status == 200) {
