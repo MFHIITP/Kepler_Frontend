@@ -12,7 +12,7 @@ import {
   ArrowRight,
   Check,
   Star,
-  Search
+  Search,
 } from "lucide-react";
 import Footer from "./Footer";
 import { useNavigate } from "react-router-dom";
@@ -31,9 +31,9 @@ function ProfessionalEducationPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [fade, setFade] = useState(false);
   const navigate = useNavigate();
-  const [search, setSearch] = useState("")
+  const [search, setSearch] = useState("");
 
-  const { data, isLoading, error} = useQuery({
+  const { data, isLoading, error } = useQuery({
     queryKey: ["examPrograms"],
     queryFn: getCourses,
   });
@@ -41,9 +41,9 @@ function ProfessionalEducationPage() {
   const [examPrograms, setExamPrograms] = useState([]);
 
   useEffect(() => {
-    if(isLoading) return;
+    if (isLoading) return;
     setExamPrograms(data);
-  }, [data])
+  }, [data]);
 
   // Sample data (replacing imported data)
   const heroImages = [
@@ -188,7 +188,7 @@ function ProfessionalEducationPage() {
         setImageIndex((prev) => (prev + 1) % heroImages.length);
       } else {
         setImageIndex((prev) =>
-          prev === 0 ? heroImages.length - 1 : prev - 1
+          prev === 0 ? heroImages.length - 1 : prev - 1,
         );
       }
       setFade(false);
@@ -207,8 +207,12 @@ function ProfessionalEducationPage() {
 
   const handleSearchBar = (value: string) => {
     setSearch(value);
-    setExamPrograms(data.filter((course) => course.name.toLowerCase().includes(value.toLowerCase())));
-  }
+    setExamPrograms(
+      data.filter((course) =>
+        course.name.toLowerCase().includes(value.toLowerCase()),
+      ),
+    );
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50">
@@ -298,7 +302,7 @@ function ProfessionalEducationPage() {
           Excel in Job Interviews and UpSkill in Technical Roles
         </h2>
         <p className="text-xl text-slate-600 max-w-3xl mx-auto mb-8">
-          Join over 100,000 students who have achieved their academic goals with
+          Join over 100 students who have achieved their academic goals with
           Kepler's comprehensive learning ecosystem and expert guidance.
         </p>
         <div className="flex flex-wrap justify-center gap-8 text-sm text-slate-500">
@@ -308,7 +312,7 @@ function ProfessionalEducationPage() {
           </div>
           <div className="flex items-center gap-2">
             <Check className="w-5 h-5 text-emerald-500" />
-            <span>99% Success Rate</span>
+            <span>95% Success Rate</span>
           </div>
           <div className="flex items-center gap-2">
             <Check className="w-5 h-5 text-emerald-500" />
@@ -406,68 +410,87 @@ function ProfessionalEducationPage() {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {!isLoading &&
-            examPrograms.map((program, index) => (
-              <div
-                key={index}
-                className="group bg-white rounded-2xl border border-slate-200 overflow-hidden hover:shadow-2xl hover:border-blue-200 transition-all duration-300 cursor-pointer"
-                onClick={() => {
-                  navigate(`/courses/${program.exam}`);
-                }}
-              >
-                {/* Image */}
-                <div className="relative h-48 overflow-hidden">
-                  <img
-                    src={program.image}
-                    alt={program.name}
-                    className="w-full h-full object-fill group-hover:scale-105 transition-transform duration-300"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
+          {!isLoading && (
+            <>
+              {/* Placement Card (Centered) */}
+              {examPrograms
+                .filter((program) => program.exam === "placement")
+                .map((program, index) => (
+                  <div
+                    key={`placement-${index}`}
+                    className="lg:col-span-2 flex justify-center"
+                  >
+                    <div
+                      className="group w-full lg:w-1/2 bg-white rounded-2xl border border-slate-200 overflow-hidden hover:shadow-2xl hover:border-blue-200 transition-all duration-300 cursor-pointer radiant-border p-4"
+                      onClick={() => navigate(`/courses/${program.exam}`)}
+                    >
+                      {/* Image */}
+                      <div className="relative h-48 overflow-hidden">
+                        <img
+                          src={program.image}
+                          alt={program.name}
+                          className="w-full h-full object-fill group-hover:scale-105 transition-transform duration-300"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
 
-                  {/* Rating Badge */}
-                  <div className="absolute top-4 right-4 bg-white/95 backdrop-blur-sm px-3 py-1 rounded-full flex items-center gap-1">
-                    <Star className="w-4 h-4 text-yellow-500 fill-current" />
-                    <span className="text-sm font-semibold text-slate-700">
-                      {program.rating}
-                    </span>
-                  </div>
-                </div>
-
-                {/* Content */}
-                <div className="p-8">
-                  <h3 className="text-2xl font-bold text-slate-800 mb-3 group-hover:text-blue-600 transition-colors">
-                    {program.name}
-                  </h3>
-                  <p className="text-slate-600 mb-6 leading-relaxed">
-                    {program.description}
-                  </p>
-
-                  {/* Features */}
-                  <div className="grid grid-cols-2 gap-2 mb-6">
-                    {program.features?.map((feature, idx) => (
-                      <div
-                        key={idx}
-                        className="flex items-center gap-2 text-sm text-slate-600"
-                      >
-                        <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full"></div>
-                        {feature}
+                        <div className="absolute top-4 right-4 bg-white/95 backdrop-blur-sm px-3 py-1 rounded-full flex items-center gap-1">
+                          <Star className="w-4 h-4 text-yellow-500 fill-current" />
+                          <span className="text-sm font-semibold text-slate-700">
+                            {program.rating}
+                          </span>
+                        </div>
                       </div>
-                    ))}
-                  </div>
 
-                  {/* Footer */}
-                  <div className="flex items-center justify-between">
-                    <div className="text-sm text-slate-500">
-                      {/* <span className="font-semibold text-slate-700">{program.students}</span> students enrolled */}
+                      <div className="p-8">
+                        <h3 className="text-2xl font-bold text-slate-800 mb-3 group-hover:text-blue-600 transition-colors">
+                          {program.name}
+                        </h3>
+                        <p className="text-slate-600 mb-6 leading-relaxed">
+                          {program.description}
+                        </p>
+                      </div>
                     </div>
-                    <button className="text-blue-600 font-semibold hover:text-blue-700 flex items-center gap-1 group-hover:gap-2 transition-all">
-                      Explore Course
-                      <ArrowRight className="w-4 h-4" />
-                    </button>
                   </div>
-                </div>
-              </div>
-            ))}
+                ))}
+
+              {/* Other Programs (Normal Grid) */}
+              {examPrograms
+                .filter((program) => program.exam !== "placement")
+                .map((program, index) => (
+                  <div
+                    key={`normal-${index}`}
+                    className="group bg-white rounded-2xl border border-slate-200 overflow-hidden hover:shadow-2xl hover:border-blue-200 transition-all duration-300 cursor-pointer"
+                    onClick={() => navigate(`/courses/${program.exam}`)}
+                  >
+                    {/* Image */}
+                    <div className="relative h-48 overflow-hidden">
+                      <img
+                        src={program.image}
+                        alt={program.name}
+                        className="w-full h-full object-fill group-hover:scale-105 transition-transform duration-300"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
+
+                      <div className="absolute top-4 right-4 bg-white/95 backdrop-blur-sm px-3 py-1 rounded-full flex items-center gap-1">
+                        <Star className="w-4 h-4 text-yellow-500 fill-current" />
+                        <span className="text-sm font-semibold text-slate-700">
+                          {program.rating}
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className="p-8">
+                      <h3 className="text-2xl font-bold text-slate-800 mb-3 group-hover:text-blue-600 transition-colors">
+                        {program.name}
+                      </h3>
+                      <p className="text-slate-600 mb-6 leading-relaxed">
+                        {program.description}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+            </>
+          )}
         </div>
       </section>
 
@@ -483,7 +506,7 @@ function ProfessionalEducationPage() {
           </h3>
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
             <div>
-              <div className="text-4xl font-bold mb-2">100K+</div>
+              <div className="text-4xl font-bold mb-2">100+</div>
               <div className="text-blue-100">Active Students</div>
             </div>
             <div>
@@ -491,11 +514,11 @@ function ProfessionalEducationPage() {
               <div className="text-blue-100">Success Rate</div>
             </div>
             <div>
-              <div className="text-4xl font-bold mb-2">500+</div>
+              <div className="text-4xl font-bold mb-2">10+</div>
               <div className="text-blue-100">Expert Faculty</div>
             </div>
             <div>
-              <div className="text-4xl font-bold mb-2">5M+</div>
+              <div className="text-4xl font-bold mb-2">1K+</div>
               <div className="text-blue-100">Hours Taught</div>
             </div>
           </div>

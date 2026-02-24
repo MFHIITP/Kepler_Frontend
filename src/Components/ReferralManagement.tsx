@@ -17,6 +17,7 @@ interface Referral {
   status: "pending" | "confirmed" | "rejected";
   amount: number;
   verifiedDate?: string;
+  paidAmount: boolean;
 }
 
 interface BankDetails {
@@ -375,6 +376,9 @@ const ReferralManagement: React.FC<referralPropsInterface> = ({
                     <th className="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
                       Amount
                     </th>
+                    <th className="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                      Paid Amount
+                    </th>
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
@@ -417,6 +421,11 @@ const ReferralManagement: React.FC<referralPropsInterface> = ({
                         <span className="text-sm font-semibold text-gray-900 flex items-center">
                           <IndianRupee size={14} className="mr-1" />
                           {referral?.amount}
+                        </span>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <span className="text-sm font-semibold text-gray-900 flex items-center">
+                          {referral?.paidAmount ? "Paid" : "Not Paid"}
                         </span>
                       </td>
                     </tr>

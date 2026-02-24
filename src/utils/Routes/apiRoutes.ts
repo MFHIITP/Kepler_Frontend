@@ -80,8 +80,12 @@ const apiRoutes = {
         adminMoneyTracker: {
             getAllReferralMoneyApprovals: '/referralMoneyTracker/getAllMoneyTransfers',
             approveReferralMoney: '/referralMoneyTracker/confirmMoneyTransfer',
-            checkAdminApproval: '/referralMoneyTracker/checkAdminApproval',
-        }
+            checkAdminApproval: '/referralMoneyTracker/checkAdminAccess',
+        },
+        courseToStudentList: '/admins/courseToStudentList',
+        loggedInStudentsWithoutPurchase: '/admins/getLoggedInStudentsWithoutPurchase',
+        studentInformationFromCourseAndOrganization: "/admins/stuentInformationFromStudentCourseAndOrganization",
+        studentDetailFromStudentData: '/admins/getStudentDetailsFromStudentData',
     },
     homePage: '/api/homePage',
     problems: {
@@ -113,6 +117,9 @@ const apiRoutes = {
         acceptRejectReferral: '/referCode/acceptRejectReferral',
         getAcceptedReferrals: 'referCode/getAcceptedReferrals',
         saveBankDetails: '/referCode/saveReferralBankDetails'
+    },
+    playlistData: {
+        getCoursePlaylist: '/playlist/getCoursePlaylist',
     }
 }
 export default apiRoutes

@@ -21,13 +21,14 @@ const ApprovalModal: React.FC<ApprovalModalProps> = ({ isOpen, referral, actionT
   const handleSubmit = async () => {
     const secretKeyResponse = await api.post(apiRoutes.admins.adminMoneyTracker.checkAdminApproval, {
         email: referral.referral_giver_email,
-        secretCode: adminSecretKey
+        secretCode: adminSecretKey,
+        referCode: referral.referral_giver_refer_code
     });
     if(secretKeyResponse.status == 200){
         const approvalResponse = await api.post(apiRoutes.admins.adminMoneyTracker.approveReferralMoney, {
             referral_giver_refer_code: referral.referral_giver_refer_code,
             money_transfer_status: actionType === 'approve' ? true : false,
-            referral_amount: referral.referral_amount
+            referral_amount: referral.wallet_balance
         })
         if(approvalResponse.status == 200){
             toast.success(`Payment ${actionType === 'approve' ? 'Approved' : 'Rejected'} Successfully`);

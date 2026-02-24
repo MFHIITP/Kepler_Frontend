@@ -14,7 +14,7 @@ interface courseDetailsInterface {
   admittedCourses: [string];
   selectedCourses: [CourseInterface];
   preventedCourses: [string];
-  allPossibleCourses: [string];
+  allPossibleCourses: {name: string; price: number}[];
 }
 
 const getAllCourses = async (emailId: string) => {
@@ -62,9 +62,9 @@ const CheckIcon = () => (
 
 const Profile_Courses: React.FC<componentPropsInterfacePaymentProfile> = (props) => {
   const [admittedCourses, setAdmittedCourses] = useState<{"Computer Science": string[]}>({"Computer Science": []});
-  const [choices, setChoices] = useState<{"Computer Science": string[]}>({"Computer Science": []});
-  const [allComputerCourses, setAllComputerCourses] = useState<{"Computer Science": string[]}>({"Computer Science": []})
-  const [dropdowns, setDropdowns] = useState({
+  const [choices, setChoices] = useState<{"Computer Science": Array<{name: string; price: number}>}>({"Computer Science": []});
+  const [allComputerCourses, setAllComputerCourses] = useState<{"Computer Science": Array<{name: string; price: number}>}>({"Computer Science": []})
+  const [dropdowns, setDropdowns] = useState<{ [key: string]: boolean }>({
     AllCourses: false,
     "Computer Science": false
   });
@@ -81,11 +81,11 @@ const Profile_Courses: React.FC<componentPropsInterfacePaymentProfile> = (props)
       setAdmittedCourses(filteredAdmittedCourses);
       const selectedCourses = data.selectedCourses;
       const filteredChoices = {
-        "Computer Science": selectedCourses.filter((val) => String(val.name).startsWith("Computer Science")).map((val) => val.name),
+        "Computer Science": selectedCourses.filter((val) => String(val.name).startsWith("Computer Science")).map((val) => ({name: val.name, price: val.value})),
       };
       setChoices(filteredChoices);
       const allPossibleCourses = data.allPossibleCourses
-      const filteredComputerCourses = allPossibleCourses.filter((val) => String(val).startsWith("Computer Science")).map(val => val.replace(/^Computer Science - \s*/, ""))
+      const filteredComputerCourses = allPossibleCourses.filter((val) => String(val.name).startsWith("Computer Science")).map(val => {return {name: val.name.replace(/^Computer Science - \s*/, ""), price: val.price}})
       setAllComputerCourses({
         "Computer Science": filteredComputerCourses
       })
@@ -107,17 +107,18 @@ const Profile_Courses: React.FC<componentPropsInterfacePaymentProfile> = (props)
     return val.toLowerCase().includes(search.toLowerCase());
   });
 
-  const handleChoiceChange = (category, value) => {
+  const handleChoiceChange = (category: string, value: string) => {
     setChoices((prev) => {
-      const updated_list = prev[category].includes(value)
-        ? prev[category].filter((item) => item !== value)
-        : [...prev[category], value];
-      return { ...prev, [category]: updated_list };
+      const categoryKey = category as keyof typeof allComputerCourses;
+      const updated_list = prev[categoryKey].some(item => item.name === value)
+        ? prev[categoryKey].filter((item) => item.name !== value)
+        : [...prev[categoryKey], { name: value, price: allComputerCourses[categoryKey]?.find(c => `Computer Science - ${c.name}` === value)?.price || 0 }];
+      return { ...prev, [categoryKey]: updated_list };
     });
   };
 
   const handleApplyCourses = async () => {
-    const subjectList = courses.flatMap((category) => choices[category]);
+    const subjectList = courses.flatMap((category) => choices[category as keyof typeof choices].map((course) => course.name));
     const response = await api.post(apiRoutes.courses.payment.appliedCourses, {
       name: props.details?.name,
       email: props.details?.email,
@@ -146,7 +147,7 @@ const Profile_Courses: React.FC<componentPropsInterfacePaymentProfile> = (props)
     let total = 0;
     Object.entries(choices).forEach(([category, courseList]) => {
       courseList.forEach(course => {
-        if (course.includes('Computer Science')) total += 1000;
+        total += course.price;
       });
     });
     return total;
@@ -237,25 +238,25 @@ const Profile_Courses: React.FC<componentPropsInterfacePaymentProfile> = (props)
                         <div className="px-6 pb-6">
                           <div className="bg-white rounded-lg border border-gray-200">
                             {allComputerCourses["Computer Science"].map((sem) => (
-                              <label key={sem} className="flex items-center justify-between p-4 hover:bg-blue-50 cursor-pointer border-b border-gray-100 last:border-b-0">
+                              <label key={sem.name} className="flex items-center justify-between p-4 hover:bg-blue-50 cursor-pointer border-b border-gray-100 last:border-b-0">
                                 <div className="flex items-center gap-3">
                                   <div className="relative">
                                     <input
                                       type="checkbox"
                                       className="w-5 h-5 text-blue-600 border-2 border-gray-300 rounded focus:ring-blue-500 disabled:opacity-50"
-                                      checked={choices[category].includes(`Computer Science - ${sem}`)}
-                                      disabled={preventedCourses.includes(`Computer Science - ${sem}`)}
-                                      onChange={() => handleChoiceChange(category, `Computer Science - ${sem}`)}
+                                      checked={choices[category].some(item => item.name === `Computer Science - ${sem.name}`)}
+                                      disabled={preventedCourses.includes(`Computer Science - ${sem.name}`)}
+                                      onChange={() => handleChoiceChange(category, `Computer Science - ${sem.name}`)}
                                     />
-                                    {choices[category].includes(`Computer Science - ${sem}`) && (
+                                    {choices[category].some(item => item.name === `Computer Science - ${sem.name}`) && (
                                       <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                                         <CheckIcon />
                                       </div>
                                     )}
                                   </div>
-                                  <span className="text-gray-700 font-medium">{sem}</span>
+                                  <span className="text-gray-700 font-medium">{sem.name}</span>
                                 </div>
-                                <span className="text-green-600 font-semibold">₹1,000</span>
+                                <span className="text-green-600 font-semibold">₹{sem.price}</span>
                               </label>
                             ))}
                           </div>
@@ -311,9 +312,7 @@ const Profile_Courses: React.FC<componentPropsInterfacePaymentProfile> = (props)
                           {courses.map((val, key) => (
                             <li key={key} className="text-sm text-green-700 flex items-center gap-2">
                               <div className="w-1.5 h-1.5 bg-green-500 rounded-full" />
-                              {val?.startsWith("Mathematics And Computer Science")
-                                ? val.split("-")[1]
-                                : val}
+                              {val}
                             </li>
                           ))}
                         </ul>
@@ -355,9 +354,7 @@ const Profile_Courses: React.FC<componentPropsInterfacePaymentProfile> = (props)
                           {courses.map((val, key) => (
                             <li key={key} className="text-sm text-blue-700 flex items-center gap-2">
                               <div className="w-1.5 h-1.5 bg-blue-500 rounded-full" />
-                              {val?.startsWith("Mathematics And Computer Science")
-                                ? val.split("-")[1]
-                                : val}
+                              {val.name}
                             </li>
                           ))}
                         </ul>

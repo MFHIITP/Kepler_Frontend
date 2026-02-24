@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Search, Target, Code, Brain, Database, Globe, Network, ChevronRight, Star, Users, BookOpen, Zap, Headphones, MessageCircle, PenTool, Clock } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import Popping from "./Popping";
+import { JSX } from "react/jsx-runtime";
 
 function Part2() {
   const [search, setSearch] = useState("");
@@ -10,7 +11,7 @@ function Part2() {
   const courses = [
     {
       title: "DSA for Placements & Contests",
-      exam: 'dsa1',
+      exam: 'dsa',
       description: "A contest and industry oriented tracker with structured DSA and CP practice, advanced variations, and an upsolving system that builds real competitive strength and gears students towards the industry.",
       icon: <Database className="w-8 h-8" />,
       color: "from-blue-500 to-cyan-500",
@@ -19,12 +20,12 @@ function Part2() {
       price: (
       <>
         <span className="line-through text-gray-400">₹999</span>{" "}
-        <span className="text-purple-600 font-semibold">₹249</span>
+        <span className="text-purple-600 font-semibold">₹249/month</span>
       </>)
     },
     {
       title: "Development Crash Course: Projects Made Easier",
-      exam: 'webdev1',
+      exam: 'webdev',
       description: "Build projects faster with a guided web development roadmap, structured milestones, code reviews, and deployment focused learning to get you industry ready.",
       icon: <Globe className="w-8 h-8" />,
       color: "from-green-500 to-emerald-500",
@@ -33,13 +34,13 @@ function Part2() {
       price: (
       <>
         <span className="line-through text-gray-400">₹999</span>{" "}
-        <span className="text-purple-600 font-semibold">₹249</span>
+        <span className="text-purple-600 font-semibold">₹249/month</span>
       </>)
     },
     {
       title: "Fundamentals Course: Crack GATE With Ease",
-      exam: 'fundamentals1',
-      description: "A structured fundamentals tracker covering core CS topics with revision cycles, quizzes, and evaluation driven preparation",
+      exam: 'fundamentals',
+      description: "A structured fundamentals tracker covering core CS topics with revision cycles, quizzes, and evaluation driven preparation.",
       icon: <Network className="w-8 h-8" />,
       color: "from-teal-500 to-blue-500",
       level: "Beginner",
@@ -47,13 +48,13 @@ function Part2() {
       price: (
       <>
         <span className="line-through text-gray-400">₹999</span>{" "}
-        <span className="text-purple-600 font-semibold">₹249</span>
+        <span className="text-purple-600 font-semibold">₹249/month</span>
       </>)
     },
     {
       title: "Artificial Intelligence: Explore the Future",
-      exam: 'ml1',
-      description: "Learn machine learning foundations, deep learning basics, and practical AI workflows through guided labs and mini projects",
+      exam: 'ml',
+      description: "Learn machine learning foundations, deep learning basics, and practical AI workflows through guided labs and mini projects.",
       icon: <Brain className="w-8 h-8" />,
       color: "from-orange-500 to-red-500",
       level: "Intermediary",
@@ -61,13 +62,13 @@ function Part2() {
       price: (
       <>
         <span className="line-through text-gray-400">₹999</span>{" "}
-        <span className="text-purple-600 font-semibold">₹249</span>
+        <span className="text-purple-600 font-semibold">₹249/month</span>
       </>)
     },
     {
       title: "Placements Made Easier",
-      exam: 'dsa2',
-      description: "A structured tracker combining DSA, Web Development, and CS Fundamentals so you can build projects, clear interviews, and prepare your resume with confidence",
+      exam: 'placement',
+      description: (<><div>A structured tracker combining 3 out of the 4 previous courses, namely DSA, Web Development, and CS Fundamentals so you can build projects, clear interviews, and prepare your resume with confidence.</div> <div><b className="text-red-900">BEST DEAL</b></div></>),
       icon: <Database className="w-8 h-8" />,
       color: "from-indigo-500 to-purple-500",
       level: "Beginner to Advanced",
@@ -75,7 +76,7 @@ function Part2() {
       price: (
       <>
         <span className="line-through text-gray-400">₹2499</span>{" "}
-        <span className="text-purple-600 font-semibold">₹599</span>
+        <span className="text-purple-600 font-semibold">₹599/month</span>
       </>)
     },
   ];
@@ -147,7 +148,7 @@ function Part2() {
     return val.title.toLowerCase().includes(search.toLowerCase());
   });
 
-  const handleCourseClick = (course) => {
+  const handleCourseClick = (course: { title: string; exam: string; description: string; icon: JSX.Element; color: string; level: string; duration: string; price: JSX.Element; } | { title: string; exam: string; description: JSX.Element; icon: JSX.Element; color: string; level: string; duration: string; price: JSX.Element; }) => {
     navigate(`/courses/${course.exam}`);
   };
 
@@ -203,19 +204,19 @@ function Part2() {
             {filteredList.map((course, index) => (
               <div
                 key={index}
-                className={`group relative rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 cursor-pointer border border-gray-100 hover:border-gray-200 transform hover:-translate-y-2 ${course.exam === "dsa2" ? 'md:col-span-2 md:justify-self-center md:max-w-3xl w-full radiant-border bg-blue-100' : 'bg-white'}`}
+                className={`group relative rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 cursor-pointer border border-gray-100 hover:border-gray-200 transform hover:-translate-y-2 ${course.exam === "placement" ? 'md:col-span-2 md:justify-self-center md:max-w-3xl w-full radiant-border bg-blue-100' : 'bg-white'}`}
                 onClick={() => handleCourseClick(course)}
               >
                 {/* Course Icon with Gradient Background */}
-                <div className={`p-4 rounded-2xl bg-gradient-to-r ${course.color} text-white mb-6 group-hover:scale-110 transition-transform duration-300 ${course.exam === 'dsa2' ? 'flex justify-self-center' : 'inline-flex'}`}>
+                <div className={`p-4 rounded-2xl bg-gradient-to-r ${course.color} text-white mb-6 group-hover:scale-110 transition-transform duration-300 ${course.exam === 'placement' ? 'flex justify-self-center' : 'inline-flex'}`}>
                   {course.icon}
                 </div>
                 
                 {/* Course Content */}
-                <h4 className={`font-bold text-gray-800 mb-3 group-hover:text-purple-600 transition-colors ${course.exam === 'dsa2' ? 'flex justify-self-center text-3xl' : 'text-xl'}`}>
+                <h4 className={`font-bold text-gray-800 mb-3 group-hover:text-purple-600 transition-colors ${course.exam === 'placement' ? 'flex justify-self-center text-3xl' : 'text-xl'}`}>
                   {course.title}
                 </h4>
-                <p className={`text-gray-600 mb-6 leading-relaxed ${course.exam === 'dsa2' ? 'text-xl' : ''}`}>
+                <p className={`text-gray-600 mb-6 leading-relaxed ${course.exam === 'placement' ? 'text-xl' : ''}`}>
                   {course.description}
                 </p>
                 <div className="mt-3 text-lg">
@@ -223,7 +224,7 @@ function Part2() {
                 </div>
                 
                 {/* Course Meta Info */}
-                <div className={`flex items-center justify-between text-gray-500 mb-4 ${course.exam === 'dsa2' ? 'text-xl' : 'text-sm'}`}>
+                <div className={`flex items-center justify-between text-gray-500 mb-4 ${course.exam === 'placement' ? 'text-xl' : 'text-sm'}`}>
                   <span className="bg-gray-100 px-3 py-1 rounded-full">{course.level}</span>
                   <span>{course.duration}</span>
                 </div>

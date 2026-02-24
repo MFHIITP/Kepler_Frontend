@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Shield, CheckCircle, XCircle, Eye, IndianRupee, CreditCard, RefreshCw, Lock, AlertCircle } from 'lucide-react';
 import apiRoutes from '../../utils/Routes/apiRoutes';
 import api from '../../utils/api';
@@ -16,14 +16,14 @@ export interface ReferralData {
   referral_giver_ifsc_code: string;
   referral_giver_account_name: string;
   bank_name: string;
-  money_given_status: 'pending' | 'approved' | 'rejected';
+  money_given_status: boolean;
   wallet_balance: number;
   toChange: boolean;
 }
 
 const getDashboardReferralMoneyApprovals = async (): Promise<{responseData: ReferralData[], message: string}> => {
-    const data: {responseData: ReferralData[], message: string} = await api.post(apiRoutes.admins.adminMoneyTracker.getAllReferralMoneyApprovals);
-    return data;
+    const response = await api.post(apiRoutes.admins.adminMoneyTracker.getAllReferralMoneyApprovals);
+    return response.data;
 };
 
 const AdminDashboard: React.FC = () => {
@@ -35,10 +35,11 @@ const AdminDashboard: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const {mutate: getAllReferralMoneyApprovals} = useMutation({
-    mutationFn: getDashboardReferralMoneyApprovals,
+    mutationFn: () => getDashboardReferralMoneyApprovals(),
     onMutate: () => setIsLoading(true),
     onSuccess: (data) => {
         toast.success("Referral Money Data fetched successfully")
+        console.log(data);
         setReferralData(data.responseData);
         setIsLoading(false);
     },
@@ -48,6 +49,10 @@ const AdminDashboard: React.FC = () => {
     }
   })
 
+  useEffect(() => {
+    getAllReferralMoneyApprovals();
+  }, [])
+  
   const handleOpenModal = (referral: ReferralData, action: 'approve' | 'reject') => {
     setSelectedReferral(referral);
     setActionType(action);
@@ -61,22 +66,22 @@ const AdminDashboard: React.FC = () => {
 
   const getStatusBadge = (status: string) => {
     switch (status) {
-      case 'pending':
+      case 'Pending':
         return (
           <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-700">
             <Eye size={14} />
             Pending
           </span>
         );
-      case 'approved':
+      case 'Approved':
         return (
           <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-700">
             <CheckCircle size={14} />
             Approved
           </span>
         );
-      case 'rejected':
-        return (
+      case 'Rejected':
+        return (  
           <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium bg-red-100 text-red-700">
             <XCircle size={14} />
             Rejected
@@ -87,9 +92,9 @@ const AdminDashboard: React.FC = () => {
     }
   };
 
-  const pendingCount = referralData.filter(r => r.money_given_status === 'pending').length;
-  const approvedCount = referralData.filter(r => r.money_given_status === 'approved').length;
-  const totalAmount = referralData.reduce((sum, r) => sum + r.wallet_balance, 0);
+  const pendingCount = referralData?.filter(r => r?.money_given_status === false).length ?? 0;
+  const approvedCount = referralData?.filter(r => r?.money_given_status === true).length ?? 0;
+  const totalAmount = referralData?.reduce((sum, r) => sum + Number(r.wallet_balance), 0) ?? 0;
 
   return (
     <div className="min-h-screen bg-gray-50 p-6">
@@ -205,7 +210,7 @@ const AdminDashboard: React.FC = () => {
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
-                {referralData.map((referral) => (
+                {referralData?.map((referral) => (
                   <tr key={referral?.referral_giver_refer_code} className="hover:bg-gray-50 transition-colors">
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="text-sm font-medium text-gray-900">{referral?.referral_giver_refer_code}</div>
@@ -216,7 +221,7 @@ const AdminDashboard: React.FC = () => {
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="text-sm font-semibold text-green-600 flex items-center">
                         <IndianRupee size={14} className="mr-1" />
-                        {referral?.referral_amount}
+                        {referral?.money_given_status == true ? referral?.referral_amount : referral?.wallet_balance}
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
@@ -253,10 +258,10 @@ const AdminDashboard: React.FC = () => {
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      {getStatusBadge(referral?.money_given_status)}
+                      {getStatusBadge(referral?.money_given_status == false ? "Pending" : "Approved")}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      {referral?.money_given_status === 'pending' ? (
+                      {referral?.money_given_status === false ? (
                         <div className="flex gap-2">
                           <button
                             onClick={() => handleOpenModal(referral, 'approve')}

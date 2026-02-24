@@ -188,6 +188,22 @@ const Index: FC<componentPropsInterface> = ({ auth, details }) => {
                       >
                         Admin Dashboard
                       </Link>
+                      <Link 
+                        to="/admins/courseToStudentList" 
+                        className={`block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 ${
+                          auth ? "" : "hidden"
+                        } ${adminemails.includes(details?.email ?? "") ? "" : "hidden"}`}
+                      >
+                        Course To Students
+                      </Link>
+                      <Link 
+                        to="/admins/studentMonitoring" 
+                        className={`block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 ${
+                          auth ? "" : "hidden"
+                        } ${adminemails.includes(details?.email ?? "") ? "" : "hidden"}`}
+                      >
+                        Student Tracker
+                      </Link>
                     </div>
                   </div>
                 )}

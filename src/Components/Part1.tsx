@@ -19,9 +19,9 @@ function Part1({auth}: {auth: boolean}) {
   }, []);
 
   const stats = [
-    { number: "50+", label: "Active Learners" },
+    { number: "100+", label: "Active Learners" },
     { number: "100+", label: "Coding Challenges" },
-    { number: "99.1%", label: "Job Success Rate" },
+    { number: "95%", label: "Job Success Rate" },
     { number: "24/7", label: "Expert Support" }
   ];
 

@@ -4,6 +4,8 @@ import { createBrowserRouter } from "react-router-dom";
 import AllProblems from "../Components/AllProblems";
 import Connection_Landing from "../Components/Connections/Connection_Landing";
 import AdminDashboard from "../Components/AdminDashboard/AdminDashboard";
+import CourseToStudentList from "../Components/AdminDashboard/CourseToStudentList";
+import StudentTracker from "../Components/AdminDashboard/StudentTracker";
 const DailyProblemsPage = lazy(() => import("../Components/DailyProblems/DailyProblemsPage"));
 
 const MainLayout = lazy(()=>import("./MainLayout"))
@@ -227,7 +229,7 @@ export const RouterFrontend = (authenticated: boolean, details: userdetails | un
           path: "/courses/:exam",
           element: (
             <Suspense fallback={<div>Loading...</div>}>
-              <Course_Details />
+              <Course_Details details = {details}/>
             </Suspense>
           ),
         },
@@ -257,7 +259,7 @@ export const RouterFrontend = (authenticated: boolean, details: userdetails | un
           path: "/courses/:examname/details",
           element: (
             <>
-              <Suspense fallback = {<>Loading...</>}><Course_Schedules /></Suspense>
+              <Suspense fallback = {<>Loading...</>}><Course_Schedules details = {details} authenticated = {authenticated}/></Suspense>
             </>
           ),
         },
@@ -284,7 +286,23 @@ export const RouterFrontend = (authenticated: boolean, details: userdetails | un
               <Suspense fallback = {<>Loading...</>}><Connection_Landing details = {details}></Connection_Landing></Suspense>
             </>
           )
-        }
+        },
+        {
+          path: "/admins/courseToStudentList",
+          element: (
+            <>
+              <Suspense fallback = {<>Loading...</>}><CourseToStudentList details = {details}></CourseToStudentList></Suspense>
+            </>
+          )
+        },
+        {
+          path: "/admins/studentMonitoring",
+          element: (
+            <>
+              <Suspense fallback = {<>Loading...</>}><StudentTracker details = {details}></StudentTracker></Suspense>
+            </>
+          )
+        },
       ],
     },
   ]);
