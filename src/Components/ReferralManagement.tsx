@@ -38,11 +38,12 @@ const getPendingReferrals = async (emailId: string) => {
   return data;
 };
 
-const acceptRejectReferrals = async ({ emailId, referralCodeAcceptedOrRejected, status }: { emailId: string; referralCodeAcceptedOrRejected: string; status: boolean }) => {
+const acceptRejectReferrals = async ({ emailId, referralCodeAcceptedOrRejected, status, dateReferred }: { emailId: string; referralCodeAcceptedOrRejected: string; status: boolean, dateReferred: string }) => {
   const { data } = await api.post(apiRoutes.referrals.acceptRejectReferral, {
     emailId: emailId,
     referralCodeAcceptedOrRejected: referralCodeAcceptedOrRejected,
     status: status,
+    dateReferred: dateReferred
   });
   return data;
 };
@@ -102,19 +103,12 @@ const ReferralManagement: React.FC<referralPropsInterface> = ({
   });
 
   const { mutate: acceptRejectReferralsMutation } = useMutation({
-    mutationFn: ({
-      emailId,
-      referralCodeAcceptedOrRejected,
-      status,
-    }: {
-      emailId: string;
-      referralCodeAcceptedOrRejected: string;
-      status: boolean;
-    }) =>
+    mutationFn: ({ emailId, referralCodeAcceptedOrRejected, status, dateReferred }: { emailId: string; referralCodeAcceptedOrRejected: string; status: boolean; dateReferred: string }) =>
       acceptRejectReferrals({
         emailId,
         referralCodeAcceptedOrRejected,
         status,
+        dateReferred: dateReferred
       }),
     onMutate: () => setLoading(true),
     onSuccess: (data) => {
@@ -161,11 +155,13 @@ const ReferralManagement: React.FC<referralPropsInterface> = ({
   const handleConfirmReferral = (
     referCode: string,
     status: boolean,
+    dateReferred: string
   ) => {
     acceptRejectReferralsMutation({
       emailId: details?.email!,
       referralCodeAcceptedOrRejected: referCode,
       status: status,
+      dateReferred: dateReferred
     });
   };
 
@@ -498,7 +494,7 @@ const ReferralManagement: React.FC<referralPropsInterface> = ({
                         <div className="flex gap-2">
                           <button
                             onClick={() =>
-                              handleConfirmReferral(referral.referCode, true)
+                              handleConfirmReferral(referral.referCode, true, referral.dateReferred)
                             }
                             className="px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700 transition-colors flex items-center gap-1"
                           >
@@ -507,7 +503,7 @@ const ReferralManagement: React.FC<referralPropsInterface> = ({
                           </button>
                           <button
                             onClick={() =>
-                              handleConfirmReferral(referral.referCode, false)
+                              handleConfirmReferral(referral.referCode, false, referral.dateReferred)
                             }
                             className="px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700 transition-colors flex items-center gap-1"
                           >

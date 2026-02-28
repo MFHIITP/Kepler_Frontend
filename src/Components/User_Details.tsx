@@ -161,8 +161,8 @@ const User_Details: React.FC<componentPropsInterfacePaymentProfile> = (props) =>
   const [userdetails, setUserdetails] = useState<userInformation | null>(null);
   const [loading, setLoading] = useState(true);
   const [referralCode, setReferralCode] = useState<string | null>(null);
-  const [coursesBought, setCoursesBought] = useState<string[] | []>([]);
-  const [additionalCourses, setAdditionalCourses] = useState<string[] | []>([])
+  const [coursesBought, setCoursesBought] = useState<String[] | []>([]);
+  const [additionalCourses, setAdditionalCourses] = useState<String[] | []>([])
 
   const handlecopyclick = async (val: string) => {
     await navigator.clipboard.writeText(val);
@@ -173,12 +173,12 @@ const User_Details: React.FC<componentPropsInterfacePaymentProfile> = (props) =>
     mutationFn: ({ emailId, name }: { emailId: string; name: string }) =>
       getUserDetails({ emailId: emailId, name: name }),
     onMutate: () => setLoading(true),
-    onSuccess: (data) => {
+    onSuccess: async(data) => {
       setLoading(false);
       setUserdetails(data.data);
-      const courses = userdetails?.course_details.map((course) => course.name);
-      setCoursesBought(courses);
-      setAdditionalCourses(userdetails?.additionalCourses)
+      const courses = await data.data.applied_course_details.map((course) => course.name);
+      setCoursesBought(courses ?? []);
+      setAdditionalCourses(data.data.additionalCoursesApplied ?? [])
     },
     onError: () => {
       setLoading(false);
@@ -226,7 +226,7 @@ const User_Details: React.FC<componentPropsInterfacePaymentProfile> = (props) =>
             razorpay_signature: response.razorpay_signature,
             referralCode_giver: referralCode,
             coursesBought: coursesBought,
-            additionalCourses: additionalCourses
+            additionalCoursesApplied: additionalCourses
           }
         );
         if (verifyRes.status == 200) {
@@ -834,9 +834,9 @@ const User_Details: React.FC<componentPropsInterfacePaymentProfile> = (props) =>
               </div>
               <button
                 onClick={handlePayment}
-                disabled={userdetails?.amount.value}
+                disabled={userdetails?.amount.value == 0 || true}
                 className={`px-6 py-3 rounded-xl font-semibold transition-all duration-200 ${
-                  userdetails?.amount.value
+                  (userdetails?.amount.value == 0 ||  true)
                     ? "bg-gray-300 text-gray-500 cursor-not-allowed"
                     : "bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white hover:scale-105 hover:shadow-lg"
                 }`}

@@ -11,9 +11,10 @@ interface ApprovalModalProps {
   actionType: 'approve' | 'reject';
   onClose: () => void;
   refetch: () => void;
+  emailId: string;
 }
 
-const ApprovalModal: React.FC<ApprovalModalProps> = ({ isOpen, referral, actionType, onClose, refetch }) => {
+const ApprovalModal: React.FC<ApprovalModalProps> = ({ isOpen, referral, actionType, onClose, refetch, emailId }) => {
   const [adminSecretKey, setAdminSecretKey] = useState('');
 
   if (!isOpen || !referral) return null;
@@ -22,7 +23,8 @@ const ApprovalModal: React.FC<ApprovalModalProps> = ({ isOpen, referral, actionT
     const secretKeyResponse = await api.post(apiRoutes.admins.adminMoneyTracker.checkAdminApproval, {
         email: referral.referral_giver_email,
         secretCode: adminSecretKey,
-        referCode: referral.referral_giver_refer_code
+        referCode: referral.referral_giver_refer_code,
+        emailId: emailId
     });
     if(secretKeyResponse.status == 200){
         const approvalResponse = await api.post(apiRoutes.admins.adminMoneyTracker.approveReferralMoney, {

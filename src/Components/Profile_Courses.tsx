@@ -119,10 +119,15 @@ const Profile_Courses: React.FC<componentPropsInterfacePaymentProfile> = (props)
 
   const handleApplyCourses = async () => {
     const subjectList = courses.flatMap((category) => choices[category as keyof typeof choices].map((course) => course.name));
+    let additionalCoursesSelected = []
+    if(subjectList.includes("Computer Science - Placements Made Easier")){
+      additionalCoursesSelected.push("Computer Science - Development Crash Course: Projects Made Easier")
+    }
     const response = await api.post(apiRoutes.courses.payment.appliedCourses, {
       name: props.details?.name,
       email: props.details?.email,
       selectedCourses: subjectList,
+      additionalCoursesSelected: additionalCoursesSelected
     });
     if (response.status == 200) {
       props.goToPage("dashboard");

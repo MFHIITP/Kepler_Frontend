@@ -5,6 +5,7 @@ import api from '../../utils/api';
 import { useMutation } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
 import ApprovalModal from './ApprovalModal';
+import { userdetails } from '../Interfaces/Details.interface';
 
 export interface ReferralData {
   referral_giver_refer_code: string;
@@ -26,7 +27,7 @@ const getDashboardReferralMoneyApprovals = async (): Promise<{responseData: Refe
     return response.data;
 };
 
-const AdminDashboard: React.FC = () => {
+const AdminDashboard: React.FC<userdetails | undefined> = ({details}) => {
   const [referralData, setReferralData] = useState<ReferralData[] | []>([]);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -297,6 +298,7 @@ const AdminDashboard: React.FC = () => {
         actionType={actionType}
         onClose={() => setIsModalOpen(false)}
         refetch={() => refetchReferralData()}
+        emailId={details?.email ?? ""}
       />
     </div>
   );

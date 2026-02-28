@@ -16,7 +16,7 @@ export interface userInformation {
     validity: Date,
     color: String
   }];
-  additionalCourses: [String],
+  additionalCoursesApplied: [String],
   applied_course_details: [combinedInterface];
   payment_details: [combinedInterface];
   upcoming_payments: [combinedInterface],
