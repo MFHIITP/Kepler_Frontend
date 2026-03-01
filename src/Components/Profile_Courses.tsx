@@ -155,6 +155,13 @@ const Profile_Courses: React.FC<componentPropsInterfacePaymentProfile> = (props)
         total += course.price;
       });
     });
+    const numberOfCoursesSelected = getTotalSelectedCourses();
+    if(numberOfCoursesSelected >= 2 && !choices["Computer Science"].map((val) => val.name).includes("Computer Science - Placements Made Easier")){
+      total = total * 0.8;
+    }
+    if(choices["Computer Science"].map((val) => val.name).includes("Computer Science - Placements Made Easier") && choices["Computer Science"].map((val) => val.name).includes("Computer Science - Artificial Intelligence: Explore the Future") && choices["Computer Science"].length == 2){
+      total = total * 0.8;
+    }
     return total;
   };
 

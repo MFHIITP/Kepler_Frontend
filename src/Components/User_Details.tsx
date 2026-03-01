@@ -163,6 +163,7 @@ const User_Details: React.FC<componentPropsInterfacePaymentProfile> = (props) =>
   const [referralCode, setReferralCode] = useState<string | null>(null);
   const [coursesBought, setCoursesBought] = useState<String[] | []>([]);
   const [additionalCourses, setAdditionalCourses] = useState<String[] | []>([])
+  const [amountPayment, setAmountPayment] = useState<number | undefined>(undefined)
 
   const handlecopyclick = async (val: string) => {
     await navigator.clipboard.writeText(val);
@@ -179,6 +180,7 @@ const User_Details: React.FC<componentPropsInterfacePaymentProfile> = (props) =>
       const courses = await data.data.applied_course_details.map((course) => course.name);
       setCoursesBought(courses ?? []);
       setAdditionalCourses(data.data.additionalCoursesApplied ?? [])
+      setAmountPayment(data.data.amount.value)
     },
     onError: () => {
       setLoading(false);
@@ -192,6 +194,19 @@ const User_Details: React.FC<componentPropsInterfacePaymentProfile> = (props) =>
     });
   }, []);
 
+  useEffect(() => {
+    if (!userdetails?.amount?.value) return;
+
+  const baseAmount = userdetails.amount.value;
+
+  if (referralCode && (referralCode.length === 8 || referralCode.length === 11)) {
+    setAmountPayment(Number((Number(baseAmount) * 0.75).toFixed(2)));
+  } else {
+    setAmountPayment(Number(baseAmount));
+  }
+  }, [referralCode, userdetails])
+  
+
   const handleRazorpayPayment = async () => {
     const scriptLoaded = await loadRazorPayScript();
     if (!scriptLoaded) {
@@ -201,9 +216,8 @@ const User_Details: React.FC<componentPropsInterfacePaymentProfile> = (props) =>
       return;
     }
 
-    const amountPayment = userdetails?.amount?.value;
     const orderRes = await api.post(apiRoutes.razorpay.payment.createOrder, {
-      amount: parseInt(amountPayment as unknown as string),
+      amount: Math.round(amountPayment ?? 0) * 100,
     });
     console.log(orderRes.data.data.id);
     const orderData = orderRes.data.data;
@@ -251,7 +265,6 @@ const User_Details: React.FC<componentPropsInterfacePaymentProfile> = (props) =>
       return;
     }
 
-    const amount = userdetails?.amount.value;
     const dt = new Date();
 
     dt.setDate(dt.getDate() + 30);
@@ -292,7 +305,7 @@ const User_Details: React.FC<componentPropsInterfacePaymentProfile> = (props) =>
               </span>
               <div className="text-right">
                 <div className="text-3xl font-bold text-gray-900">
-                  ₹{amount}
+                  ₹{Number(Math.round(Number(amountPayment))).toFixed(2)}
                 </div>
                 <div className="text-sm text-gray-500">Including all taxes</div>
               </div>
@@ -889,7 +902,7 @@ const User_Details: React.FC<componentPropsInterfacePaymentProfile> = (props) =>
                       userdetails?.amount.color || "text-green-600"
                     }`}
                   >
-                    {userdetails?.amount.salutation} {userdetails?.amount.value}
+                    {userdetails?.amount.salutation} {Number(Math.round(Number(amountPayment))).toFixed(2)}
                   </div>
                 </div>
               </div>
