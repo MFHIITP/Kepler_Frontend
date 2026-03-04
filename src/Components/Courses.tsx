@@ -421,7 +421,7 @@ function ProfessionalEducationPage() {
                     className="lg:col-span-2 flex justify-center"
                   >
                     <div
-                      className="group w-full lg:w-1/2 bg-white rounded-2xl border border-slate-200 overflow-hidden hover:shadow-2xl hover:border-blue-200 transition-all duration-300 cursor-pointer radiant-border p-4"
+                      className="group w-full lg:w-1/2 bg-white rounded-2xl border border-slate-200 overflow-hidden hover:shadow-2xl hover:border-blue-200 transition-all duration-300 cursor-pointer radiant-border p-4 shine-card"
                       onClick={() => navigate(`/courses/${program.exam}`)}
                     >
                       {/* Image */}

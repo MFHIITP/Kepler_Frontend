@@ -3,6 +3,7 @@ import { Search, Target, Code, Brain, Database, Globe, Network, ChevronRight, St
 import { useNavigate } from "react-router-dom";
 import Popping from "./Popping";
 import { JSX } from "react/jsx-runtime";
+import MentorPart from "./MentorsPart";
 
 function Part2() {
   const [search, setSearch] = useState("");
@@ -20,7 +21,7 @@ function Part2() {
       price: (
       <>
         <span className="line-through text-gray-400">₹999</span>{" "}
-        <span className="text-purple-600 font-semibold">₹249/month</span>
+        <span className="text-purple-600 font-semibold">₹499/month</span>
       </>)
     },
     {
@@ -34,7 +35,7 @@ function Part2() {
       price: (
       <>
         <span className="line-through text-gray-400">₹999</span>{" "}
-        <span className="text-purple-600 font-semibold">₹249/month</span>
+        <span className="text-purple-600 font-semibold">₹499/month</span>
       </>)
     },
     {
@@ -48,7 +49,7 @@ function Part2() {
       price: (
       <>
         <span className="line-through text-gray-400">₹999</span>{" "}
-        <span className="text-purple-600 font-semibold">₹249/month</span>
+        <span className="text-purple-600 font-semibold">₹499/month</span>
       </>)
     },
     {
@@ -62,7 +63,7 @@ function Part2() {
       price: (
       <>
         <span className="line-through text-gray-400">₹999</span>{" "}
-        <span className="text-purple-600 font-semibold">₹249/month</span>
+        <span className="text-purple-600 font-semibold">₹499/month</span>
       </>)
     },
     {
@@ -75,8 +76,8 @@ function Part2() {
       duration: "5 months",
       price: (
       <>
-        <span className="line-through text-gray-400">₹2499</span>{" "}
-        <span className="text-purple-600 font-semibold">₹599/month</span>
+        <span className="line-through text-gray-400">₹3333</span>{" "}
+        <span className="text-purple-600 font-semibold">₹999/month</span>
       </>)
     },
   ];
@@ -204,7 +205,7 @@ function Part2() {
             {filteredList.map((course, index) => (
               <div
                 key={index}
-                className={`group relative rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 cursor-pointer border border-gray-100 hover:border-gray-200 transform hover:-translate-y-2 ${course.exam === "placement" ? 'md:col-span-2 md:justify-self-center md:max-w-3xl w-full radiant-border bg-blue-100' : 'bg-white'}`}
+                className={`group relative rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 cursor-pointer border border-gray-100 hover:border-gray-200 transform hover:-translate-y-2 ${course.exam === "placement" ? 'md:col-span-2 md:justify-self-center md:max-w-3xl w-full radiant-border bg-blue-100 shine-card' : 'bg-white'}`}
                 onClick={() => handleCourseClick(course)}
               >
                 {/* Course Icon with Gradient Background */}
@@ -264,6 +265,10 @@ function Part2() {
             </p>
           </div>
         </div>
+      </Popping>
+
+      <Popping>
+        <MentorPart />
       </Popping>
 
       {/* Why Choose Kepler Section */}

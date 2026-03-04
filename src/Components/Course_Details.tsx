@@ -1167,17 +1167,17 @@ function ProfessionalCourseDetails({details} : { details: UserDetails }) {
                   <p className="text-slate-600 mb-2">Starting from</p>
                   <div className="flex items-center justify-center gap-2 mb-2">
                     <span className="text-4xl lg:text-5xl font-bold text-slate-800">
-                      {exam != 'placement' ? "₹249" : "₹599"}
+                      {exam != 'placement' ? "₹499" : "₹999"}
                     </span>
                     <div className="text-left">
                       <div className="text-slate-500 line-through text-lg">
-                        {exam != 'placement' ? "₹999" : "₹2499"}
+                        {exam != 'placement' ? "₹999" : "₹3333"}
                       </div>
                       <div className="text-slate-600">/month</div>
                     </div>
                   </div>
                   <div className="bg-red-100 text-red-700 px-3 py-1 rounded-full text-sm font-semibold inline-block">
-                    75% Limited Time Offer
+                    {exam == "placement" ? "70% Limited Time Offer" : "50% Limited Time Offer"}
                   </div>
                 </div>
 

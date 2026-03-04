@@ -161,8 +161,8 @@ function QueryBox() {
                   </div>
                   <div>
                     <p className="font-bold text-lg mb-1">Contact Number</p>
-                    <a href="tel:+919903297707" className="text-blue-200 hover:text-white transition-colors">
-                      +91 99032 97707
+                    <a href="tel:+919883413477" className="text-blue-200 hover:text-white transition-colors">
+                      +91 98834 13477
                     </a>
                   </div>
                 </div>

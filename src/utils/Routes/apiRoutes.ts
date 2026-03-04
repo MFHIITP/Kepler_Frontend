@@ -1,13 +1,4 @@
 const apiRoutes = {
-    teams: {
-        teamInfo: {
-            getTeam: `/team/getTeam`,
-        },
-        teamUpdates: {
-            addPerson: `/team/addPerson`,
-            deletePerson: `/team/deletePerson`
-        },
-    },
     auth: {
         register: {
             authRegister: `/users/authsignup`,

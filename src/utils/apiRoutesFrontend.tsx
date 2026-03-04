@@ -24,7 +24,6 @@ const About = lazy(() => import("../Components/About"));
 const Courses = lazy(() => import("../Components/Courses"));
 const ReadBook = lazy(() => import("../Components/ReadBook"));
 const Popping = lazy(() => import("../Components/Popping"));
-const ContentTeam = lazy(() => import("../Components/Teams/ContentTeam"));
 const LiveUsers = lazy(() => import("../Components/Live_Usere"));
 const HistoryUsers = lazy(() => import("../Components/History_Users"));
 const Course_Details = lazy(() => import("../Components/Course_Details"));
@@ -52,6 +51,9 @@ export const RouterFrontend = (authenticated: boolean, details: userdetails | un
                   <Part1 auth = {authenticated}/>
                 </Popping>
                 <Part2 />
+                <Popping>
+                  <ReferCode details={details} auth = {authenticated}/>
+                </Popping>
                 <Numbers />
                 <Popping>
                   <QueryBox />
@@ -116,14 +118,6 @@ export const RouterFrontend = (authenticated: boolean, details: userdetails | un
           element: (
             <Suspense fallback={<div>Loading...</div>}>
               <HistoryUsers details={details} />
-            </Suspense>
-          ),
-        },
-        {
-          path: "/admins/coreteam/:teamName",
-          element: (
-            <Suspense fallback={<div>Loading...</div>}>
-              <ContentTeam details={details} />;
             </Suspense>
           ),
         },
@@ -247,7 +241,7 @@ export const RouterFrontend = (authenticated: boolean, details: userdetails | un
           path: "/courses/college/refercode",
           element: authenticated ? (
             <Suspense fallback={<div>Loading...</div>}>
-              <ReferCode details={details} />
+              <ReferCode details={details} auth = {authenticated} />
             </Suspense>
           ) : (
             <>

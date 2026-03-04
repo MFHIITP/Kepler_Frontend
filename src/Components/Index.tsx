@@ -21,7 +21,6 @@ const Index: FC<componentPropsInterface> = ({ auth, details }) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [librarydrop, setLibrarydrop] = useState(false);
   const [noticedrop, setNoticedrop] = useState(false);
-  const [coreTeamDropdownOpen, setcoreTeamDropdownOpen] = useState(false);
   const context = useContext(MyContext);  
   const adminemails = context?.adminemails ?? []
   const navigate = useNavigate();
@@ -124,40 +123,6 @@ const Index: FC<componentPropsInterface> = ({ auth, details }) => {
                     onMouseLeave={() => setDropdownOpen(false)}
                   >
                     <div className="py-1">
-                      <div
-                        className="relative group/sub"
-                        onMouseEnter={() => setcoreTeamDropdownOpen(true)}
-                        onMouseLeave={() => setcoreTeamDropdownOpen(false)}
-                      >
-                        <div className="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer flex items-center justify-between">
-                          Meet our Team
-                          <FontAwesomeIcon icon={faChevronDown} className="h-3 w-3 transform -rotate-90" />
-                        </div>
-                        
-                        {coreTeamDropdownOpen && (
-                          <div className="absolute left-full top-0 ml-1 w-64 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
-                            <div className="py-1">
-                              {[
-                                "Executive Team",
-                                "Educators Team",
-                                "Technical Team",
-                                "Marketing Team", 
-                                "Financial Team",
-                                "HR Team",
-                              ].map((team: string, index) => (
-                                <Link
-                                  key={index}
-                                  to={`/admins/coreteam/${team.toLowerCase().replace(/\s/g, "")}`}
-                                  className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                                >
-                                  {team}
-                                </Link>
-                              ))}
-                            </div>
-                          </div>
-                        )}
-                      </div>
-                      
                       <Link 
                         to="/admins/userlist" 
                         className={`block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 ${auth ? "" : "hidden"}`}
@@ -447,39 +412,6 @@ const Index: FC<componentPropsInterface> = ({ auth, details }) => {
                 
                 {dropdownOpen && (
                   <div className="ml-4 space-y-1">
-                    <button
-                      onClick={() => setcoreTeamDropdownOpen(!coreTeamDropdownOpen)}
-                      className="w-full flex items-center justify-between px-3 py-2 text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-md"
-                    >
-                      Meet our Team
-                      <FontAwesomeIcon 
-                        icon={faChevronDown} 
-                        className={`h-3 w-3 transition-transform ${coreTeamDropdownOpen ? "rotate-180" : ""}`} 
-                      />
-                    </button>
-                    
-                    {coreTeamDropdownOpen && (
-                      <div className="ml-4 space-y-1">
-                        {[
-                          "Executive Team",
-                          "Educators Team",
-                          "Technical Team",
-                          "Marketing Team", 
-                          "Financial Team",
-                          "HR Team",
-                        ].map((team, index) => (
-                          <Link
-                            key={index}
-                            to={`/admins/coreteam/${team.toLowerCase().replace(/\s/g, "")}`}
-                            className="block px-3 py-2 text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-md"
-                            onClick={() => setNavOpen(false)}
-                          >
-                            {team}
-                          </Link>
-                        ))}
-                      </div>
-                    )}
-                    
                     <Link 
                       to="/admins/userlist" 
                       className={`block px-3 py-2 text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-md ${auth ? "" : "hidden"}`}

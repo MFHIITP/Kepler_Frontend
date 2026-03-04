@@ -127,8 +127,8 @@ function Numbers() {
     },
     {
       tier: "PRO",
-      oldPrice: "₹999 / ₹2499",
-      newPrice: "₹249 / ₹599",
+      oldPrice: "₹999 / ₹3333",
+      newPrice: "₹499 / ₹999",
       period: "/month",
       description: "Complete transformation package",
       features: [
@@ -136,13 +136,13 @@ function Numbers() {
         "One premium course of choice",
         <>
           Placement Made Easier (
-          <span className="line-through text-gray-400">₹2499</span>{" "}
-          <span className="text-purple-600 font-semibold">₹599</span>)
+          <span className="line-through text-gray-400">₹3333</span>{" "}
+          <span className="text-purple-600 font-semibold">₹999</span>)
         </>,
         <>
           All other courses (
           <span className="line-through text-gray-400">₹999</span>{" "}
-          <span className="text-purple-600 font-semibold">₹249</span>)
+          <span className="text-purple-600 font-semibold">₹499</span>)
         </>,
         "Live interactive classes",
         "Comprehensive practice sets",
