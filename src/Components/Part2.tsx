@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Search, Target, Code, Brain, Database, Globe, Network, ChevronRight, Star, Users, BookOpen, Zap, Headphones, MessageCircle, PenTool, Clock } from "lucide-react";
+import { Search, Target, Code, Brain, Database, Globe, Network, ChevronRight, Star, Users, BookOpen, Zap, Headphones, MessageCircle, PenTool, Clock, ArrowRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import Popping from "./Popping";
 import { JSX } from "react/jsx-runtime";
@@ -153,6 +153,10 @@ function Part2() {
     navigate(`/courses/${course.exam}`);
   };
 
+  const handleSubscriptionClick = () => {
+    navigate("/profiles");
+  };
+
    const topBenefit = keplerBenefits.find(
     (b) => b.title === "From Basics to Placements"
   );
@@ -242,6 +246,13 @@ function Part2() {
             ))}
           </div>
         </div>
+        <button
+          onClick={handleSubscriptionClick}
+          className="w-full sm:w-fit h-16 mx-auto bg-gradient-to-r my-6 from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-200 hover:shadow-lg flex items-center justify-center gap-2"
+        >
+        Get Subscription & Start Learning
+        <ArrowRight className="w-5 h-5" />
+        </button>
       </Popping>
 
       {/* Brand Statement */}

@@ -6,6 +6,7 @@ import Connection_Landing from "../Components/Connections/Connection_Landing";
 import AdminDashboard from "../Components/AdminDashboard/AdminDashboard";
 import CourseToStudentList from "../Components/AdminDashboard/CourseToStudentList";
 import StudentTracker from "../Components/AdminDashboard/StudentTracker";
+import ReferCodeCaller from "../Components/ReferCodeCaller";
 const DailyProblemsPage = lazy(() => import("../Components/DailyProblems/DailyProblemsPage"));
 
 const MainLayout = lazy(()=>import("./MainLayout"))
@@ -52,7 +53,7 @@ export const RouterFrontend = (authenticated: boolean, details: userdetails | un
                 </Popping>
                 <Part2 />
                 <Popping>
-                  <ReferCode details={details} auth = {authenticated}/>
+                  <ReferCodeCaller details={details} auth = {authenticated}/>
                 </Popping>
                 <Numbers />
                 <Popping>

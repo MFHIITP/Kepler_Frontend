@@ -109,9 +109,8 @@ int main() {
           <div className="space-y-8">
             <div className="space-y-6">
               <div className="flex items-center space-x-3 mb-4">
-                <div className="w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
-                <span className="text-green-400 font-mono text-sm">
-                  // EdTech Platform
+                <span className="text-green-400 font-mono text-xl">
+                  Welcome to our humble abode
                 </span>
               </div>
 

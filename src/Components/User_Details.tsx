@@ -156,14 +156,18 @@ const ClockIcon = () => (
   </svg>
 );
 
-const User_Details: React.FC<componentPropsInterfacePaymentProfile> = (props) => {
+const User_Details: React.FC<componentPropsInterfacePaymentProfile> = (
+  props,
+) => {
   const navigate = useNavigate();
   const [userdetails, setUserdetails] = useState<userInformation | null>(null);
   const [loading, setLoading] = useState(true);
   const [referralCode, setReferralCode] = useState<string | null>(null);
   const [coursesBought, setCoursesBought] = useState<String[] | []>([]);
-  const [additionalCourses, setAdditionalCourses] = useState<String[] | []>([])
-  const [amountPayment, setAmountPayment] = useState<number | undefined>(undefined)
+  const [additionalCourses, setAdditionalCourses] = useState<String[] | []>([]);
+  const [amountPayment, setAmountPayment] = useState<number | undefined>(
+    undefined,
+  );
 
   const handlecopyclick = async (val: string) => {
     await navigator.clipboard.writeText(val);
@@ -174,13 +178,15 @@ const User_Details: React.FC<componentPropsInterfacePaymentProfile> = (props) =>
     mutationFn: ({ emailId, name }: { emailId: string; name: string }) =>
       getUserDetails({ emailId: emailId, name: name }),
     onMutate: () => setLoading(true),
-    onSuccess: async(data) => {
+    onSuccess: async (data) => {
       setLoading(false);
       setUserdetails(data.data);
-      const courses = await data.data.applied_course_details.map((course) => course.name);
+      const courses = await data.data.applied_course_details.map(
+        (course) => course.name,
+      );
       setCoursesBought(courses ?? []);
-      setAdditionalCourses(data.data.additionalCoursesApplied ?? [])
-      setAmountPayment(data.data.amount.value)
+      setAdditionalCourses(data.data.additionalCoursesApplied ?? []);
+      setAmountPayment(data.data.amount.value);
     },
     onError: () => {
       setLoading(false);
@@ -197,21 +203,23 @@ const User_Details: React.FC<componentPropsInterfacePaymentProfile> = (props) =>
   useEffect(() => {
     if (!userdetails?.amount?.value) return;
 
-  const baseAmount = userdetails.amount.value;
+    const baseAmount = userdetails.amount.value;
 
-  if (referralCode && (referralCode.length === 8 || referralCode.length === 11)) {
-    setAmountPayment(Number((Number(baseAmount) * 0.75).toFixed(2)));
-  } else {
-    setAmountPayment(Number(baseAmount));
-  }
-  }, [referralCode, userdetails])
-  
+    if (
+      referralCode &&
+      (referralCode.length === 8 || referralCode.length === 11)
+    ) {
+      setAmountPayment(Number((Number(baseAmount) * 0.75).toFixed(2)));
+    } else {
+      setAmountPayment(Number(baseAmount));
+    }
+  }, [referralCode, userdetails]);
 
   const handleRazorpayPayment = async () => {
     const scriptLoaded = await loadRazorPayScript();
     if (!scriptLoaded) {
       toast.error(
-        "Failed to Load Razorpay Payment Interface. Please try again with stable internet"
+        "Failed to Load Razorpay Payment Interface. Please try again with stable internet",
       );
       return;
     }
@@ -240,11 +248,10 @@ const User_Details: React.FC<componentPropsInterfacePaymentProfile> = (props) =>
             razorpay_signature: response.razorpay_signature,
             referralCode_giver: referralCode,
             coursesBought: coursesBought,
-            additionalCoursesApplied: additionalCourses
-          }
+            additionalCoursesApplied: additionalCourses,
+          },
         );
         if (verifyRes.status == 200) {
-
           toast.success("Payment Successful! Enjoy your studies with Kepler");
           navigate("/");
         } else {
@@ -260,8 +267,10 @@ const User_Details: React.FC<componentPropsInterfacePaymentProfile> = (props) =>
   };
 
   const handlePayment = async () => {
-    if(referralCode == userdetails?.referCode){
-      toast.error("Referral Code is Not Valid. Please do not try to be too clever!");
+    if (referralCode == userdetails?.referCode) {
+      toast.error(
+        "Referral Code is Not Valid. Please do not try to be too clever!",
+      );
       return;
     }
 
@@ -692,12 +701,12 @@ const User_Details: React.FC<componentPropsInterfacePaymentProfile> = (props) =>
                         </div>
                         <div className="text-sm text-gray-600">
                           {new Date(val.upcomingPaymentDate).toLocaleDateString(
-                            "en-IN"
+                            "en-IN",
                           )}
                         </div>
                         <div className="text-sm text-gray-600">
                           {new Date(val.lastDateToPay).toLocaleDateString(
-                            "en-IN"
+                            "en-IN",
                           )}
                         </div>
                       </div>
@@ -827,29 +836,62 @@ const User_Details: React.FC<componentPropsInterfacePaymentProfile> = (props) =>
 
           {/* Upcoming Payment */}
           <div className="bg-white/80 backdrop-blur-sm shadow-xl rounded-2xl border border-white/20 p-6">
-            <div className="grid grid-cols-[3fr_1fr] items-center mb-6">
-              <div className="flex items-center gap-3">
-                <div className="p-2 bg-gradient-to-r from-green-500 to-emerald-500 rounded-lg text-white">
-                  <CalendarIcon />
+            <div className="grid grid-cols-[3fr_1fr] items-start mb-6">
+              <div className="flex flex-col gap-3">
+                <div className="flex items-center gap-3">
+                  <div className="p-2 bg-gradient-to-r from-green-500 to-emerald-500 rounded-lg text-white">
+                    <CalendarIcon />
+                  </div>
+                  <h2 className="text-xl flex-nowrap font-bold text-gray-800">
+                    Upcoming Payment
+                  </h2>
                 </div>
-                <h2 className="text-xl flex-nowrap font-bold text-gray-800">
-                  Upcoming Payment
-                </h2>
-                <div className="grid grid-cols-2 gap-2">
-                  <input
-                    type="text" 
-                    placeholder="Enter Referral Code (if any)..."
-                    onChange={(e) => setReferralCode(e.target.value)}
-                    value={referralCode}
-                    className="border border-gray-300 rounded-lg px-4 py-2 bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 hover:shadow-md min-w-[220px]" 
-                  />
-                </div>
+
+                {/* Referral hint text */}
+                <p className="text-sm text-indigo-600 font-medium bg-indigo-50 border border-indigo-200 rounded-lg px-3 py-2">
+                  🎁 Enter the refer code of the person who referred you these
+                  courses and get a flat 25% discount!
+                </p>
+
+                {/* Referral input */}
+                <input
+                  type="text"
+                  placeholder="Enter Referral Code (if any)..."
+                  onChange={(e) => setReferralCode(e.target.value)}
+                  value={referralCode ?? ""}
+                  className="border border-gray-300 rounded-lg px-4 py-2 bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 hover:shadow-md max-w-xs"
+                />
+
+                {/* Discount breakdown */}
+                {referralCode &&
+                (referralCode.length === 8 || referralCode.length === 11) &&
+                userdetails?.amount?.value ? (
+                  <div className="flex items-center gap-3 bg-green-50 border border-green-200 rounded-lg px-4 py-3 max-w-xs">
+                    <div className="text-sm text-gray-500 line-through">
+                      ₹{Number(userdetails.amount.value).toFixed(2)}
+                    </div>
+                    <div className="text-sm font-semibold text-red-500">
+                      − ₹{(Number(userdetails.amount.value) * 0.25).toFixed(2)}
+                    </div>
+                    <div className="text-base font-bold text-green-700">
+                      = ₹{Number(Math.round(Number(amountPayment))).toFixed(2)}
+                    </div>
+                    <span className="ml-auto text-xs bg-green-200 text-green-800 font-semibold px-2 py-0.5 rounded-full">
+                      25% OFF
+                    </span>
+                  </div>
+                ) : referralCode && referralCode.length > 0 ? (
+                  <p className="text-xs text-amber-600 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2 max-w-xs">
+                    ⚠️ Keep typing — referral codes are 8 or 11 characters long.
+                  </p>
+                ) : null}
               </div>
+
               <button
                 onClick={handlePayment}
                 disabled={userdetails?.amount.value == 0 || true}
                 className={`px-6 py-3 rounded-xl font-semibold transition-all duration-200 ${
-                  (userdetails?.amount.value == 0 ||  true)
+                  userdetails?.amount.value == 0 || true
                     ? "bg-gray-300 text-gray-500 cursor-not-allowed"
                     : "bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white hover:scale-105 hover:shadow-lg"
                 }`}
@@ -897,12 +939,26 @@ const User_Details: React.FC<componentPropsInterfacePaymentProfile> = (props) =>
                   <div className="text-lg font-semibold text-gray-800">
                     Total Amount Due
                   </div>
-                  <div
-                    className={`text-2xl font-bold ${
-                      userdetails?.amount.color || "text-green-600"
-                    }`}
-                  >
-                    {userdetails?.amount.salutation} {Number(Math.round(Number(amountPayment))).toFixed(2)}
+                  <div className="flex flex-col items-end gap-1">
+                    {referralCode &&
+                      (referralCode.length === 8 ||
+                        referralCode.length === 11) &&
+                      userdetails?.amount?.value && (
+                        <div className="flex items-center gap-2">
+                          <span className="text-sm text-gray-400 line-through">
+                            ₹{Number(userdetails.amount.value).toFixed(2)}
+                          </span>
+                          <span className="text-xs bg-green-600 text-white font-bold px-2 py-0.5 rounded-full">
+                            25% OFF
+                          </span>
+                        </div>
+                      )}
+                    <div
+                      className={`text-2xl font-bold ${userdetails?.amount.color || "text-green-600"}`}
+                    >
+                      {userdetails?.amount.salutation}{" "}
+                      {Number(Math.round(Number(amountPayment))).toFixed(2)}
+                    </div>
                   </div>
                 </div>
               </div>

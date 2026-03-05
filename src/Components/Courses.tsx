@@ -214,6 +214,10 @@ function ProfessionalEducationPage() {
     );
   };
 
+  const handleSubscriptionClick = () => {
+    navigate("/profiles");
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50">
       {/* Subtle Background Pattern */}
@@ -492,15 +496,22 @@ function ProfessionalEducationPage() {
             </>
           )}
         </div>
+        <button
+          onClick={handleSubscriptionClick}
+          className="w-full sm:w-fit h-16 mx-auto bg-gradient-to-r mt-6 from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-200 hover:shadow-lg flex items-center justify-center gap-2"
+        >
+          Get Subscription & Start Learning
+          <ArrowRight className="w-5 h-5" />
+        </button>
       </section>
 
       {/* Trust Indicators */}
       <section
-        className={`max-w-7xl mx-auto px-6 py-16 ${
+        className={`max-w-7xl mx-auto px-6 pb-16 ${
           isModalOpen ? "blur-sm" : ""
         }`}
       >
-        <div className="bg-gradient-to-r from-blue-600 to-blue-700 rounded-2xl p-12 text-center text-white">
+        <div className="bg-gradient-to-r from-green-400 to-green-500 rounded-2xl p-12 text-center text-white">
           <h3 className="text-3xl font-bold mb-8">
             Trusted by Students Nationwide
           </h3>
