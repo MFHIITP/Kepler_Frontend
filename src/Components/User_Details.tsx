@@ -27,6 +27,20 @@ const getUserDetails = async ({
   return data;
 };
 
+const validateReferCode = async ({
+  email,
+  referCode,
+}: {
+  email: string;
+  referCode: string;
+}) => {
+  const { data } = await api.post(apiRoutes.referrals.checkValidReferCode, {
+    email: email,
+    referCode: referCode,
+  });
+  return data;
+};
+
 // Icon Components
 const UserIcon = () => (
   <svg
@@ -168,6 +182,8 @@ const User_Details: React.FC<componentPropsInterfacePaymentProfile> = (
   const [amountPayment, setAmountPayment] = useState<number | undefined>(
     undefined,
   );
+  const [referCodeLoading, setReferCodeLoading] = useState(false);
+  const [validReferCode, setValidReferCode] = useState(false);
 
   const handlecopyclick = async (val: string) => {
     await navigator.clipboard.writeText(val);
@@ -193,6 +209,39 @@ const User_Details: React.FC<componentPropsInterfacePaymentProfile> = (
     },
   });
 
+  const { mutate: checkValidReferCodeMutation } = useMutation({
+    mutationFn: ({ email, referCode }: { email: string; referCode: string }) =>
+      validateReferCode({ email: email, referCode: referCode }),
+    onMutate: () => setReferCodeLoading(true),
+    onSuccess: (data) => {
+      setReferCodeLoading(false);
+      setValidReferCode(true);
+    },
+    onError: () => {
+      setReferCodeLoading(false);
+      setValidReferCode(false);
+    },
+  });
+
+  const checkValidReferCode = () => {
+    checkValidReferCodeMutation({
+      email: props.details?.email ?? "",
+      referCode: referralCode ?? "",
+    });
+  };
+
+  useEffect(() => {
+    if (!referralCode) return;
+
+    if (referralCode.length !== 8 && referralCode.length !== 11) return;
+
+    const timer = setTimeout(() => {
+      checkValidReferCode();
+    }, 500); // 0.5 second
+
+    return () => clearTimeout(timer);
+  }, [referralCode]);
+
   useEffect(() => {
     getUserDetailsMutation({
       emailId: props.details?.email ?? "",
@@ -205,15 +254,12 @@ const User_Details: React.FC<componentPropsInterfacePaymentProfile> = (
 
     const baseAmount = userdetails.amount.value;
 
-    if (
-      referralCode &&
-      (referralCode.length === 8 || referralCode.length === 11)
-    ) {
+    if (validReferCode) {
       setAmountPayment(Number((Number(baseAmount) * 0.75).toFixed(2)));
     } else {
       setAmountPayment(Number(baseAmount));
     }
-  }, [referralCode, userdetails]);
+  }, [validReferCode, userdetails]);
 
   const handleRazorpayPayment = async () => {
     const scriptLoaded = await loadRazorPayScript();
@@ -562,6 +608,319 @@ const User_Details: React.FC<componentPropsInterfacePaymentProfile> = (
           </div>
         </div>
 
+        {/* Applied Courses and Upcoming Payment */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+          {/* Applied Courses */}
+          <div className="bg-white/80 backdrop-blur-sm shadow-xl rounded-2xl border border-white/20 p-6">
+            <div className="flex items-center gap-3 mb-6">
+              <div className="p-2 bg-gradient-to-r from-orange-500 to-red-500 rounded-lg text-white">
+                <ClipboardListIcon />
+              </div>
+              <h2 className="text-xl font-bold text-gray-800">
+                Applied Courses for Upcoming Month
+              </h2>
+            </div>
+
+            {userdetails?.applied_course_details &&
+            userdetails.applied_course_details.length === 0 ? (
+              <div className="text-center py-8">
+                <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                  <ClipboardListIcon />
+                </div>
+                <p className="text-gray-600">
+                  No courses applied for next month
+                </p>
+              </div>
+            ) : (
+              <div className="space-y-3">
+                {userdetails?.applied_course_details.map((val, key) => (
+                  <div
+                    key={key}
+                    className="bg-gradient-to-r from-orange-50 to-red-50 rounded-lg p-4 border border-orange-200"
+                  >
+                    <div className="flex justify-between items-center">
+                      <div>
+                        <div className="font-medium text-gray-800">
+                          {val.name}
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <div
+                          className={`font-bold ${
+                            val.color ? val.color : "text-gray-800"
+                          }`}
+                        >
+                          {val.salutation} {val.value}
+                        </div>
+                        {val.copy && (
+                          <button
+                            onClick={() => handlecopyclick(val.value as string)}
+                            className="p-1 hover:bg-white rounded transition-colors duration-200 text-gray-500 hover:text-gray-700"
+                          >
+                            <CopyIcon />
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Upcoming Payment */}
+          <div className="bg-white/80 backdrop-blur-sm shadow-xl rounded-2xl border border-white/20 p-6">
+            <div className="grid grid-cols-[3fr_1fr] items-start mb-6">
+              <div className="flex flex-col gap-3">
+                <div className="flex items-center gap-3">
+                  <div className="p-2 bg-gradient-to-r from-green-500 to-emerald-500 rounded-lg text-white">
+                    <CalendarIcon />
+                  </div>
+                  <h2 className="text-xl flex-nowrap font-bold text-gray-800">
+                    Upcoming Payment
+                  </h2>
+                </div>
+
+                {/* Referral hint text */}
+                <p className="text-sm text-indigo-600 font-medium bg-indigo-50 border border-indigo-200 rounded-lg px-3 py-2">
+                  🎁 Enter the refer code of the person who referred you these
+                  courses and get a flat 25% discount!
+                </p>
+
+                {/* Referral input */}
+                <div className="relative max-w-xs">
+                  <input
+                    type="text"
+                    placeholder="Enter Referral Code (if any)..."
+                    onChange={(e) => {
+                      setReferralCode(e.target.value);
+                      setValidReferCode(false); // reset on change
+                    }}
+                    value={referralCode ?? ""}
+                    className={`w-full border rounded-lg px-4 py-2 pr-10 bg-white shadow-sm focus:outline-none focus:ring-2 transition-all duration-200 hover:shadow-md ${
+                      referralCode &&
+                      (referralCode.length === 8 || referralCode.length === 11)
+                        ? validReferCode
+                          ? "border-green-400 focus:ring-green-300 focus:border-green-400"
+                          : referCodeLoading
+                            ? "border-blue-300 focus:ring-blue-200 focus:border-blue-400"
+                            : "border-red-400 focus:ring-red-200 focus:border-red-400"
+                        : "border-gray-300 focus:ring-blue-500 focus:border-blue-500"
+                    }`}
+                  />
+
+                  {/* Right-side status icon inside input */}
+                  <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                    {referCodeLoading && (
+                      <svg
+                        className="w-4 h-4 text-blue-500 animate-spin"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                      >
+                        <circle
+                          className="opacity-25"
+                          cx="12"
+                          cy="12"
+                          r="10"
+                          stroke="currentColor"
+                          strokeWidth="4"
+                        />
+                        <path
+                          className="opacity-75"
+                          fill="currentColor"
+                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+                        />
+                      </svg>
+                    )}
+                    {!referCodeLoading &&
+                      referralCode &&
+                      (referralCode.length === 8 ||
+                        referralCode.length === 11) &&
+                      validReferCode && (
+                        <svg
+                          className="w-4 h-4 text-green-500"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2.5}
+                            d="M5 13l4 4L19 7"
+                          />
+                        </svg>
+                      )}
+                    {!referCodeLoading &&
+                      referralCode &&
+                      (referralCode.length === 8 ||
+                        referralCode.length === 11) &&
+                      !validReferCode && (
+                        <svg
+                          className="w-4 h-4 text-red-500"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2.5}
+                            d="M6 18L18 6M6 6l12 12"
+                          />
+                        </svg>
+                      )}
+                  </div>
+                </div>
+
+                {/* Status message below input */}
+                {referralCode &&
+                  (referralCode.length === 8 || referralCode.length === 11) && (
+                    <>
+                      {referCodeLoading && (
+                        <p className="text-xs text-blue-500 bg-blue-50 border border-blue-200 rounded-lg px-3 py-2 max-w-xs flex items-center gap-2">
+                          <svg
+                            className="w-3 h-3 animate-spin flex-shrink-0"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                          >
+                            <circle
+                              className="opacity-25"
+                              cx="12"
+                              cy="12"
+                              r="10"
+                              stroke="currentColor"
+                              strokeWidth="4"
+                            />
+                            <path
+                              className="opacity-75"
+                              fill="currentColor"
+                              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+                            />
+                          </svg>
+                          Validating referral code...
+                        </p>
+                      )}
+                      {!referCodeLoading &&
+                        validReferCode &&
+                        userdetails?.amount?.value && (
+                          <div className="flex items-center gap-3 bg-green-50 border border-green-200 rounded-lg px-4 py-3 min-w-max">
+                            <div className="text-sm text-gray-500 line-through">
+                              ₹{Number(userdetails.amount.value).toFixed(2)}
+                            </div>
+                            <div className="text-sm font-semibold text-red-500">
+                              − ₹
+                              {(
+                                Number(userdetails.amount.value) * 0.25
+                              ).toFixed(2)}
+                            </div>
+                            <div className="text-base font-bold text-green-700">
+                              = ₹
+                              {Number(
+                                Math.round(Number(amountPayment)),
+                              ).toFixed(2)}
+                            </div>
+                            <span className="ml-auto text-xs bg-green-200 text-green-800 font-semibold px-2 py-0.5 rounded-full whitespace-nowrap">
+                              25% OFF
+                            </span>
+                          </div>
+                        )}
+                      {!referCodeLoading && !validReferCode && (
+                        <p className="text-xs text-red-600 bg-red-50 border border-red-200 rounded-lg px-3 py-2 max-w-xs">
+                          ❌ Invalid referral code. Please check and try again.
+                        </p>
+                      )}
+                    </>
+                  )}
+
+                {/* Partial code nudge */}
+                {referralCode &&
+                  referralCode.length > 0 &&
+                  referralCode.length !== 8 &&
+                  referralCode.length !== 11 && (
+                    <p className="text-xs text-amber-600 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2 max-w-xs">
+                      ⚠️ Keep typing — referral codes are 8 or 11 characters
+                      long.
+                    </p>
+                  )}
+              </div>
+
+              <button
+                onClick={handlePayment}
+                disabled={userdetails?.amount.value == 0 || true}
+                className={`px-6 py-3 rounded-xl font-semibold transition-all duration-200 ${
+                  userdetails?.amount.value == 0 || true
+                    ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+                    : "bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white hover:scale-105 hover:shadow-lg"
+                }`}
+              >
+                Pay Now
+              </button>
+            </div>
+
+            <div className="space-y-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {userdetails?.upcoming_payments.map((val, key) => (
+                  <div
+                    key={key}
+                    className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg p-4 border border-blue-200"
+                  >
+                    <div className="flex flex-col gap-2">
+                      <div className="text-sm text-gray-600 font-medium">
+                        {val.name}
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <div
+                          className={`font-bold ${
+                            val.color ? "text-purple-900" : "text-gray-800"
+                          }`}
+                        >
+                          {val.salutation} {val.value}
+                        </div>
+                        {val.copy && (
+                          <button
+                            onClick={() => handlecopyclick(val.value as string)}
+                            className="p-1 hover:bg-white rounded transition-colors duration-200 text-gray-500 hover:text-gray-700"
+                          >
+                            <CopyIcon />
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Total Amount */}
+              <div className="bg-gradient-to-r from-green-100 to-emerald-100 rounded-lg p-4 border-2 border-green-300">
+                <div className="flex items-center justify-between">
+                  <div className="text-lg font-semibold text-gray-800">
+                    Total Amount Due
+                  </div>
+                  <div className="flex flex-col items-end gap-1">
+                    {validReferCode && userdetails?.amount?.value && (
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm text-gray-400 line-through">
+                          ₹{Number(userdetails.amount.value).toFixed(2)}
+                        </span>
+                        <span className="text-xs bg-green-600 text-white font-bold px-2 py-0.5 rounded-full">
+                          25% OFF
+                        </span>
+                      </div>
+                    )}
+                    <div
+                      className={`text-2xl font-bold ${userdetails?.amount.color || "text-green-600"}`}
+                    >
+                      {userdetails?.amount.salutation}{" "}
+                      {Number(Math.round(Number(amountPayment))).toFixed(2)}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
         {/* Transaction Summary */}
         {userdetails?.transaction_details &&
           userdetails.transaction_details.length > 0 && (
@@ -770,198 +1129,6 @@ const User_Details: React.FC<componentPropsInterfacePaymentProfile> = (
                   ))}
                 </div>
               )}
-            </div>
-          </div>
-        </div>
-
-        {/* Applied Courses and Upcoming Payment */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-          {/* Applied Courses */}
-          <div className="bg-white/80 backdrop-blur-sm shadow-xl rounded-2xl border border-white/20 p-6">
-            <div className="flex items-center gap-3 mb-6">
-              <div className="p-2 bg-gradient-to-r from-orange-500 to-red-500 rounded-lg text-white">
-                <ClipboardListIcon />
-              </div>
-              <h2 className="text-xl font-bold text-gray-800">
-                Applied Courses for Upcoming Month
-              </h2>
-            </div>
-
-            {userdetails?.applied_course_details &&
-            userdetails.applied_course_details.length === 0 ? (
-              <div className="text-center py-8">
-                <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-3">
-                  <ClipboardListIcon />
-                </div>
-                <p className="text-gray-600">
-                  No courses applied for next month
-                </p>
-              </div>
-            ) : (
-              <div className="space-y-3">
-                {userdetails?.applied_course_details.map((val, key) => (
-                  <div
-                    key={key}
-                    className="bg-gradient-to-r from-orange-50 to-red-50 rounded-lg p-4 border border-orange-200"
-                  >
-                    <div className="flex justify-between items-center">
-                      <div>
-                        <div className="font-medium text-gray-800">
-                          {val.name}
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <div
-                          className={`font-bold ${
-                            val.color ? val.color : "text-gray-800"
-                          }`}
-                        >
-                          {val.salutation} {val.value}
-                        </div>
-                        {val.copy && (
-                          <button
-                            onClick={() => handlecopyclick(val.value as string)}
-                            className="p-1 hover:bg-white rounded transition-colors duration-200 text-gray-500 hover:text-gray-700"
-                          >
-                            <CopyIcon />
-                          </button>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-
-          {/* Upcoming Payment */}
-          <div className="bg-white/80 backdrop-blur-sm shadow-xl rounded-2xl border border-white/20 p-6">
-            <div className="grid grid-cols-[3fr_1fr] items-start mb-6">
-              <div className="flex flex-col gap-3">
-                <div className="flex items-center gap-3">
-                  <div className="p-2 bg-gradient-to-r from-green-500 to-emerald-500 rounded-lg text-white">
-                    <CalendarIcon />
-                  </div>
-                  <h2 className="text-xl flex-nowrap font-bold text-gray-800">
-                    Upcoming Payment
-                  </h2>
-                </div>
-
-                {/* Referral hint text */}
-                <p className="text-sm text-indigo-600 font-medium bg-indigo-50 border border-indigo-200 rounded-lg px-3 py-2">
-                  🎁 Enter the refer code of the person who referred you these
-                  courses and get a flat 25% discount!
-                </p>
-
-                {/* Referral input */}
-                <input
-                  type="text"
-                  placeholder="Enter Referral Code (if any)..."
-                  onChange={(e) => setReferralCode(e.target.value)}
-                  value={referralCode ?? ""}
-                  className="border border-gray-300 rounded-lg px-4 py-2 bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 hover:shadow-md max-w-xs"
-                />
-
-                {/* Discount breakdown */}
-                {referralCode &&
-                (referralCode.length === 8 || referralCode.length === 11) &&
-                userdetails?.amount?.value ? (
-                  <div className="flex items-center gap-3 bg-green-50 border border-green-200 rounded-lg px-4 py-3 max-w-xs">
-                    <div className="text-sm text-gray-500 line-through">
-                      ₹{Number(userdetails.amount.value).toFixed(2)}
-                    </div>
-                    <div className="text-sm font-semibold text-red-500">
-                      − ₹{(Number(userdetails.amount.value) * 0.25).toFixed(2)}
-                    </div>
-                    <div className="text-base font-bold text-green-700">
-                      = ₹{Number(Math.round(Number(amountPayment))).toFixed(2)}
-                    </div>
-                    <span className="ml-auto text-xs bg-green-200 text-green-800 font-semibold px-2 py-0.5 rounded-full">
-                      25% OFF
-                    </span>
-                  </div>
-                ) : referralCode && referralCode.length > 0 ? (
-                  <p className="text-xs text-amber-600 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2 max-w-xs">
-                    ⚠️ Keep typing — referral codes are 8 or 11 characters long.
-                  </p>
-                ) : null}
-              </div>
-
-              <button
-                onClick={handlePayment}
-                disabled={userdetails?.amount.value == 0 || true}
-                className={`px-6 py-3 rounded-xl font-semibold transition-all duration-200 ${
-                  userdetails?.amount.value == 0 || true
-                    ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-                    : "bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white hover:scale-105 hover:shadow-lg"
-                }`}
-              >
-                Pay Now
-              </button>
-            </div>
-
-            <div className="space-y-4">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {userdetails?.upcoming_payments.map((val, key) => (
-                  <div
-                    key={key}
-                    className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg p-4 border border-blue-200"
-                  >
-                    <div className="flex flex-col gap-2">
-                      <div className="text-sm text-gray-600 font-medium">
-                        {val.name}
-                      </div>
-                      <div className="flex items-center justify-between">
-                        <div
-                          className={`font-bold ${
-                            val.color ? "text-purple-900" : "text-gray-800"
-                          }`}
-                        >
-                          {val.salutation} {val.value}
-                        </div>
-                        {val.copy && (
-                          <button
-                            onClick={() => handlecopyclick(val.value as string)}
-                            className="p-1 hover:bg-white rounded transition-colors duration-200 text-gray-500 hover:text-gray-700"
-                          >
-                            <CopyIcon />
-                          </button>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              {/* Total Amount */}
-              <div className="bg-gradient-to-r from-green-100 to-emerald-100 rounded-lg p-4 border-2 border-green-300">
-                <div className="flex items-center justify-between">
-                  <div className="text-lg font-semibold text-gray-800">
-                    Total Amount Due
-                  </div>
-                  <div className="flex flex-col items-end gap-1">
-                    {referralCode &&
-                      (referralCode.length === 8 ||
-                        referralCode.length === 11) &&
-                      userdetails?.amount?.value && (
-                        <div className="flex items-center gap-2">
-                          <span className="text-sm text-gray-400 line-through">
-                            ₹{Number(userdetails.amount.value).toFixed(2)}
-                          </span>
-                          <span className="text-xs bg-green-600 text-white font-bold px-2 py-0.5 rounded-full">
-                            25% OFF
-                          </span>
-                        </div>
-                      )}
-                    <div
-                      className={`text-2xl font-bold ${userdetails?.amount.color || "text-green-600"}`}
-                    >
-                      {userdetails?.amount.salutation}{" "}
-                      {Number(Math.round(Number(amountPayment))).toFixed(2)}
-                    </div>
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
         </div>

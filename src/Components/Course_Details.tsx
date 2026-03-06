@@ -821,7 +821,7 @@ function ProfessionalCourseDetails({details} : { details: UserDetails }) {
                       </h4>
                     </div>
                     <p className="text-slate-700 text-lg font-semibold">
-                      12 - 18 hours per week
+                      4 - 6 hours per week
                     </p>
                   </div>
 
@@ -1026,8 +1026,8 @@ function ProfessionalCourseDetails({details} : { details: UserDetails }) {
                   <div className="space-y-4">
                     {[
                       "Students who want to improve Codeforces and CodeChef performance",
-                      "Students preparing for ICPC style contests",
-                      "Aspiring competitive programmers seeking structured guidance",
+                      "Students preparing for placements and internships at top tech companies",
+                      "Aspiring programmers seeking to explore the field of artificial intelligence and machine learning",
                     ].map((item, index) => (
                       <div
                         key={index}
@@ -1054,7 +1054,7 @@ function ProfessionalCourseDetails({details} : { details: UserDetails }) {
                       </h4>
                     </div>
                     <p className="text-slate-700 text-lg font-semibold">
-                      10-14 hours per week
+                      16-20 hours per week
                     </p>
                   </div>
 

@@ -107,7 +107,8 @@ const apiRoutes = {
         getPendingReferrals: '/referCode/getPendingReferrals',
         acceptRejectReferral: '/referCode/acceptRejectReferral',
         getAcceptedReferrals: 'referCode/getAcceptedReferrals',
-        saveBankDetails: '/referCode/saveReferralBankDetails'
+        saveBankDetails: '/referCode/saveReferralBankDetails',
+        checkValidReferCode: '/referCode/checkValidReferCode'
     },
     playlistData: {
         getCoursePlaylist: '/playlist/getCoursePlaylist',
