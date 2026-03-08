@@ -17,11 +17,16 @@ import {
   Download,
   Bell,
   ChevronRight,
+  Info,
 } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
 import Playlist from "./Playlist";
 import Footer from "./Footer";
 import { UserDetails } from "./Connections/Connection.interface";
+import api from "../utils/api";
+import apiRoutes from "../utils/Routes/apiRoutes";
+import { useMutation } from "@tanstack/react-query";
+import toast from "react-hot-toast";
 
 interface ScheduleItem {
   month: string;
@@ -44,6 +49,20 @@ interface CourseInfo {
   startDate: string;
 }
 
+const userPurchasedCourse = async ({
+  emailId,
+  examname,
+}: {
+  emailId: string;
+  examname: string;
+}) => {
+  const { data } = await api.post(apiRoutes.courses.coursePurchase, {
+    email: emailId,
+    examname: examname,
+  });
+  return data;
+};
+
 const ProfessionalCourseSchedule = ({
   details,
   authenticated,
@@ -52,21 +71,34 @@ const ProfessionalCourseSchedule = ({
   authenticated: boolean;
 }) => {
   const { examname } = useParams();
+  const [purchased, setPurchased] = useState(false);
 
   const navigate = useNavigate();
 
-  const [courseData, setCourseData] = useState({
-    languages: {
-      type: "Language",
-      name: "Programming Languages Mastery 2025",
-      teachers: "Purnendu Kumar Mishra",
-      description:
-        "Master core programming languages like C, C++, Java, Python, and JavaScript from scratch to advanced. Build a strong foundation for software development, competitive coding, and interviews.",
-      duration: "5 Months",
-      students: "12,500+",
-      rating: 4.8,
-      startDate: "September 1st, 2025",
+  const { mutate: getPurchasedCourseMutation } = useMutation({
+    mutationFn: ({
+      emailId,
+      examname,
+    }: {
+      emailId: string;
+      examname: string;
+    }) => userPurchasedCourse({ emailId: emailId, examname: examname }),
+    onSuccess: () => {
+      setPurchased(true);
     },
+    onError: () => {
+      setPurchased(false);
+    },
+  });
+
+  useEffect(() => {
+    getPurchasedCourseMutation({
+      emailId: details.email,
+      examname: examname ?? "",
+    });
+  }, [details.email, examname]);
+
+  const [courseData] = useState({
     webdev: {
       type: "Web Development",
       name: "Development Crash Course: Projects Made Easier",
@@ -76,7 +108,7 @@ const ProfessionalCourseSchedule = ({
       duration: "5 Months / Bi-Weekly Classes",
       students: "10+",
       rating: 4.9,
-      startDate: "March 1st, 2026",
+      startDate: "March 21st, 2026",
       image: "/Images/WebDev1InternalImage.jpg",
     },
     dsa: {
@@ -88,7 +120,7 @@ const ProfessionalCourseSchedule = ({
       duration: "5 Months / Bi-Weekly Classes",
       students: "10+",
       rating: 4.7,
-      startDate: "March 1st, 2026",
+      startDate: "March 21st, 2026",
       image: "/Images/DSA1InternalImage.jpg",
     },
     fundamentals: {
@@ -100,7 +132,7 @@ const ProfessionalCourseSchedule = ({
       duration: "5 Months / Bi-Weekly Classes",
       students: "10+",
       rating: 4.7,
-      startDate: "March 1st, 2026",
+      startDate: "March 21st, 2026",
       image: "/Images/CSFundamentals1InternalImage.jpg",
     },
     ml: {
@@ -112,7 +144,7 @@ const ProfessionalCourseSchedule = ({
       duration: "5 Months / Bi-Weekly Classes",
       students: "10+",
       rating: 4.7,
-      startDate: "March 1st, 2026",
+      startDate: "April 4st, 2026",
       image: "/Images/ML1InternalImage.gif",
     },
     placement: {
@@ -124,156 +156,295 @@ const ProfessionalCourseSchedule = ({
       duration: "5 Months / Bi-Weekly Classes Per Course",
       students: "10+",
       rating: 4.7,
-      startDate: "March 1st, 2026",
+      startDate: "March 21st, 2026",
       image: "/Images/placed.jpg",
     },
   });
 
-  const [scheduleData, setScheduleData] = useState({
-    languages: [
-      {
-        month: "SEP",
-        day: "1",
-        title: "Introduction to Computer Languages and C Programming Language",
-        details:
-          "Basic Concepts of C, arrays, functions, memory stack, dynamic memory allocation",
-        topic: "Languages • Chapter 1-3",
-        type: "live",
-        status: "upcoming",
-      },
-      {
-        month: "SEP",
-        day: "5",
-        title: "Introduction to C++",
-        details:
-          "Conclusion for C, Introduction to C++, dynamic memory based data structures.",
-        topic: "Languages • Chapters 4 - 6",
-        type: "test",
-        status: "upcoming",
-      },
-      {
-        month: "SEP",
-        day: "8",
-        title: "Introduction to Java",
-        details:
-          "Introduction to Java, Classes and Objects, Data structures in Java",
-        topic: "Languages • Chapter 7 - 10",
-        type: "live",
-        status: "live",
-      },
-      {
-        month: "SEP",
-        day: "22",
-        title: "Object Oriented Programming",
-        details: "Inheritance and Operator Overloading",
-        topic: "Languages • Chapters 11 - 20",
-        type: "live",
-        status: "upcoming",
-      },
-    ],
+  const [scheduleData] = useState({
     webdev: [
-      {
-        month: "SEP",
-        day: "2",
-        title: "Introduction to Web Development",
-        details: "HTTP, HTML5, CSS3",
-        topic: "Web Dev • Chapters 1 - 8",
-        type: "live",
-        status: "upcoming",
-      },
-      {
-        month: "SEP",
-        day: "6",
-        title: "ReactJS",
-        details: "ReactJS",
-        topic: "Web Dev • Chapters 9 - 16",
-        type: "test",
-        status: "upcoming",
-      },
+      { ClassNo: 1, month: "MAR", day: "21", title: "Phase 0", type: "live" },
+      { ClassNo: 2, month: "MAR", day: "22", title: "Phase 0", type: "live" },
+      { ClassNo: 3, month: "MAR", day: "28", title: "Phase 0", type: "live" },
+      { ClassNo: 4, month: "MAR", day: "29", title: "Phase 0", type: "live" },
+      { ClassNo: 5, month: "APR", day: "4", title: "Phase 0", type: "live" },
+      { ClassNo: 6, month: "APR", day: "5", title: "Phase 1", type: "live" },
+      { ClassNo: 7, month: "APR", day: "11", title: "Phase 1", type: "live" },
+      { ClassNo: 8, month: "APR", day: "12", title: "Phase 1", type: "live" },
+      { ClassNo: 9, month: "APR", day: "18", title: "Phase 1", type: "live" },
+      { ClassNo: 10, month: "APR", day: "19", title: "Phase 1", type: "live" },
+      { ClassNo: 11, month: "APR", day: "25", title: "Phase 2", type: "live" },
+      { ClassNo: 12, month: "APR", day: "26", title: "Phase 2", type: "live" },
+      { ClassNo: 13, month: "MAY", day: "2", title: "Phase 2", type: "live" },
+      { ClassNo: 14, month: "MAY", day: "3", title: "Phase 2", type: "live" },
+      { ClassNo: 15, month: "MAY", day: "9", title: "Phase 2", type: "live" },
+      { ClassNo: 16, month: "MAY", day: "10", title: "Phase 3", type: "live" },
+      { ClassNo: 17, month: "MAY", day: "16", title: "Phase 3", type: "live" },
+      { ClassNo: 18, month: "MAY", day: "17", title: "Phase 3", type: "live" },
+      { ClassNo: 19, month: "MAY", day: "23", title: "Phase 3", type: "live" },
+      { ClassNo: 20, month: "MAY", day: "24", title: "Phase 3", type: "live" },
+      { ClassNo: 21, month: "MAY", day: "30", title: "Phase 4", type: "live" },
+      { ClassNo: 22, month: "MAY", day: "31", title: "Phase 4", type: "live" },
+      { ClassNo: 23, month: "JUN", day: "6", title: "Phase 4", type: "live" },
+      { ClassNo: 24, month: "JUN", day: "7", title: "Phase 4", type: "live" },
+      { ClassNo: 25, month: "JUN", day: "13", title: "Phase 4", type: "live" },
+      { ClassNo: 26, month: "JUN", day: "14", title: "Phase 5", type: "live" },
+      { ClassNo: 27, month: "JUN", day: "20", title: "Phase 5", type: "live" },
+      { ClassNo: 28, month: "JUN", day: "21", title: "Phase 5", type: "live" },
+      { ClassNo: 29, month: "JUN", day: "27", title: "Phase 5", type: "live" },
+      { ClassNo: 30, month: "JUN", day: "28", title: "Phase 5", type: "live" },
+      { ClassNo: 31, month: "JUL", day: "4", title: "Phase 5", type: "live" },
+      { ClassNo: 32, month: "JUL", day: "5", title: "Phase 6", type: "live" },
+      { ClassNo: 33, month: "JUL", day: "11", title: "Phase 6", type: "live" },
+      { ClassNo: 34, month: "JUL", day: "12", title: "Phase 6", type: "live" },
+      { ClassNo: 35, month: "JUL", day: "18", title: "Phase 6", type: "live" },
+      { ClassNo: 36, month: "JUL", day: "19", title: "Phase 6", type: "live" },
+      { ClassNo: 37, month: "JUL", day: "25", title: "Phase 6", type: "live" },
+      { ClassNo: 38, month: "JUL", day: "26", title: "Phase 7", type: "live" },
+      { ClassNo: 39, month: "AUG", day: "1", title: "Phase 7", type: "live" },
+      { ClassNo: 40, month: "AUG", day: "2", title: "Phase 7", type: "live" },
+      { ClassNo: 41, month: "AUG", day: "8", title: "Phase 7", type: "live" },
+      { ClassNo: 42, month: "AUG", day: "9", title: "Phase 7", type: "live" },
     ],
     dsa: [
-      {
-        month: "SEP",
-        day: "3",
-        title: "Introduction to Data Structures and Algorithms",
-        details: "Importance of DSA in Companies, Recursion",
-        topic: "DSA • Chapters 1 - 5",
-        type: "live",
-        status: "upcoming",
-      },
+      { ClassNo: 1, month: "MAR", day: "21", title: "Phase 0", type: "live" },
+      { ClassNo: 2, month: "MAR", day: "28", title: "Phase 1", type: "live" },
+      { ClassNo: 3, month: "APR", day: "4", title: "Phase 1", type: "live" },
+      { ClassNo: 4, month: "APR", day: "11", title: "Phase 1", type: "live" },
+      { ClassNo: 5, month: "APR", day: "18", title: "Phase 2", type: "live" },
+      { ClassNo: 6, month: "APR", day: "25", title: "Phase 3", type: "live" },
+      { ClassNo: 7, month: "MAY", day: "2", title: "Phase 3", type: "live" },
+      { ClassNo: 8, month: "MAY", day: "9", title: "Phase 4", type: "live" },
+      { ClassNo: 9, month: "MAY", day: "16", title: "Phase 4", type: "live" },
+      { ClassNo: 10, month: "MAY", day: "23", title: "Phase 5", type: "live" },
+      { ClassNo: 11, month: "MAY", day: "30", title: "Phase 5", type: "live" },
+      { ClassNo: 12, month: "JUN", day: "6", title: "Phase 5", type: "live" },
+      { ClassNo: 13, month: "JUN", day: "13", title: "Phase 6", type: "live" },
+      { ClassNo: 14, month: "JUN", day: "20", title: "Phase 6", type: "live" },
+      { ClassNo: 15, month: "JUN", day: "27", title: "Phase 7", type: "live" },
+      { ClassNo: 16, month: "JUL", day: "4", title: "Phase 8", type: "live" },
+      { ClassNo: 17, month: "JUL", day: "11", title: "Phase 8", type: "live" },
+      { ClassNo: 18, month: "JUL", day: "18", title: "Phase 9", type: "live" },
+      { ClassNo: 19, month: "JUL", day: "25", title: "Phase 9", type: "live" },
+      { ClassNo: 20, month: "AUG", day: "1", title: "Phase 10", type: "live" },
+      { ClassNo: 21, month: "AUG", day: "8", title: "Phase 10", type: "live" },
     ],
     fundamentals: [
-      {
-        month: "SEP",
-        day: "4",
-        title: "Introduction to Computer Networks",
-        details:
-          "Computer Networks, Types of Networking, Subnet, Layer wise Architechture in Networks",
-        topic: "fundamentals • CN 1 - 4",
-        type: "live",
-        status: "upcoming",
-      },
+      { ClassNo: 1, month: "MAR", day: "21", title: "Phase 0", type: "live" },
+      { ClassNo: 2, month: "MAR", day: "22", title: "Phase 1", type: "live" },
+      { ClassNo: 3, month: "MAR", day: "28", title: "Phase 1", type: "live" },
+      { ClassNo: 4, month: "MAR", day: "29", title: "Phase 1", type: "live" },
+      { ClassNo: 5, month: "APR", day: "4", title: "Phase 1", type: "live" },
+      { ClassNo: 6, month: "APR", day: "5", title: "Phase 1", type: "live" },
+      { ClassNo: 7, month: "APR", day: "11", title: "Phase 1", type: "live" },
+      { ClassNo: 8, month: "APR", day: "12", title: "Phase 2", type: "live" },
+      { ClassNo: 9, month: "APR", day: "18", title: "Phase 2", type: "live" },
+      { ClassNo: 10, month: "APR", day: "19", title: "Phase 2", type: "live" },
+      { ClassNo: 11, month: "APR", day: "25", title: "Phase 2", type: "live" },
+      { ClassNo: 12, month: "APR", day: "26", title: "Phase 2", type: "live" },
+      { ClassNo: 13, month: "MAY", day: "2", title: "Phase 2", type: "live" },
+      { ClassNo: 14, month: "MAY", day: "3", title: "Phase 2", type: "live" },
+      { ClassNo: 15, month: "MAY", day: "9", title: "Phase 2", type: "live" },
+      { ClassNo: 16, month: "MAY", day: "10", title: "Phase 2", type: "live" },
+      { ClassNo: 17, month: "MAY", day: "16", title: "Phase 3", type: "live" },
+      { ClassNo: 18, month: "MAY", day: "17", title: "Phase 3", type: "live" },
+      { ClassNo: 19, month: "MAY", day: "23", title: "Phase 3", type: "live" },
+      { ClassNo: 20, month: "MAY", day: "24", title: "Phase 3", type: "live" },
+      { ClassNo: 21, month: "MAY", day: "30", title: "Phase 3", type: "live" },
+      { ClassNo: 22, month: "MAY", day: "31", title: "Phase 3", type: "live" },
+      { ClassNo: 23, month: "JUN", day: "6", title: "Phase 3", type: "live" },
+      { ClassNo: 24, month: "JUN", day: "7", title: "Phase 3", type: "live" },
+      { ClassNo: 25, month: "JUN", day: "13", title: "Phase 3", type: "live" },
+      { ClassNo: 26, month: "JUN", day: "14", title: "Phase 3", type: "live" },
+      { ClassNo: 27, month: "JUN", day: "20", title: "Phase 4", type: "live" },
+      { ClassNo: 28, month: "JUN", day: "21", title: "Phase 4", type: "live" },
+      { ClassNo: 29, month: "JUN", day: "27", title: "Phase 4", type: "live" },
+      { ClassNo: 30, month: "JUN", day: "28", title: "Phase 4", type: "live" },
+      { ClassNo: 31, month: "JUL", day: "4", title: "Phase 4", type: "live" },
+      { ClassNo: 32, month: "JUL", day: "5", title: "Phase 4", type: "live" },
+      { ClassNo: 33, month: "JUL", day: "11", title: "Phase 4", type: "live" },
+      { ClassNo: 34, month: "JUL", day: "12", title: "Phase 4", type: "live" },
+      // { ClassNo:35, month:"JUL", day:"18", title:"Phase 1", type:"live" },
+      // { ClassNo:36, month:"JUL", day:"19", title:"Phase 1", type:"live" },
+      // { ClassNo:37, month:"JUL", day:"25", title:"Phase 1", type:"live" },
+      // { ClassNo:38, month:"JUL", day:"26", title:"Phase 1", type:"live" },
+      // { ClassNo:39, month:"AUG", day:"1", title:"Phase 1", type:"live" },
+      // { ClassNo:40, month:"AUG", day:"2", title:"Phase 1", type:"live" },
+      // { ClassNo:41, month:"AUG", day:"8", title:"Phase 1", type:"live" },
+      // { ClassNo:42, month:"AUG", day:"9", title:"Phase 1", type:"live" }
     ],
     ml: [
-      {
-        month: "SEP",
-        day: "7",
-        title:
-          "Introduction to Machine Learning and Importance of ML in real life",
-        details: "Introduction, MLDLC, Introduction to Data Gathering",
-        topic: "ML • Chapters 1 - 3",
-        type: "live",
-        status: "upcoming",
-      },
+      { ClassNo: 1, month: "APR", day: "4", title: "Phase 1", type: "live" },
+      { ClassNo: 2, month: "APR", day: "5", title: "Phase 1", type: "live" },
+      { ClassNo: 3, month: "APR", day: "11", title: "Phase 1", type: "live" },
+      { ClassNo: 4, month: "APR", day: "12", title: "Phase 1", type: "live" },
+      { ClassNo: 5, month: "APR", day: "18", title: "Phase 1", type: "live" },
+      { ClassNo: 6, month: "APR", day: "19", title: "Phase 1", type: "live" },
+      { ClassNo: 7, month: "APR", day: "25", title: "Phase 1", type: "live" },
+      { ClassNo: 8, month: "APR", day: "26", title: "Phase 1", type: "live" },
+      { ClassNo: 9, month: "MAY", day: "2", title: "Phase 1", type: "live" },
+      { ClassNo: 10, month: "MAY", day: "3", title: "Phase 1", type: "live" },
+      { ClassNo: 11, month: "MAY", day: "9", title: "Phase 2", type: "live" },
+      { ClassNo: 12, month: "MAY", day: "10", title: "Phase 2", type: "live" },
+      { ClassNo: 13, month: "MAY", day: "16", title: "Phase 2", type: "live" },
+      { ClassNo: 14, month: "MAY", day: "17", title: "Phase 2", type: "live" },
+      { ClassNo: 15, month: "MAY", day: "23", title: "Phase 3", type: "live" },
+      { ClassNo: 16, month: "MAY", day: "24", title: "Phase 3", type: "live" },
+      { ClassNo: 17, month: "MAY", day: "30", title: "Phase 3", type: "live" },
+      { ClassNo: 18, month: "MAY", day: "31", title: "Phase 3", type: "live" },
+      { ClassNo: 19, month: "JUN", day: "6", title: "Phase 3", type: "live" },
+      { ClassNo: 20, month: "JUN", day: "7", title: "Phase 3", type: "live" },
+      { ClassNo: 21, month: "JUN", day: "13", title: "Phase 3", type: "live" },
+      { ClassNo: 22, month: "JUN", day: "14", title: "Phase 3", type: "live" },
+      { ClassNo: 23, month: "JUN", day: "20", title: "Phase 3", type: "live" },
+      { ClassNo: 24, month: "JUN", day: "21", title: "Phase 3", type: "live" },
+      { ClassNo: 25, month: "JUN", day: "27", title: "Phase 4", type: "live" },
+      { ClassNo: 26, month: "JUN", day: "28", title: "Phase 4", type: "live" },
+      { ClassNo: 27, month: "JUL", day: "4", title: "Phase 4", type: "live" },
+      { ClassNo: 28, month: "JUL", day: "5", title: "Phase 5", type: "live" },
+      { ClassNo: 29, month: "JUL", day: "11", title: "Phase 5", type: "live" },
+      { ClassNo: 30, month: "JUL", day: "12", title: "Phase 5", type: "live" },
+      { ClassNo: 31, month: "JUL", day: "18", title: "Phase 6", type: "live" },
+      { ClassNo: 32, month: "JUL", day: "19", title: "Phase 6", type: "live" },
+      { ClassNo: 33, month: "JUL", day: "25", title: "Phase 6", type: "live" },
+      // { ClassNo:38, month:"JUL", day:"26", title:"Phase 1", type:"live" },
+      // { ClassNo:39, month:"AUG", day:"1", title:"Phase 1", type:"live" },
+      // { ClassNo:40, month:"AUG", day:"2", title:"Phase 1", type:"live" },
+      // { ClassNo:41, month:"AUG", day:"8", title:"Phase 1", type:"live" },
+      // { ClassNo:42, month:"AUG", day:"9", title:"Phase 1", type:"live" }
     ],
   });
 
   // Sample syllabus data
-  const [syllabusData, setSyllabusData] = useState({
-    languages: [
-      "C",
-      "C++",
-      "Java",
-      "Python",
-      "Introduction to Object Oriented Programming",
-      "Inheritance and Operator Overloading",
-      "Error Handling and Reflection",
-      "Class Diagram and System Design",
-    ],
+  const [syllabusData] = useState({
     dsa: [
-      "Recursion",
-      "Arrays",
-      "Sliding Window",
-      "Greedy",
-      "Binary Search",
-      "Trees",
-      "Graphs",
-      "Dynamic Programming",
+      "Phase 0: Introduction to DSA - Requirements and Applications, Course Details Overview",
+      "Phase 1: Arrays - Introduction and basic questions, Sorting - Bubble, Insertion, Selection",
+      "Phase 1: Arrays - Medium to Difficult questions, Prefix Sums, Two Pointer, Difference Arrays",
+      "Phase 1: Bit Manipulation - Introduction, CFQ/IFQ",
+      "Phase 1: Hashing and Sliding Window - Introduction and easy problems",
+      "Phase 1: Hashing and Sliding Window - CFQ/IFQ",
+      "Phase 2: Greedy Algorithms - Introduction and easy problems",
+      "Phase 2: Greedy Algorithms - CFQ/IFQ",
+      "Phase 3: Recursion – Introduction, Easy problems on recursion, Merge Sort, Quick Sort",
+      "Phase 3: Recursion - Standard Problems, Introduction to recurring sub-problems",
+      "Phase 3: Binary Search - Introduction, Pattern Identification and easy problems",
+      "Phase 3: Binary Search - CFQ/IFQ",
+      "Phase 4: Linked Lists - Introduction, Easy Problems",
+      "Phase 4: Linked Lists - CFQ/IFQ",
+      "Phase 5: Stacks - Introduction and Easy Problems",
+      "Phase 5: Stacks - CFQ/IFQ",
+      "Phase 5: Queues - Introduction to Easy Problems",
+      "Phase 5: Queues - CFQ/IFQ",
+      "Phase 5: Mathematics - Sieve of Eratosthenes, HFC, LCM, Basic Combinatorics",
+      "Phase 6: Dynamic Programming - Introduction and Continuation from Phase 3 - 'Recursion - Standard Problems, Introduction to recurring sub-problems'",
+      "Phase 6: Dynamic Programming - 1D DP – CFQ/IFQ",
+      "Phase 6: Dynamic Programming - 2D & 3D DP – CFQ/IFQ",
+      "Phase 7: Strings – Introduction and basics, LPS Array definition and creation",
+      "Phase 7: Strings – KMP, CFQ/IFQ, Manacher's algorithm",
+      "Phase 8: Trees – Introduction and Traversal Algorithms",
+      "Phase 8: Trees – LCA, BFS and other Algorithms",
+      "Phase 8: Trees – CFQ/IFQ",
+      "Phase 9: Graphs – Introduction, BFS, DFS, Representation, Cycle Detection, DAG, Topological Sort",
+      "Phase 9: Graphs – Shortest path, Djikstra, Bellman Ford, Floyd Warshall, Kosaraju, Tarzan",
+      "Phase 9: Graphs – Union Find and Path Compression, MST – Prim and Kruskal",
+      "Phase 9: Trees and Graphs – CFQ/IFQ",
+      "Phase 10: Tries – Introduction, easy problems and string matching",
+      "Phase 10: Tries – CFQ/IFQ",
+      "Phase 10: Maths – Introduction, CFQ/IFQ",
+      "Phase 10: Fenwick and Segment Trees – Introduction and CFQ/IFQ (one problem for each)",
     ],
     webdev: [
-      "HTML5",
-      "CSS3",
-      "JavaScript",
-      "TypeScript",
-      "ReactJS",
-      "NodeJS",
-      "MongoDB",
-      "PostgreSQL",
+      "Phase 0: Foundation, HTML5, CSS - DNS, HTTP/HTTPS, Semantic HTML, a11y",
+      "Phase 0: Foundation, HTML5, CSS - Structuring a semantic landing page for a JavaScript tutorial series",
+      "Phase 0: Foundation, HTML5, CSS - Box Model, Flexbox, CSS Grid, Variables, Building a responsive, complex layout from scratch",
+      "Phase 0: Foundation, HTML5, CSS - Media Queries, Keyframes, Transitions, Creating interactive UI components (modals, carousels)",
+      "Phase 0: Foundation, HTML5, CSS - Utility-first CSS, Git/GitHub Workflows, Replicating a modern SaaS landing page using Tailwind",
+      "Phase 1: JavaScript - Core JavaScript Engine - Execution Context, Hoisting, Closures, Memory",
+      "Phase 1: JavaScript - Data Structures in JS - Arrays, Maps, Sets, High-order functions, Building an in-memory data table with complex sort/filter logic",
+      "Phase 1: JavaScript - DOM & Event Driven JS - Event Delegation, Bubbling, Browser Storage, Building a dynamic client-side task or curriculum tracker",
+      "Phase 1: JavaScript - Asynchronous JS - Event Loop, Promises, Async/Await, Fetching and displaying mock course data from a REST API",
+      "Phase 2: ReactJs - React Fundamentals - Virtual DOM, JSX, Props, State, Building reusable UI components",
+      "Phase 2: ReactJS - Deep Dive into Hooks - useState, useEffect, Custom Hooks, Creating custom hooks for API fetching and debouncing search",
+      "Phase 2: ReactJs - Advanced State - Context API, useReducer, Zustand/Redux, Managing global state for user progress and authentication",
+      "Phase 2: ReactJs - Routing & Performance - React Router, Memoization, Lazy Loading, Building an interactive course dashboard",
+      "Phase 3: NextJS - Next.js 16 & Server Components - App Router, Server vs. Client Components, Migrating the dashboard to a server-rendered Next.js 16 app",
+      "Phase 3: NextJs - Data Fetching & Mutations - Server Actions, SSR vs. SSG vs. ISR, Implementing seamless data mutations for user profiles",
+      "Phase 4: Part 4.1: Auth & Security - NextAuth/Auth.js, OAuth, JWTs, XSS prevention, Securing routes and implementing user credential logins",
+      "Phase 4: Part 4.2: TypeScript - Static Typing, Interfaces, Generics, Refactoring the platform to strict TypeScript for production readiness",
+      "Phase 4: Part 4.3: NodeJs & REST API - Node runtime, Express.js, Middleware, Building a scalable backend to serve course content",
+      "Phase 5: Databases - Relational DBs (Postgres), SQL fundamentals, Joins, Prisma/Drizzle ORM, Designing a database schema for users, courses, and enrollments",
+      "Phase 5: Databases - Caching & Performance, Redis caching, Rate Limiting, Implementing a Redis cache to serve high-traffic endpoints faster",
+      "Phase 6: System Architecture - Real-Time Communication, WebSockets, Socket.io, Adding a live chat or Q&A feature for active classes",
+      "Phase 6: System Architecture - Cloud Deployment (AWS), Docker, AWS EC2, S3, CI/CD Pipelines, Containerizing the app and automating deployments via GitHub Actions",
+      "Phase 6: System Architecture - System Design & Scale, Horizontal Scaling, Load Balancing, CDNs,Architecting for high traffic and integrating HLS video streaming",
+      "Phase 7: Capstone Project - Agile Sprints, Architecture Planning, Building the MVP of a full-fledged EdTech platform",
+      "Phase 7: Capstone Project - Capstone & Launch, E2E Testing, Performance Audits, Code Review, Finalizing features, integrating LiveKit for live sessions, and deploying",
     ],
     ml: [
-      "Data Gathering",
-      "Data Processing",
-      "Data Analysis",
-      "Machine Learning Algorithms",
-      "Deep Learning",
-      "Natural Language Processing",
+      "Phase 0: Introduction - What is ML, Complete ML pipe line",
+      "Phase 0: Introduction - Complete installation, Environment setup, Notebook, Pandas, Numpy, Matplotlib",
+      "Phase 1: Machine Learning Types - Supervised Learning: Linear regression (from scratch)",
+      "Phase 1: Machine Learning Types - Supervised Learning: Cost Function, Gradient Descent",
+      "Phase 1: Machine Learning Types - Supervised Learning: Sk-learn, Regression and Classification",
+      "Phase 1: Machine Learning Types - Model Performance Metrics: MSE, MAE, Accuracy, Precision, Recall, F1, Confusion Matrix",
+      "Phase 1: Machine Learning Types - Model Training Techniques: Train-test split, Cross-validation",
+      "Phase 1: Machine Learning Types - Overfitting, Bias-Variance Tradeoff",
+      "Phase 1: Machine Learning Types - Regularization, Hyperparameter tuning",
+      "Phase 1: Machine Learning Types - Ensemble Learning",
+      "Phase 2: Complete Hand-on Experience of Developing an ML model - Data Cleaning Techniques",
+      "Phase 2: Complete Hand-on Experience of Developing an ML model - Feature Selection",
+      "Phase 2: Complete Hand-on Experience of Developing an ML model - Feature Engineering",
+      "Phase 2: Complete Hand-on Experience of Developing an ML model - PCA",
+      "Phase 2: Complete Hand-on Experience of Developing an ML model - Model Training and evaluation, Other Talks",
+      "Phase 3: Deep Learning - Neural Networks - Forward & backward pass",
+      "Phase 3: Deep Learning - Neural Networks - Activation functions",
+      "Phase 3: Deep Learning - Neural Networks - Loss functions",
+      "Phase 3: Deep Learning - Neural Networks - Building a Neural Network from Scratch and Its Analysis",
+      "Phase 3: Deep Learning - Neural Networks - How to use Pytorch",
+      "Phase 4: Working With Images - CNN",
+      "Phase 4: Working With Images - Different Types of CNN Models",
+      "Phase 5: Working With Text Data - How to prepare text data",
+      "Phase 5: Working With Text Data - RNN, LSTM, GRU",
+      "Phase 6: Working With Text Data - Sentence auto complete (Project)",
+      "Phase 6: Working With Text Data - Simple Q&A Bot (Project)",
+      "Phase 6: Working With Text Data - Language to Language Translator (Project)",
     ],
     fundamentals: [
-      "Computer Networks",
-      "Database Management",
-      "Operating Systems",
-      "Computer Organization and Architechture",
-      "System Design",
+      "Phase 0: Introduction - Introduction and Course Overview, understanding of prerequisites, revision of C++ & Java",
+      "Phase 1: OOPS - Pillars of OOPS – Encapsulation and Polymorphism (along with static classes, functions, overloading, etc)",
+      "Phase 1: OOPS - Function and Operator Overloading in C++, pointers in C++ and references in Java, interfaces",
+      "Phase 1: OOPS - Pillars of OOPS – Inheritance",
+      "Phase 1: OOPS - Pillars of OOPS – Abstraction (including virtual classes, functions, etc",
+      "Phase 1: OOPS - Error Handling in C++ and Java",
+      "Phase 1: OOPS - Conclusion of OOPS – CFQs from OOPS",
+      "Phase 2: Computer Networks - Introduction to Networks – Subnet, Channel Sharing Techniques, Types of Networks and Subnets, Communications in Subnet, Layering Architecture, OSI model and TCP/IP Model",
+      "Phase 2: Computer Networks - Data Link Layer - Introduction, CSMA/CD, Checksum based Error Handling, Flow Control (Stop and Wait ARQ, Go back n, Sliding Window, etc.), MAC addressing",
+      "Phase 2: Computer Networks - Network Layer- Types of Subnets and Routing Algorithms (2 Routing Algorithms, Distance Vector Routing, Link State Routing),  Congestion Control algorithms (Leaky Bucket and all), Tunnelling and Fragmentation",
+      "Phase 2: Computer Networks - Network Layer - IP Addressing, IPv4 addresses, Classes IP Addresses, CIDR, Subnet Masking, NAT Translation, Drawbacks of CIDR, IP Aggregation",
+      "Phase 2: Computer Networks - Network Layer -  Drawbacks of IPv4 addressing, BJP, Introduction to IPv6 Addressing, Introduction to mobile IP Addresses, IGMP and ICMP ARP, RARP, DHCP",
+      "Phase 2: Computer Networks - Transport Layer –  Introduction, requirement of the Transport layer as a set of work that Network Layer does not do, TCP –  Prime Goals of TCP and Limitations of IP and 3 Way Handshake Protocol",
+      "Phase 2: Computer Networks - Transport Layer - Flow Control – Naggle's algorithm and Clark's solution and Cumulative / Delayed / Duplicate Acknowledgement",
+      "Phase 2: Computer Networks - Transport Layer - Requirement of Congestion Avoidance instead of Congestion Control, Congestion Avoidance Protocols –  Concept, TCP Taho, TCP Reno TCP New Reno, Introduction and concept of UDP, RPC",
+      "Phase 2: Computer Networks - Application Layer - Introduction to HTTP, HTTPS, SMTP, Mail transport old and new versions, Limitations on Wireless over Wired Connections applications and Flying Router, Wireless LAN, WebSocket Protocol, WebRTC Protocol, Basic security using SSL, SSH",
+      "Phase 3: DBMS - Introduction to Databases and Problems in File Storage",
+      "Phase 3: DBMS - Relational Algebra and ER Diagram",
+      "Phase 3: DBMS - Functional Dependency and Normalization",
+      "Phase 3: DBMS - Transactions and Recovery",
+      "Phase 3: DBMS - Understanding ACID Properties",
+      "Phase 3: DBMS - Understanding BASE Properties and Distributed Databases",
+      "Phase 3: DBMS - Introduction to MySQL  (DQL, DML, DDL, TCL)",
+      "Phase 3: DBMS - Indexing, Query Optimizations and SQL Practice (CFQ)",
+      "Phase 3: DBMS - Hashing File Storage and SQL Practice (CFQ)",
+      "Phase 3: DBMS - Introduction to NoSQL, Difference between SQL and NoSQL - Programmers perspective, Brief talk on Data Warehouring, Difference between OLAP and OLTP",
+      "Phase 4: Operating Systems - Process Management – Basic Concepts of Process, Process State Diagram , Creating and Suspending Processes ,Need of Process Scheduling and Types of Schedulers., IPC and Synchronization",
+      "Phase 4: Operating Systems - CPU Scheduling – Multiple Processors, Multiple Queue Scheduling, Multiple Feedback Queue Scheduling, Process Synchronization – Critical Section Problem, Mutual Exclusion, Producer Consumer Problem, Peterson's Solution, Semaphore, Starvation and Classical examples of Synchronization – Readers and Writers problem, Bounded Buffer, Dining Philosophers Problem",
+      "Phase 4: Operating Systems - Deadlock – introduction and characteristics of deadlock, Deadlock Handling – safe state, avoidance algorithm, and Bankers Algorithm, Recovery from Deadlock and Wait for graph ( Resource Preemption )",
+      "Phase 4: Operating Systems - Memory Management 1 – Introduction and necessity, Conversion of a user program to process, logical v/s physical address space, final definition of MMU , dynamic loading, dynamic linking, Swapping",
+      "Phase 4: Operating Systems - Memory Management 2 - Contiguous and dynamic storage allocation, Problems in both of them, Fragmentation, both internal and external, Solution to the above problem using Paging, Page Table, Associative Memory, TLB",
+      "Phase 4: Operating Systems - Memory Management 3 - Memory Protection, Shared Pages, Structure of the Page Table – 2 level, 3 level, Segmentation, Architecture, Hardware Segment Tables",
+      "Phase 4: Operating Systems - Memory Management 4 – Problems of Paging and Segmentation, Solution to the above problem – virtual memory using Demand Paging and Demand Segmentation, Demand Paging – Page Faults, Steps OS should do in a page fault, Performance of Demand Paging, Page Replacement Algorithm LRU, FIFO, Optimal",
+      "Phase 4: Operating Systems - Hardware Memory Handling - Allocation of Frames – Fixed and Priority – modern OS follow Global and Local Allocation, Thrashing – Prepaging and Page Size, TLB Reach",
     ],
   });
 
@@ -297,6 +468,62 @@ const ProfessionalCourseSchedule = ({
         return "bg-green-100 text-green-700 border-green-200";
       default:
         return "bg-gray-100 text-gray-700 border-gray-200";
+    }
+  };
+
+  const getCourseTiming = () => {
+    switch (examname) {
+      case "ml":
+        return (
+          <>
+            <div>
+              <b>Saturday 10 am to 12 pm</b>
+            </div>
+            <div>
+              <b>Sunday 6 pm to 8 pm</b>
+            </div>
+            <div>2 Days per Week</div>
+          </>
+        );
+
+      case "dsa":
+        return (
+          <>
+            <div>
+              <b>Friday 9 pm to 12:30 am</b>
+            </div>
+            <div>1 Day per Week</div>
+          </>
+        );
+
+      case "webdev":
+        return (
+          <>
+            <div>
+              <b>Saturday 2 pm to 4 pm</b>
+            </div>
+            <div>
+              <b>Sunday 2 pm to 4 pm</b>
+            </div>
+            <div>2 Days per Week</div>
+          </>
+        );
+
+      case "fundamentals":
+        return (
+          <>
+            <div>
+              <b>Saturday 6 pm to 8 pm</b>
+            </div>
+            <div>
+              <b>Sunday 10 am to 12 pm</b>
+            </div>
+            <div>2 Days per Week</div>
+          </>
+        );
+
+      default:
+        return <div>Loading...</div>;
     }
   };
 
@@ -425,6 +652,30 @@ const ProfessionalCourseSchedule = ({
             {authenticated && (
               <>
                 {/* Video Playlist Section */}
+                {/* Video Container */}
+                {/* Playlist Info Banner */}
+                {purchased && <div className="flex-shrink-0 mx-3 mt-3 mb-1 rounded-xl border border-emerald-200 bg-gradient-to-r from-emerald-50 via-teal-50 to-emerald-50 px-4 py-3.5 flex items-start gap-3 shadow-sm">
+                  {/* Top accent line */}
+                  <div className="flex-shrink-0 mt-0.5 p-2 rounded-lg bg-emerald-100 text-emerald-600">
+                    <Info className="w-4 h-4" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-xs font-bold text-emerald-800 uppercase tracking-wide mb-1">
+                      About this Playlist
+                    </p>
+                    <p className="text-xs text-emerald-700 leading-relaxed">
+                      Refer to the playlist to watch any video that you might
+                      have missed or may have been taught before you joined the
+                      classes. You can also use it for revision at any time of
+                      your choosing.{" "}
+                      <span className="font-semibold text-emerald-800">
+                        Note: Recorded videos will only be accessible for the
+                        duration for which this course remains active on your
+                        account.
+                      </span>
+                    </p>
+                  </div>
+                </div>}
                 <section className="mb-16">
                   <div className="bg-white rounded-3xl border border-slate-200 shadow-lg p-8">
                     <div className="flex items-center justify-between mb-8">
@@ -450,139 +701,9 @@ const ProfessionalCourseSchedule = ({
               </>
             )}
 
-            {/* Schedule & Content Grid */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-16">
-              {/* Schedule Info Sidebar */}
-              <div className="lg:col-span-1">
-                <div className="bg-white rounded-3xl border border-slate-200 shadow-lg p-8 sticky top-6">
-                  <h3 className="text-2xl font-bold text-slate-800 mb-6">
-                    Class Schedule
-                  </h3>
-
-                  <div className="space-y-6">
-                    <div className="flex items-start gap-3">
-                      <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                        <Clock className="w-5 h-5 text-blue-600" />
-                      </div>
-                      <div>
-                        <div className="font-semibold text-slate-800 mb-1">
-                          Class Timings
-                        </div>
-                        <div className="text-slate-600">
-                          Morning or Evening sessions
-                        </div>
-                        <div className="text-slate-600">2 days per week</div>
-                      </div>
-                    </div>
-
-                    <div className="flex items-start gap-3">
-                      <div className="w-10 h-10 bg-emerald-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                        <Target className="w-5 h-5 text-emerald-600" />
-                      </div>
-                      <div>
-                        <div className="font-semibold text-slate-800 mb-1">
-                          Assessments
-                        </div>
-                        <div className="text-slate-600">Weekly mock tests</div>
-                        <div className="text-slate-600">Progress tracking</div>
-                      </div>
-                    </div>
-
-                    <div className="flex items-start gap-3">
-                      <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                        <Bell className="w-5 h-5 text-purple-600" />
-                      </div>
-                      <div>
-                        <div className="font-semibold text-slate-800 mb-1">
-                          Notifications
-                        </div>
-                        <div className="text-slate-600">Class reminders</div>
-                        <div className="text-slate-600">Assignment alerts</div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="mt-8 p-4 bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl border border-blue-100">
-                    <div className="flex items-center gap-2 text-blue-700 font-semibold mb-2">
-                      <Zap className="w-4 h-4" />
-                      Next Class
-                    </div>
-                    <div className="text-slate-800 font-semibold">
-                      Calculus Fundamentals
-                    </div>
-                    <div className="text-slate-600 text-sm">
-                      Tomorrow at 10:00 AM
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Main Schedule Content */}
-              <div className="lg:col-span-2">
-                <div className="bg-white rounded-3xl border border-slate-200 shadow-lg p-8">
-                  <h3 className="text-2xl font-bold text-slate-800 mb-8">
-                    Upcoming Sessions
-                  </h3>
-
-                  <div className="space-y-6">
-                    {currentSchedule.map((session, index) => (
-                      <div
-                        key={index}
-                        className="group border border-slate-200 rounded-2xl p-6 hover:shadow-md hover:border-blue-200 transition-all duration-200"
-                      >
-                        <div className="flex flex-col md:flex-row items-start gap-6">
-                          {/* Date Badge */}
-                          <div className="flex-shrink-0 bg-gradient-to-br from-slate-100 to-slate-200 rounded-xl p-4 text-center md:min-w-[80px]">
-                            <div className="text-sm font-semibold text-slate-600">
-                              {session.month}
-                            </div>
-                            <div className="text-2xl font-bold text-slate-800">
-                              {session.day}
-                            </div>
-                          </div>
-
-                          {/* Session Content */}
-                          <div className="flex-1">
-                            <div className="flex items-start justify-between mb-3">
-                              <h4 className="text-xl font-bold text-slate-800 group-hover:text-blue-600 transition-colors">
-                                {session.title}
-                              </h4>
-                              <div
-                                className={`flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold border ${getStatusColor(
-                                  session.status || "upcoming",
-                                )}`}
-                              >
-                                {getTypeIcon(session.type || "live")}
-                                {session.status || "upcoming"}
-                              </div>
-                            </div>
-
-                            <p className="text-slate-600 mb-3 leading-relaxed">
-                              {session.details}
-                            </p>
-
-                            <div className="flex items-center justify-between">
-                              <div className="flex items-center gap-2 text-blue-600 font-medium">
-                                <BookOpen className="w-4 h-4" />
-                                {session.topic}
-                              </div>
-                              <button className="opacity-0 group-hover:opacity-100 transition-opacity text-blue-600 hover:text-blue-700 flex items-center gap-1">
-                                Join Session
-                                <ChevronRight className="w-4 h-4" />
-                              </button>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
-
             {/* Syllabus Section */}
             <section>
-              <div className="bg-white rounded-3xl border border-slate-200 shadow-lg overflow-hidden">
+              <div className="bg-white rounded-3xl border border-slate-200 shadow-lg overflow-hidden mb-16">
                 <div className="bg-gradient-to-r from-slate-50 to-blue-50 px-8 py-6 border-b border-slate-200">
                   <div className="flex items-center justify-between">
                     <div>
@@ -601,7 +722,7 @@ const ProfessionalCourseSchedule = ({
                 </div>
 
                 <div className="p-8">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 h-[90vh] scrollbar-thin overflow-auto">
                     {currentSyllabus.map((topic, index) => (
                       <div
                         key={index}
@@ -629,6 +750,170 @@ const ProfessionalCourseSchedule = ({
                 </div>
               </div>
             </section>
+
+            {/* How to Join Banner — visible only to purchased users */}
+            {purchased && (
+              <div className="mb-8 rounded-2xl border border-blue-200 bg-gradient-to-r from-blue-50 via-indigo-50 to-blue-50 px-6 py-5 shadow-sm">
+                {/* Top accent strip */}
+                <div className="flex items-start gap-4">
+                  <div className="flex-shrink-0 mt-0.5 p-2.5 rounded-xl bg-blue-100 text-blue-600">
+                    <Info className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-bold text-blue-800 mb-1">
+                      How to Join Your Live Classes
+                    </p>
+                    <p className="text-sm text-blue-700 leading-relaxed">
+                      You can join each class at its designated time as shown in
+                      the{" "}
+                      <span className="font-semibold">Upcoming Sessions</span>{" "}
+                      schedule below. Simply click the{" "}
+                      <span className="font-semibold">Class Link</span> provided
+                      in the{" "}
+                      <span className="font-semibold">Class Schedule</span>{" "}
+                      panel on the left — the link will become active at the
+                      start of the session. Make sure to join on time, as
+                      classes begin as per the pre-designated time schedule.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Schedule & Content Grid */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
+              {/* Schedule Info Sidebar */}
+              <div className="lg:col-span-1">
+                <div className="bg-white rounded-3xl border border-slate-200 shadow-lg p-8 sticky top-6">
+                  <h3 className="text-2xl font-bold text-slate-800 mb-6">
+                    Class Schedule
+                  </h3>
+
+                  <div className="space-y-6">
+                    <div className="flex items-start gap-3">
+                      <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                        <Clock className="w-5 h-5 text-blue-600" />
+                      </div>
+                      <div>
+                        <div className="font-semibold text-slate-800 mb-1">
+                          Class Timings
+                        </div>
+                        <div className="text-slate-600">
+                          {getCourseTiming()}
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="flex items-start gap-3">
+                      <div className="w-10 h-10 bg-emerald-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                        <Target className="w-5 h-5 text-emerald-600" />
+                      </div>
+                      <div>
+                        <div className="font-semibold text-slate-800 mb-1">
+                          Assessments
+                        </div>
+                        <div className="text-slate-600">Weekly mock tests</div>
+                        <div className="text-slate-600">Progress tracking</div>
+                      </div>
+                    </div>
+
+                    <div className="flex items-start gap-3">
+                      <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                        <Bell className="w-5 h-5 text-purple-600" />
+                      </div>
+                      <div>
+                        <div className="font-semibold text-slate-800 mb-1">
+                          Class Link
+                        </div>
+                        {purchased ? (
+                          <>Link</>
+                        ) : (
+                          <div className="text-slate-600">
+                            <b>Purchase the course to activate the link</b>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="mt-8 p-4 bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl border border-blue-100">
+                    <div className="flex items-center gap-2 text-blue-700 font-semibold mb-2">
+                      <Zap className="w-4 h-4" />
+                      Next Class
+                    </div>
+                    <div className="text-slate-800 font-semibold">
+                      Calculus Fundamentals
+                    </div>
+                    <div className="text-slate-600 text-sm">
+                      Tomorrow at 10:00 AM
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Main Schedule Content */}
+              <div className="lg:col-span-2">
+                <div className="bg-white rounded-3xl border border-slate-200 shadow-lg p-8">
+                  <h3 className="text-2xl font-bold text-slate-800 mb-8">
+                    Upcoming Sessions
+                  </h3>
+
+                  <div className="space-y-6 overflow-auto h-[90vh] scrollbar-thin">
+                    {currentSchedule.map((session, index) => (
+                      <div
+                        key={index}
+                        className="group border border-slate-200 rounded-2xl p-6 hover:shadow-md hover:border-blue-200 transition-all duration-200"
+                      >
+                        <div className="flex flex-col md:flex-row items-start gap-6">
+                          {/* Class Numbers */}
+                          <div className="flex-shrink-0 bg-gradient-to-br from-slate-100 to-slate-200 rounded-xl p-4 text-center md:min-w-[80px]">
+                            <div className="text-sm font-semibold text-slate-600">
+                              Class
+                            </div>
+                            <div className="text-2xl font-bold text-slate-800">
+                              {session.ClassNo}
+                            </div>
+                          </div>
+
+                          <div className="flex-shrink-0 bg-gradient-to-br from-slate-100 to-slate-200 rounded-xl p-4 text-center md:min-w-[80px]">
+                            <div className="text-sm font-semibold text-slate-600">
+                              {session.month}
+                            </div>
+                            <div className="text-2xl font-bold text-slate-800">
+                              {session.day}
+                            </div>
+                          </div>
+
+                          {/* Session Content */}
+                          <div className="flex-1">
+                            <div className="flex items-start justify-between mb-3">
+                              <h4 className="text-xl font-bold text-slate-800 group-hover:text-blue-600 transition-colors">
+                                {session.title}
+                              </h4>
+                              <div
+                                className={`flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold border ${getStatusColor(
+                                  session.status || "upcoming",
+                                )}`}
+                              >
+                                {getTypeIcon(session.type || "live")}
+                                {session.status || "upcoming"}
+                              </div>
+                            </div>
+
+                            <div className="flex items-center justify-between">
+                              <button className="opacity-0 group-hover:opacity-100 transition-opacity text-blue-600 hover:text-blue-700 flex items-center gap-1">
+                                Join Session
+                                <ChevronRight className="w-4 h-4" />
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
           </>
         ) : (
           <>

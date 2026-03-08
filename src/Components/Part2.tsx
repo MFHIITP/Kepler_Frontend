@@ -246,6 +246,28 @@ function Part2() {
             ))}
           </div>
         </div>
+
+        {/* April AI Announcement Banner */}
+        <div className="container mx-auto px-6 pb-4">
+          <div className="relative overflow-hidden rounded-2xl border border-amber-300 bg-gradient-to-r from-amber-50 via-orange-50 to-amber-50 shadow-md px-6 py-5 flex items-start gap-4 max-w-3xl mx-auto">
+            {/* Top shimmer strip */}
+            <div className="absolute top-0 left-0 h-1 w-full bg-gradient-to-r from-amber-400 via-orange-400 to-amber-400 animate-pulse"></div>
+
+            {/* Icon */}
+            <div className="flex-shrink-0 mt-0.5 text-2xl">🚀</div>
+
+            {/* Message */}
+            <p className="text-sm md:text-base text-amber-900 leading-relaxed">
+              In the month of{" "}
+              <span className="font-semibold text-orange-700">April</span>,{" "}
+              <span className="font-semibold text-orange-700">Artificial Intelligence: Explore the Future</span>{" "}
+              would be introduced to the{" "}
+              <span className="font-semibold text-orange-700">Placements Made Easier</span>{" "}
+              course as well. Please bear with us for the remaining days of this month.
+            </p>
+          </div>
+        </div>
+
         <button
           onClick={handleSubscriptionClick}
           className="w-full sm:w-fit h-16 mx-auto bg-gradient-to-r my-6 from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-200 hover:shadow-lg flex items-center justify-center gap-2"

@@ -54,7 +54,8 @@ const apiRoutes = {
         },
         referCode: {
             getReferCode: `/referCode/getReferCode`
-        }
+        },
+        coursePurchase: `/playlist/verifyCoursePurchase`
     },
     getAllCourses: '/users/getAllCourses',
     razorpay: {

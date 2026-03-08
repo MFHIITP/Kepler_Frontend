@@ -1,6 +1,6 @@
 import ReactPlayer from "react-player/youtube";
 import React, { useEffect, useState, useRef } from "react";
-import { Play, PlayCircle, Clock, Eye, CheckCircle, Lock, Download, BookOpen, Video, FileText, Star, Volume2, Settings, Maximize, SkipBack, SkipForward, Pause, ChevronUp, ChevronDown } from "lucide-react";
+import { Play, PlayCircle, Clock, Eye, CheckCircle, Lock, Download, BookOpen, Video, FileText, Star, Volume2, Settings, Maximize, SkipBack, SkipForward, Pause, ChevronUp, ChevronDown, ShoppingCart } from "lucide-react";
 import api from "../utils/api";
 import apiRoutes from "../utils/Routes/apiRoutes";
 import { useMutation } from "@tanstack/react-query";
@@ -212,7 +212,23 @@ function ProfessionalVideoPlaylist({ exam, details }: { exam: string, details: U
               </div>
             </div>
             <div className="text-xs md:text-sm text-slate-600">
-              {!currentPlaylist || currentPlaylist.length == 0 ? <span className="text-red-500 font-bold text-2xl">Buy the course to start learning</span> : "Complete all videos to unlock the next chapter"}
+              {!currentPlaylist || currentPlaylist.length == 0 ? (
+                <div className="flex items-start gap-2.5 mt-1 p-3 rounded-xl bg-gradient-to-r from-red-50 to-orange-50 border border-red-100">
+                  <div className="flex-shrink-0 mt-0.5 w-7 h-7 rounded-lg bg-red-100 flex items-center justify-center">
+                    <ShoppingCart className="w-3.5 h-3.5 text-red-500" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-bold text-red-700 leading-snug mb-0.5">
+                      Purchase to unlock
+                    </p>
+                    <p className="text-xs text-red-500 leading-relaxed">
+                      Buy this course to get full access to all videos and recorded sessions.
+                    </p>
+                  </div>
+                </div>
+              ) : (
+                "Complete all videos to unlock the next chapter"
+              )}
             </div>
           </div>
 

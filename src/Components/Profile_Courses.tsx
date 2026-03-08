@@ -616,6 +616,13 @@ const Profile_Courses: React.FC<componentPropsInterfacePaymentProfile> = (
                                         className={`text-sm font-medium ${isDisabled ? "text-gray-400" : "text-gray-800"}`}
                                       >
                                         {sem.name}{" "}
+                                        {/* have to remove the following code lines on 31st April, 2026*/}
+                                        {sem.name == "Artificial Intelligence: Explore the Future" ? <span className="inline-flex items-center gap-1 text-xs bg-amber-50 border border-amber-200 text-amber-700 px-2 py-0.5 rounded-full font-medium">
+                                          🗓 Available from April 2026
+                                        </span> : <span className="inline-flex items-center gap-1 text-xs bg-amber-50 border border-amber-200 text-green-700 px-2 py-0.5 rounded-full font-medium">
+                                          🗓 Live Now !
+                                        </span>}
+
                                       </span>
                                       {isPlacement && !isDisabled && (
                                         <span className="inline-flex items-center gap-1 text-xs bg-gradient-to-r from-violet-500 to-indigo-500 text-white px-2 py-0.5 rounded-full font-semibold">
