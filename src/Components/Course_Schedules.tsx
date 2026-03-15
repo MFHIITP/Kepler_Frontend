@@ -487,6 +487,9 @@ const ProfessionalCourseSchedule = ({
   };
 
   const getNextClass = () => {
+    if(examname == "placement"){
+      return null;
+    }
     const now = new Date();
 
     const upcoming = currentSchedule.filter((session: any) => session.date).map((session: any) => ({
@@ -884,11 +887,11 @@ const ProfessionalCourseSchedule = ({
                     {nextClass ? (
                       <>
                         <div className="text-slate-800 font-semibold">
-                          {nextClass.title}
+                          {nextClass?.title}
                         </div>
 
                         <div className="text-slate-600 text-sm">
-                          {new Date(nextClass.date).toLocaleDateString("en-US", {
+                          {new Date(nextClass?.date).toLocaleDateString("en-US", {
                             weekday: "long",
                             month: "short",
                             day: "numeric",
@@ -977,7 +980,7 @@ const ProfessionalCourseSchedule = ({
                 </h3>
 
                 {/* Course Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
                   {[
                     {
                       name: "Data Structures & Algorithms",
@@ -993,6 +996,11 @@ const ProfessionalCourseSchedule = ({
                       name: "Computer Science Fundamentals",
                       route: "/courses/fundamentals/details",
                       color: "from-indigo-500 to-purple-500",
+                    },
+                    {
+                      name: "Machine Learning and Deep Learning",
+                      route: "/courses/ml/details",
+                      color: "from-yellow-500 to-purple-500",
                     },
                   ].map((item, index) => (
                     <div

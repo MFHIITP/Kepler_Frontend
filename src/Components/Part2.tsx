@@ -253,9 +253,6 @@ function Part2() {
             {/* Top shimmer strip */}
             <div className="absolute top-0 left-0 h-1 w-full bg-gradient-to-r from-amber-400 via-orange-400 to-amber-400 animate-pulse"></div>
 
-            {/* Icon */}
-            <div className="flex-shrink-0 mt-0.5 text-2xl">🚀</div>
-
             {/* Message */}
             <p className="text-sm md:text-base text-amber-900 leading-relaxed">
               In the month of{" "}

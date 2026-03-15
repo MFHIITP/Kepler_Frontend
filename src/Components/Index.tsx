@@ -82,7 +82,7 @@ const Index: FC<componentPropsInterface> = ({ auth, details }) => {
                 Home
               </Link>
 
-              <Link 
+              {false && <Link 
                 to="/aboutus"
                 className={`flex items-center text-sm font-medium transition-colors hover:text-blue-600 ${
                   window.location.pathname === "/aboutus" ? "text-blue-600" : "text-gray-700"
@@ -90,7 +90,7 @@ const Index: FC<componentPropsInterface> = ({ auth, details }) => {
               >
                 <FontAwesomeIcon icon={faQuestionCircle} className="mr-2" />
                 About Us
-              </Link>
+              </Link>}
 
               <Link 
                 to="/courses"
@@ -107,7 +107,7 @@ const Index: FC<componentPropsInterface> = ({ auth, details }) => {
                 <button 
                   className={`flex items-center text-sm font-medium transition-colors hover:text-blue-600 ${
                     window.location.pathname.startsWith("/admins") ? "text-blue-600" : "text-gray-700"
-                  }`}
+                  } ${adminemails.includes(details?.email ?? "") ? "" : "hidden"}`}
                   onMouseEnter={() => setDropdownOpen(true)}
                   onMouseLeave={() => setDropdownOpen(false)}
                 >
@@ -133,7 +133,7 @@ const Index: FC<componentPropsInterface> = ({ auth, details }) => {
                         to="/admins/liveusers" 
                         className={`block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 ${
                           auth ? "" : "hidden"
-                        } ${adminemails.includes(details?.email ?? "") ? "" : "hidden"}`}
+                        }`}
                       >
                         Live Users
                       </Link>
@@ -141,7 +141,7 @@ const Index: FC<componentPropsInterface> = ({ auth, details }) => {
                         to="/admins/historyusers" 
                         className={`block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 ${
                           auth ? "" : "hidden"
-                        } ${adminemails.includes(details?.email ?? "") ? "" : "hidden"}`}
+                        } `}
                       >
                         User History
                       </Link>
@@ -149,7 +149,7 @@ const Index: FC<componentPropsInterface> = ({ auth, details }) => {
                         to="/admins/adminDashboard" 
                         className={`block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 ${
                           auth ? "" : "hidden"
-                        } ${adminemails.includes(details?.email ?? "") ? "" : "hidden"}`}
+                        }`}
                       >
                         Admin Dashboard
                       </Link>
@@ -157,7 +157,7 @@ const Index: FC<componentPropsInterface> = ({ auth, details }) => {
                         to="/admins/courseToStudentList" 
                         className={`block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 ${
                           auth ? "" : "hidden"
-                        } ${adminemails.includes(details?.email ?? "") ? "" : "hidden"}`}
+                        }`}
                       >
                         Course To Students
                       </Link>
@@ -165,7 +165,7 @@ const Index: FC<componentPropsInterface> = ({ auth, details }) => {
                         to="/admins/studentMonitoring" 
                         className={`block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 ${
                           auth ? "" : "hidden"
-                        } ${adminemails.includes(details?.email ?? "") ? "" : "hidden"}`}
+                        }`}
                       >
                         Student Tracker
                       </Link>
@@ -173,6 +173,15 @@ const Index: FC<componentPropsInterface> = ({ auth, details }) => {
                   </div>
                 )}
               </div>
+                <Link 
+                to="/problems/allProblems"
+                className={`flex items-center text-sm font-medium transition-colors hover:text-blue-600 ${
+                  window.location.pathname === "/problems/allProblems" ? "text-blue-600" : "text-gray-700"
+                }`}
+              >
+                <FontAwesomeIcon icon={faQuestionCircle} className="mr-2" />
+                Code Editor
+              </Link>
 
               {/* Library Dropdown */}
               <div className={`relative group ${auth ? "" : "hidden"}`}>
@@ -197,9 +206,6 @@ const Index: FC<componentPropsInterface> = ({ auth, details }) => {
                     <div className="py-1">
                       <Link to="/library/resources" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                         Resources
-                      </Link>
-                      <Link to="/problems/allProblems" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                        Problems
                       </Link> 
                     </div>
                   </div>
@@ -216,7 +222,7 @@ const Index: FC<componentPropsInterface> = ({ auth, details }) => {
                 Group Chat
               </Link>
 
-              <Link 
+              {false && <Link 
                 to="/meeting"
                 className={`flex items-center text-sm font-medium transition-colors hover:text-blue-600 ${
                   window.location.pathname === "/meeting" ? "text-blue-600" : "text-gray-700"
@@ -224,9 +230,9 @@ const Index: FC<componentPropsInterface> = ({ auth, details }) => {
               >
                 <FontAwesomeIcon icon={faVideo} className="mr-2" />
                 Meeting
-              </Link>
+              </Link>}
 
-              <Link 
+              {false && <Link 
                 to="https://kepler-22b.vercel.app"
                 className={`flex items-center text-sm font-medium transition-colors hover:text-blue-600 ${
                   window.location.pathname.startsWith("/gallery") ? "text-blue-600" : "text-gray-700"
@@ -236,10 +242,20 @@ const Index: FC<componentPropsInterface> = ({ auth, details }) => {
               >
                 <FontAwesomeIcon icon={faImage} className="mr-2" />
                 Gallery
+              </Link>}
+
+              <Link 
+                to="/notice/connection"
+                className={`flex items-center text-sm font-medium transition-colors hover:text-blue-600 ${
+                  window.location.pathname === "/notice/connection" ? "text-blue-600" : "text-gray-700"
+                } ${auth ? "" : "hidden"}`}
+              >
+                <FontAwesomeIcon icon={faVideo} className="mr-2" />
+                Connections
               </Link>
 
               {/* Notice Updates Dropdown */}
-              <div className="relative group">
+              {false && <div className="relative group">
                 <button 
                   className={`flex items-center text-sm font-medium transition-colors hover:text-blue-600 ${
                     window.location.pathname.startsWith("/notice") ? "text-blue-600" : "text-gray-700"
@@ -265,13 +281,10 @@ const Index: FC<componentPropsInterface> = ({ auth, details }) => {
                       >
                         Notice and Circulars
                       </Link>
-                      <Link to="/notice/connection" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                        Connections
-                      </Link>
                     </div>
                   </div>
                 )}
-              </div>
+              </div>}
             </nav>
 
             {/* Right side actions */}
