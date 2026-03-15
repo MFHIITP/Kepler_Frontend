@@ -847,9 +847,9 @@ const User_Details: React.FC<componentPropsInterfacePaymentProfile> = (
 
               <button
                 onClick={handlePayment}
-                disabled={userdetails?.amount.value == 0 || true}
+                disabled={userdetails?.amount.value == 0 || false}
                 className={`px-6 py-3 rounded-xl font-semibold transition-all duration-200 ${
-                  userdetails?.amount.value == 0 || true
+                  userdetails?.amount.value == 0 || false
                     ? "bg-gray-300 text-gray-500 cursor-not-allowed"
                     : "bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white hover:scale-105 hover:shadow-lg"
                 }`}
