@@ -15,6 +15,7 @@ interface courseDetailsInterface {
   selectedCourses: [CourseInterface];
   preventedCourses: [string];
   allPossibleCourses: { name: string; price: number }[];
+  showDiscount: boolean;
 }
 
 const getAllCourses = async (emailId: string) => {
@@ -161,6 +162,28 @@ const TrendingIcon = () => (
   </svg>
 );
 
+const GraduationCapIcon = () => (
+  <svg
+    className="w-4 h-4"
+    fill="none"
+    stroke="currentColor"
+    viewBox="0 0 24 24"
+  >
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth={2}
+      d="M12 14l9-5-9-5-9 5 9 5z"
+    />
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth={2}
+      d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"
+    />
+  </svg>
+);
+
 // ─── Main Component ───────────────────────────────────────────────────────────
 
 const Profile_Courses: React.FC<componentPropsInterfacePaymentProfile> = (
@@ -182,6 +205,7 @@ const Profile_Courses: React.FC<componentPropsInterfacePaymentProfile> = (
   const [preventedCourses, setPreventedCourses] = useState<string[]>([]);
   const [search, setsearch] = useState("");
   const [courses] = useState(["Computer Science"]);
+  const [showDiscount, setShowDiscount] = useState(false);
 
   const { mutate: getCoursesMutation } = useMutation({
     mutationFn: (emailId: string) => getAllCourses(emailId),
@@ -208,6 +232,7 @@ const Profile_Courses: React.FC<componentPropsInterfacePaymentProfile> = (
           })),
       });
       setPreventedCourses(data.preventedCourses);
+      setShowDiscount(data.showDiscount);
     },
   });
 
@@ -313,15 +338,18 @@ const Profile_Courses: React.FC<componentPropsInterfacePaymentProfile> = (
       discountLabel = "Bundle Discount (Placements + AI)";
     }
     const discountAmount = subtotal * discountRate;
-    const total = subtotal - discountAmount;
-    return { subtotal, discountRate, discountAmount, total, discountLabel };
+    const priceAfterBundleDiscount = subtotal - discountAmount;
+    // JU 50% discount is applied on top of the bundle discount
+    const juDiscountAmount = showDiscount ? priceAfterBundleDiscount * 0.5 : 0;
+    const total = priceAfterBundleDiscount - juDiscountAmount;
+    return { subtotal, discountRate, discountAmount, juDiscountAmount, total, discountLabel };
   };
 
   const isPlacementSelected = choices["Computer Science"].some(
     (c) => c.name === PLACEMENT_COURSE,
   );
   const totalSelected = getTotalSelectedCourses();
-  const { subtotal, discountRate, discountAmount, total, discountLabel } =
+  const { subtotal, discountRate, discountAmount, juDiscountAmount, total, discountLabel } =
     getPriceBreakdown();
 
   return (
@@ -492,6 +520,21 @@ const Profile_Courses: React.FC<componentPropsInterfacePaymentProfile> = (
             </p>
             <span className="ml-auto text-xs bg-white/20 rounded-full px-3 py-1 font-semibold whitespace-nowrap">
               🎓 4-for-2
+            </span>
+          </div>
+        )}
+
+        {/* ── Jadavpur University Discount Banner ── */}
+        {showDiscount && (
+          <div className="mb-6 fade-in shine bg-gradient-to-r from-rose-500 to-pink-600 rounded-xl px-5 py-3.5 flex items-center gap-3 text-white shadow-lg shadow-rose-100">
+            <GraduationCapIcon />
+            <p className="text-sm font-medium">
+              <strong>Jadavpur University exclusive!</strong> You qualify for an
+              additional <strong>50% off</strong> applied on top of any existing
+              discounts.
+            </p>
+            <span className="ml-auto text-xs bg-white/20 rounded-full px-3 py-1 font-semibold whitespace-nowrap">
+              🎓 50% OFF
             </span>
           </div>
         )}
@@ -878,12 +921,29 @@ const Profile_Courses: React.FC<componentPropsInterfacePaymentProfile> = (
                           </div>
                         ) : null}
 
+                        {/* Jadavpur University discount row */}
+                        {showDiscount && totalSelected > 0 && (
+                          <div className="flex justify-between items-center bg-rose-50 border border-rose-200 rounded-lg px-3 py-2">
+                            <div className="flex items-center gap-1.5">
+                              <span className="text-xs bg-gradient-to-r from-rose-500 to-pink-600 text-white font-bold px-1.5 py-0.5 rounded-full">
+                                −50%
+                              </span>
+                              <span className="text-rose-700 text-xs font-medium">
+                                Jadavpur University
+                              </span>
+                            </div>
+                            <span className="text-rose-600 text-sm font-bold">
+                              −₹{juDiscountAmount.toLocaleString()}
+                            </span>
+                          </div>
+                        )}
+
                         <div className="pt-2 border-t border-gray-200 flex justify-between items-center">
                           <span className="font-bold text-gray-900 text-sm">
                             Total
                           </span>
                           <div className="text-right">
-                            {discountRate > 0 && (
+                            {(discountRate > 0 || showDiscount) && (
                               <div className="text-xs text-gray-400 line-through text-right">
                                 ₹{subtotal.toLocaleString()}
                               </div>
