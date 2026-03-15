@@ -33,7 +33,9 @@ const ReferCodeCaller: React.FC<referralPropsInterface> = ({details, auth}) => {
               </p>
               <div className="space-y-2 mb-6">
                 <p className="text-blue-100">
-                  • ₹150 cashback for referring to your friends
+                  • ₹150 minimum cashback (per course) for referring to your friends
+                  <br></br>
+                  • ₹375 cashback for referring the "Placements Made Easier" tracker to your friends
                 </p>
               </div>
               <button
