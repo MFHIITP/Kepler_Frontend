@@ -60,7 +60,7 @@ function Login() {
     onError: async (data) => {
       setLoading(false);
       setEmail("");
-      toast.error(data.message);
+      toast.error(data);
     },
   });
 

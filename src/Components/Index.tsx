@@ -177,7 +177,7 @@ const Index: FC<componentPropsInterface> = ({ auth, details }) => {
                 to="/problems/allProblems"
                 className={`flex items-center text-sm font-medium transition-colors hover:text-blue-600 ${
                   window.location.pathname === "/problems/allProblems" ? "text-blue-600" : "text-gray-700"
-                }`}
+                }  ${auth ? "" : "hidden"}`}
               >
                 <FontAwesomeIcon icon={faQuestionCircle} className="mr-2" />
                 Code Editor
