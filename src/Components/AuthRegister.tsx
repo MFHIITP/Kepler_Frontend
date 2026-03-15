@@ -392,15 +392,23 @@ function AuthRegister() {
                       >
                         College/University Name *
                       </label>
-                      <input
-                        type="text"
+                      <select
                         id="college"
                         value={formData.college}
                         onChange={handleChange}
                         className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-white"
-                        placeholder="Enter your college/university name"
                         required
-                      />
+                      >
+                        <option value="">Select University</option>
+
+                        {universities.map((university) => (
+                          <option key={university} value={university}>
+                            {university}
+                          </option>
+                        ))}
+
+                        <option value="Other">Other (Not Listed)</option>
+                      </select>
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div className="space-y-2">
