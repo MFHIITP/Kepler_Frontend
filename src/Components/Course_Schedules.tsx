@@ -214,7 +214,7 @@ const ProfessionalCourseSchedule = ({
       { ClassNo:42, month:"AUG", day:"13", title:"Phase 7", type:"live", date:"2026-08-13", time: "7 pm to 9 pm"}
     ],
     dsa: [
-	  { ClassNo:1, month:"MAR", day:"23", title:"Phase 0", type:"live", date:"2026-03-23", time: "2 pm to 4 pm"},
+	  { ClassNo:1, month:"MAR", day:"23", title:"Phase 0", type:"live", date:"2026-03-23", time: "6 pm to 8 pm"},
       { ClassNo:2, month:"MAR", day:"28", title:"Phase 1", type:"live", date:"2026-03-28", time: "2 pm to 4 pm"},
       { ClassNo:3, month:"MAR", day:"29", title:"Phase 1", type:"live", date:"2026-03-29", time: "2 pm to 4 pm"},
       { ClassNo:4, month:"APR", day:"4", title:"Phase 1", type:"live", date:"2026-04-04", time: "2 pm to 4 pm"},
@@ -337,9 +337,9 @@ const ProfessionalCourseSchedule = ({
       { ClassNo:33, month:"JUL", day:"25", title:"Phase 6", type:"live", date:"2026-07-25", time: "6 pm to 8 pm"},
       { ClassNo:34, month:"JUL", day:"26", title:"Phase 6", type:"live", date:"2026-07-26", time: "6 pm to 8 pm"},
       { ClassNo:35, month:"AUG", day:"1", title:"Phase 6", type:"live", date:"2026-08-01", time: "6 pm to 8 pm"},
-      { ClassNo:40, month:"AUG", day:"2", title:"Phase 1", type:"live", date:"2026-08-02" , time: "6 pm to 8 pm"},
-      { ClassNo:41, month:"AUG", day:"8", title:"Phase 1", type:"live", date:"2026-08-08" , time: "6 pm to 8 pm"},
-      { ClassNo:42, month:"AUG", day:"9", title:"Phase 1", type:"live", date:"2026-08-09" , time: "6 pm to 8 pm"}
+      // { ClassNo:40, month:"AUG", day:"2", title:"Phase 1", type:"live", date:"2026-08-02" , time: "6 pm to 8 pm"},
+      // { ClassNo:41, month:"AUG", day:"8", title:"Phase 1", type:"live", date:"2026-08-08" , time: "6 pm to 8 pm"},
+      // { ClassNo:42, month:"AUG", day:"9", title:"Phase 1", type:"live", date:"2026-08-09" , time: "6 pm to 8 pm"}
     ],
   });
 
