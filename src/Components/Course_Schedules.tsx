@@ -127,7 +127,7 @@ const ProfessionalCourseSchedule = ({
       duration: "5 Months / Bi-Weekly Classes",
       students: "10+",
       rating: 4.7,
-      startDate: "March 23th, 2026",
+      startDate: "March 23rd, 2026",
       image: "/Images/DSA1InternalImage.jpg",
     },
     fundamentals: {
