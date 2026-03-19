@@ -19,7 +19,7 @@ import {
   ChevronRight,
   Info,
 } from "lucide-react";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import Playlist from "./Playlist";
 import Footer from "./Footer";
 import { UserDetails } from "./Connections/Connection.interface";
@@ -170,7 +170,7 @@ const ProfessionalCourseSchedule = ({
 
   const [scheduleData] = useState({
     webdev: [
-	  { ClassNo:1, month:"MAR", day:"20", title:"Phase 0", type:"live", date:"2026-03-20", time: "7 pm to 9 pm"},
+      { ClassNo:1, month:"MAR", day:"20", title:"Phase 0", type:"live", date:"2026-03-20", time: "7 pm to 9 pm"},
       { ClassNo:2, month:"MAR", day:"26", title:"Phase 0", type:"live", date:"2026-03-26", time: "7 pm to 9 pm"},
       { ClassNo:3, month:"MAR", day:"27", title:"Phase 0", type:"live", date:"2026-03-27", time: "7 pm to 9 pm"},
       { ClassNo:4, month:"APR", day:"2", title:"Phase 0", type:"live", date:"2026-04-02", time: "7 pm to 9 pm"},
@@ -214,132 +214,129 @@ const ProfessionalCourseSchedule = ({
       { ClassNo:42, month:"AUG", day:"13", title:"Phase 7", type:"live", date:"2026-08-13", time: "7 pm to 9 pm"}
     ],
     dsa: [
-	  { ClassNo:1, month:"MAR", day:"23", title:"Phase 0", type:"live", date:"2026-03-23", time: "6 pm to 8 pm"},
+      { ClassNo:1, month:"MAR", day:"23", title:"Phase 0", type:"live", date:"2026-03-23", time: "6 pm to 8 pm"},
+      { ClassNo:2, month:"MAR", day:"28", title:"Phase 1", type:"live", date:"2026-03-28", time: "6 pm to 8 pm"},
+      { ClassNo:3, month:"MAR", day:"29", title:"Phase 1", type:"live", date:"2026-03-29", time: "6 pm to 8 pm"},
+      { ClassNo:4, month:"APR", day:"4", title:"Phase 1", type:"live", date:"2026-04-04", time: "6 pm to 8 pm"},
+      { ClassNo:5, month:"APR", day:"5", title:"Phase 1", type:"live", date:"2026-04-05", time: "6 pm to 8 pm"},
+      { ClassNo:6, month:"APR", day:"11", title:"Phase 1", type:"live", date:"2026-04-11", time: "6 pm to 8 pm"},
+      { ClassNo:7, month:"APR", day:"12", title:"Phase 2", type:"live", date:"2026-04-12", time: "6 pm to 8 pm"},
+      { ClassNo:8, month:"APR", day:"18", title:"Phase 2", type:"live", date:"2026-04-18", time: "6 pm to 8 pm"},
+      { ClassNo:9, month:"APR", day:"19", title:"Phase 2", type:"live", date:"2026-04-19", time: "6 pm to 8 pm"},
+      { ClassNo:10, month:"APR", day:"25", title:"Phase 3", type:"live", date:"2026-04-25", time: "6 pm to 8 pm"},
+      { ClassNo:11, month:"APR", day:"26", title:"Phase 3", type:"live", date:"2026-04-26", time: "6 pm to 8 pm"},
+      { ClassNo:12, month:"MAY", day:"2", title:"Phase 3", type:"live", date:"2026-05-02", time: "6 pm to 8 pm"},
+      { ClassNo:13, month:"MAY", day:"3", title:"Phase 3", type:"live", date:"2026-05-03", time: "6 pm to 8 pm"},
+      { ClassNo:14, month:"MAY", day:"9", title:"Phase 4", type:"live", date:"2026-05-09", time: "6 pm to 8 pm"},
+      { ClassNo:15, month:"MAY", day:"10", title:"Phase 4", type:"live", date:"2026-05-10", time: "6 pm to 8 pm"},
+      { ClassNo:16, month:"MAY", day:"16", title:"Phase 4", type:"live", date:"2026-05-16", time: "6 pm to 8 pm"},
+      { ClassNo:17, month:"MAY", day:"17", title:"Phase 5", type:"live", date:"2026-05-17", time: "6 pm to 8 pm"},
+      { ClassNo:18, month:"MAY", day:"23", title:"Phase 5", type:"live", date:"2026-05-23", time: "6 pm to 8 pm"},
+      { ClassNo:19, month:"MAY", day:"24", title:"Phase 5", type:"live", date:"2026-05-24", time: "6 pm to 8 pm"},
+      { ClassNo:20, month:"MAY", day:"30", title:"Phase 5", type:"live", date:"2026-05-30", time: "6 pm to 8 pm"},
+      { ClassNo:21, month:"MAY", day:"31", title:"Phase 5", type:"live", date:"2026-05-31", time: "6 pm to 8 pm"},
+      { ClassNo:22, month:"JUN", day:"6", title:"Phase 5", type:"live", date:"2026-06-06", time: "6 pm to 8 pm"},
+      { ClassNo:23, month:"JUN", day:"7", title:"Phase 6", type:"live", date:"2026-06-07", time: "6 pm to 8 pm"},
+      { ClassNo:24, month:"JUN", day:"13", title:"Phase 6", type:"live", date:"2026-06-13", time: "6 pm to 8 pm"},
+      { ClassNo:25, month:"JUN", day:"14", title:"Phase 6", type:"live", date:"2026-06-14", time: "6 pm to 8 pm"},
+      { ClassNo:26, month:"JUN", day:"20", title:"Phase 6", type:"live", date:"2026-06-20", time: "6 pm to 8 pm"},
+      { ClassNo:27, month:"JUN", day:"21", title:"Phase 7", type:"live", date:"2026-06-21", time: "6 pm to 8 pm"},
+      { ClassNo:28, month:"JUN", day:"27", title:"Phase 7", type:"live", date:"2026-06-27", time: "6 pm to 8 pm"},
+      { ClassNo:29, month:"JUN", day:"28", title:"Phase 7", type:"live", date:"2026-06-28", time: "6 pm to 8 pm"},
+      { ClassNo:30, month:"JUL", day:"4", title:"Phase 8", type:"live", date:"2026-07-04", time: "6 pm to 8 pm"},
+      { ClassNo:31, month:"JUL", day:"5", title:"Phase 8", type:"live", date:"2026-07-05", time: "6 pm to 8 pm"},
+      { ClassNo:32, month:"JUL", day:"11", title:"Phase 8", type:"live", date:"2026-07-11", time: "6 pm to 8 pm"},
+      { ClassNo:33, month:"JUL", day:"12", title:"Phase 8", type:"live", date:"2026-07-12", time: "6 pm to 8 pm"},
+      { ClassNo:34, month:"JUL", day:"18", title:"Phase 9", type:"live", date:"2026-07-18", time: "6 pm to 8 pm"},
+      { ClassNo:35, month:"JUL", day:"19", title:"Phase 9", type:"live", date:"2026-07-19", time: "6 pm to 8 pm"},
+      { ClassNo:36, month:"JUL", day:"25", title:"Phase 9", type:"live", date:"2026-07-25", time: "6 pm to 8 pm"},
+      { ClassNo:37, month:"JUL", day:"26", title:"Phase 9", type:"live", date:"2026-07-26", time: "6 pm to 8 pm"},
+      { ClassNo:38, month:"AUG", day:"1", title:"Phase 10", type:"live", date:"2026-08-01", time: "6 pm to 8 pm"},
+      { ClassNo:39, month:"AUG", day:"2", title:"Phase 10", type:"live", date:"2026-08-02", time: "6 pm to 8 pm"},
+      { ClassNo:40, month:"AUG", day:"8", title:"Phase 10", type:"live", date:"2026-08-08", time: "6 pm to 8 pm"},
+      { ClassNo:41, month:"AUG", day:"9", title:"Phase 10", type:"live", date:"2026-08-09", time: "6 pm to 8 pm"},
+      { ClassNo:42, month:"AUG", day:"15", title:"Phase 10", type:"live", date:"2026-08-15", time: "6 pm to 8 pm"}
+    ],
+    fundamentals: [
+      { ClassNo:1, month:"MAR", day:"21", title:"Phase 0", type:"live", date:"2026-03-21", time: "11 am to 1 pm"},
       { ClassNo:2, month:"MAR", day:"28", title:"Phase 1", type:"live", date:"2026-03-28", time: "2 pm to 4 pm"},
       { ClassNo:3, month:"MAR", day:"29", title:"Phase 1", type:"live", date:"2026-03-29", time: "2 pm to 4 pm"},
       { ClassNo:4, month:"APR", day:"4", title:"Phase 1", type:"live", date:"2026-04-04", time: "2 pm to 4 pm"},
       { ClassNo:5, month:"APR", day:"5", title:"Phase 1", type:"live", date:"2026-04-05", time: "2 pm to 4 pm"},
       { ClassNo:6, month:"APR", day:"11", title:"Phase 1", type:"live", date:"2026-04-11", time: "2 pm to 4 pm"},
-      { ClassNo:7, month:"APR", day:"12", title:"Phase 2", type:"live", date:"2026-04-12", time: "2 pm to 4 pm"},
-      { ClassNo:8, month:"APR", day:"18", title:"Phase 2", type:"live", date:"2026-04-18", time: "2 pm to 4 pm"},
-      { ClassNo:9, month:"APR", day:"19", title:"Phase 2", type:"live", date:"2026-04-19", time: "2 pm to 4 pm"},
-      { ClassNo:10, month:"APR", day:"25", title:"Phase 3", type:"live", date:"2026-04-25", time: "2 pm to 4 pm"},
-      { ClassNo:11, month:"APR", day:"26", title:"Phase 3", type:"live", date:"2026-04-26", time: "2 pm to 4 pm"},
-      { ClassNo:12, month:"MAY", day:"2", title:"Phase 3", type:"live", date:"2026-05-02", time: "2 pm to 4 pm"},
-      { ClassNo:13, month:"MAY", day:"3", title:"Phase 3", type:"live", date:"2026-05-03", time: "2 pm to 4 pm"},
-      { ClassNo:14, month:"MAY", day:"9", title:"Phase 4", type:"live", date:"2026-05-09", time: "2 pm to 4 pm"},
-      { ClassNo:15, month:"MAY", day:"10", title:"Phase 4", type:"live", date:"2026-05-10", time: "2 pm to 4 pm"},
-      { ClassNo:16, month:"MAY", day:"16", title:"Phase 4", type:"live", date:"2026-05-16", time: "2 pm to 4 pm"},
-      { ClassNo:17, month:"MAY", day:"17", title:"Phase 5", type:"live", date:"2026-05-17", time: "2 pm to 4 pm"},
-      { ClassNo:18, month:"MAY", day:"23", title:"Phase 5", type:"live", date:"2026-05-23", time: "2 pm to 4 pm"},
-      { ClassNo:19, month:"MAY", day:"24", title:"Phase 5", type:"live", date:"2026-05-24", time: "2 pm to 4 pm"},
-      { ClassNo:20, month:"MAY", day:"30", title:"Phase 5", type:"live", date:"2026-05-30", time: "2 pm to 4 pm"},
-      { ClassNo:21, month:"MAY", day:"31", title:"Phase 5", type:"live", date:"2026-05-31", time: "2 pm to 4 pm"},
-      { ClassNo:22, month:"JUN", day:"6", title:"Phase 5", type:"live", date:"2026-06-06", time: "2 pm to 4 pm"},
-      { ClassNo:23, month:"JUN", day:"7", title:"Phase 6", type:"live", date:"2026-06-07", time: "2 pm to 4 pm"},
-      { ClassNo:24, month:"JUN", day:"13", title:"Phase 6", type:"live", date:"2026-06-13", time: "2 pm to 4 pm"},
-      { ClassNo:25, month:"JUN", day:"14", title:"Phase 6", type:"live", date:"2026-06-14", time: "2 pm to 4 pm"},
-      { ClassNo:26, month:"JUN", day:"20", title:"Phase 6", type:"live", date:"2026-06-20", time: "2 pm to 4 pm"},
-      { ClassNo:27, month:"JUN", day:"21", title:"Phase 7", type:"live", date:"2026-06-21", time: "2 pm to 4 pm"},
-      { ClassNo:28, month:"JUN", day:"27", title:"Phase 7", type:"live", date:"2026-06-27", time: "2 pm to 4 pm"},
-      { ClassNo:29, month:"JUN", day:"28", title:"Phase 7", type:"live", date:"2026-06-28", time: "2 pm to 4 pm"},
-      { ClassNo:30, month:"JUL", day:"4", title:"Phase 8", type:"live", date:"2026-07-04", time: "2 pm to 4 pm"},
-      { ClassNo:31, month:"JUL", day:"5", title:"Phase 8", type:"live", date:"2026-07-05", time: "2 pm to 4 pm"},
-      { ClassNo:32, month:"JUL", day:"11", title:"Phase 8", type:"live", date:"2026-07-11", time: "2 pm to 4 pm"},
-      { ClassNo:33, month:"JUL", day:"12", title:"Phase 8", type:"live", date:"2026-07-12", time: "2 pm to 4 pm"},
-      { ClassNo:34, month:"JUL", day:"18", title:"Phase 9", type:"live", date:"2026-07-18", time: "2 pm to 4 pm"},
-      { ClassNo:35, month:"JUL", day:"19", title:"Phase 9", type:"live", date:"2026-07-19", time: "2 pm to 4 pm"},
-      { ClassNo:36, month:"JUL", day:"25", title:"Phase 9", type:"live", date:"2026-07-25", time: "2 pm to 4 pm"},
-      { ClassNo:37, month:"JUL", day:"26", title:"Phase 9", type:"live", date:"2026-07-26", time: "2 pm to 4 pm"},
-      { ClassNo:38, month:"AUG", day:"1", title:"Phase 10", type:"live", date:"2026-08-01", time: "2 pm to 4 pm"},
-      { ClassNo:39, month:"AUG", day:"2", title:"Phase 10", type:"live", date:"2026-08-02", time: "2 pm to 4 pm"},
-      { ClassNo:40, month:"AUG", day:"8", title:"Phase 10", type:"live", date:"2026-08-08", time: "2 pm to 4 pm"},
-      { ClassNo:41, month:"AUG", day:"9", title:"Phase 10", type:"live", date:"2026-08-09", time: "2 pm to 4 pm"},
-      { ClassNo:42, month:"AUG", day:"15", title:"Phase 10", type:"live", date:"2026-08-15", time: "2 pm to 4 pm"}
-    ],
-    fundamentals: [
-	  { ClassNo:1, month:"MAR", day:"21", title:"Phase 0", type:"live", date:"2026-03-21", time: "11 am to 1 pm"},
-      { ClassNo:2, month:"MAR", day:"28", title:"Phase 1", type:"live", date:"2026-03-28", time: "11 am to 1 pm"},
-      { ClassNo:3, month:"MAR", day:"30", title:"Phase 1", type:"live", date:"2026-03-30", time: "7 pm to 9 pm"},
-      { ClassNo:4, month:"APR", day:"4", title:"Phase 1", type:"live", date:"2026-04-04", time: "11 am to 1 pm"},
-      { ClassNo:5, month:"APR", day:"6", title:"Phase 1", type:"live", date:"2026-04-06", time: "7 pm to 9 pm"},
-      { ClassNo:6, month:"APR", day:"11", title:"Phase 1", type:"live", date:"2026-04-11", time: "11 am to 1 pm"},
-      { ClassNo:7, month:"APR", day:"13", title:"Phase 1", type:"live", date:"2026-04-13", time: "7 pm to 9 pm"},
-      { ClassNo:8, month:"APR", day:"18", title:"Phase 1", type:"live", date:"2026-04-18", time: "11 am to 1 pm"},
-      { ClassNo:9, month:"APR", day:"20", title:"Phase 1", type:"live", date:"2026-04-20", time: "7 pm to 9 pm"},
-      { ClassNo:10, month:"APR", day:"25", title:"Phase 2", type:"live", date:"2026-04-25", time: "11 am to 1 pm"},
-      { ClassNo:11, month:"APR", day:"27", title:"Phase 2", type:"live", date:"2026-04-27", time: "7 pm to 9 pm"},
-      { ClassNo:12, month:"MAY", day:"2", title:"Phase 2", type:"live", date:"2026-05-02", time: "11 am to 1 pm"},
-      { ClassNo:13, month:"MAY", day:"4", title:"Phase 2", type:"live", date:"2026-05-04", time: "7 pm to 9 pm"},
-      { ClassNo:14, month:"MAY", day:"9", title:"Phase 2", type:"live", date:"2026-05-09", time: "11 am to 1 pm"},
-      { ClassNo:15, month:"MAY", day:"11", title:"Phase 2", type:"live", date:"2026-05-11", time: "7 pm to 9 pm"},
-      { ClassNo:16, month:"MAY", day:"16", title:"Phase 2", type:"live", date:"2026-05-16", time: "11 am to 1 pm"},
-      { ClassNo:17, month:"MAY", day:"18", title:"Phase 2", type:"live", date:"2026-05-18", time: "7 pm to 9 pm"},
-      { ClassNo:18, month:"MAY", day:"23", title:"Phase 2", type:"live", date:"2026-05-23", time: "11 am to 1 pm"},
-      { ClassNo:19, month:"MAY", day:"25", title:"Phase 2", type:"live", date:"2026-05-25", time: "7 pm to 9 pm"},
-      { ClassNo:20, month:"MAY", day:"30", title:"Phase 2", type:"live", date:"2026-05-30", time: "11 am to 1 pm"},
-      { ClassNo:21, month:"JUN", day:"1", title:"Phase 3", type:"live", date:"2026-06-01", time: "7 pm to 9 pm"},
-      { ClassNo:22, month:"JUN", day:"6", title:"Phase 3", type:"live", date:"2026-06-06", time: "11 am to 1 pm"},
-      { ClassNo:23, month:"JUN", day:"8", title:"Phase 3", type:"live", date:"2026-06-08", time: "7 pm to 9 pm"},
-      { ClassNo:24, month:"JUN", day:"13", title:"Phase 3", type:"live", date:"2026-06-13", time: "11 am to 1 pm"},
-      { ClassNo:25, month:"JUN", day:"15", title:"Phase 3", type:"live", date:"2026-06-15", time: "7 pm to 9 pm"},
-      { ClassNo:26, month:"JUN", day:"20", title:"Phase 3", type:"live", date:"2026-06-20", time: "11 am to 1 pm"},
-      { ClassNo:27, month:"JUN", day:"22", title:"Phase 3", type:"live", date:"2026-06-22", time: "7 pm to 9 pm"},
-      { ClassNo:28, month:"JUN", day:"27", title:"Phase 3", type:"live", date:"2026-06-27", time: "11 am to 1 pm"},
-      { ClassNo:29, month:"JUN", day:"29", title:"Phase 3", type:"live", date:"2026-06-29", time: "7 pm to 9 pm"},
-      { ClassNo:30, month:"JUL", day:"4", title:"Phase 3", type:"live", date:"2026-07-04", time: "11 am to 1 pm"},
-      { ClassNo:31, month:"JUL", day:"6", title:"Phase 3", type:"live", date:"2026-07-06", time: "7 pm to 9 pm"},
-      { ClassNo:32, month:"JUL", day:"11", title:"Phase 4", type:"live", date:"2026-07-11", time: "11 am to 1 pm"},
-      { ClassNo:33, month:"JUL", day:"13", title:"Phase 4", type:"live", date:"2026-07-13", time: "7 pm to 9 pm"},
-      { ClassNo:34, month:"JUL", day:"18", title:"Phase 4", type:"live", date:"2026-07-18", time: "11 am to 1 pm"},
-      { ClassNo:35, month:"JUL", day:"20", title:"Phase 4", type:"live", date:"2026-07-20", time: "7 pm to 9 pm"},
-      { ClassNo:36, month:"JUL", day:"25", title:"Phase 4", type:"live", date:"2026-07-25", time: "11 am to 1 pm"},
-      { ClassNo:37, month:"JUL", day:"27", title:"Phase 4", type:"live", date:"2026-07-27", time: "7 pm to 9 pm"},
-      { ClassNo:38, month:"AUG", day:"1", title:"Phase 4", type:"live", date:"2026-08-01", time: "11 am to 1 pm"},
-      { ClassNo:39, month:"AUG", day:"3", title:"Phase 4", type:"live", date:"2026-08-03", time: "7 pm to 9 pm"},
-      { ClassNo:40, month:"AUG", day:"8", title:"Phase 4", type:"live", date:"2026-08-08", time: "11 am to 1 pm"},
-      { ClassNo:41, month:"AUG", day:"10", title:"Phase 4", type:"live", date:"2026-08-10", time: "7 pm to 9 pm"},
-      { ClassNo:42, month:"AUG", day:"15", title:"Phase 4", type:"live", date:"2026-08-15", time: "11 am to 1 pm"}
+      { ClassNo:7, month:"APR", day:"12", title:"Phase 1", type:"live", date:"2026-04-12", time: "2 pm to 4 pm"},
+      { ClassNo:8, month:"APR", day:"18", title:"Phase 1", type:"live", date:"2026-04-18", time: "2 pm to 4 pm"},
+      { ClassNo:9, month:"APR", day:"19", title:"Phase 1", type:"live", date:"2026-04-19", time: "2 pm to 4 pm"},
+      { ClassNo:10, month:"APR", day:"25", title:"Phase 2", type:"live", date:"2026-04-25", time: "2 pm to 4 pm"},
+      { ClassNo:11, month:"APR", day:"26", title:"Phase 2", type:"live", date:"2026-04-26", time: "2 pm to 4 pm"},
+      { ClassNo:12, month:"MAY", day:"2", title:"Phase 2", type:"live", date:"2026-05-02", time: "2 pm to 4 pm"},
+      { ClassNo:13, month:"MAY", day:"3", title:"Phase 2", type:"live", date:"2026-05-03", time: "2 pm to 4 pm"},
+      { ClassNo:14, month:"MAY", day:"9", title:"Phase 2", type:"live", date:"2026-05-09", time: "2 pm to 4 pm"},
+      { ClassNo:15, month:"MAY", day:"10", title:"Phase 2", type:"live", date:"2026-05-10", time: "2 pm to 4 pm"},
+      { ClassNo:16, month:"MAY", day:"16", title:"Phase 2", type:"live", date:"2026-05-16", time: "2 pm to 4 pm"},
+      { ClassNo:17, month:"MAY", day:"17", title:"Phase 2", type:"live", date:"2026-05-17", time: "2 pm to 4 pm"},
+      { ClassNo:18, month:"MAY", day:"23", title:"Phase 2", type:"live", date:"2026-05-23", time: "2 pm to 4 pm"},
+      { ClassNo:19, month:"MAY", day:"24", title:"Phase 2", type:"live", date:"2026-05-24", time: "2 pm to 4 pm"},
+      { ClassNo:20, month:"MAY", day:"30", title:"Phase 2", type:"live", date:"2026-05-30", time: "2 pm to 4 pm"},
+      { ClassNo:21, month:"MAY", day:"31", title:"Phase 3", type:"live", date:"2026-05-31", time: "2 pm to 4 pm"},
+      { ClassNo:22, month:"JUN", day:"6", title:"Phase 3", type:"live", date:"2026-06-06", time: "2 pm to 4 pm"},
+      { ClassNo:23, month:"JUN", day:"7", title:"Phase 3", type:"live", date:"2026-06-07", time: "2 pm to 4 pm"},
+      { ClassNo:24, month:"JUN", day:"13", title:"Phase 3", type:"live", date:"2026-06-13", time: "2 pm to 4 pm"},
+      { ClassNo:25, month:"JUN", day:"14", title:"Phase 3", type:"live", date:"2026-06-14", time: "2 pm to 4 pm"},
+      { ClassNo:26, month:"JUN", day:"20", title:"Phase 3", type:"live", date:"2026-06-20", time: "2 pm to 4 pm"},
+      { ClassNo:27, month:"JUN", day:"21", title:"Phase 3", type:"live", date:"2026-06-21", time: "2 pm to 4 pm"},
+      { ClassNo:28, month:"JUN", day:"27", title:"Phase 3", type:"live", date:"2026-06-27", time: "2 pm to 4 pm"},
+      { ClassNo:29, month:"JUN", day:"28", title:"Phase 3", type:"live", date:"2026-06-28", time: "2 pm to 4 pm"},
+      { ClassNo:30, month:"JUL", day:"4", title:"Phase 3", type:"live", date:"2026-07-04", time: "2 pm to 4 pm"},
+      { ClassNo:31, month:"JUL", day:"5", title:"Phase 3", type:"live", date:"2026-07-05", time: "2 pm to 4 pm"},
+      { ClassNo:32, month:"JUL", day:"11", title:"Phase 4", type:"live", date:"2026-07-11", time: "2 pm to 4 pm"},
+      { ClassNo:33, month:"JUL", day:"12", title:"Phase 4", type:"live", date:"2026-07-12", time: "2 pm to 4 pm"},
+      { ClassNo:34, month:"JUL", day:"18", title:"Phase 4", type:"live", date:"2026-07-18", time: "2 pm to 4 pm"},
+      { ClassNo:35, month:"JUL", day:"19", title:"Phase 4", type:"live", date:"2026-07-19", time: "2 pm to 4 pm"},
+      { ClassNo:36, month:"JUL", day:"25", title:"Phase 4", type:"live", date:"2026-07-25", time: "2 pm to 4 pm"},
+      { ClassNo:37, month:"JUL", day:"26", title:"Phase 4", type:"live", date:"2026-07-26", time: "2 pm to 4 pm"},
+      { ClassNo:38, month:"AUG", day:"1", title:"Phase 4", type:"live", date:"2026-08-01", time: "2 pm to 4 pm"},
+      { ClassNo:39, month:"AUG", day:"2", title:"Phase 4", type:"live", date:"2026-08-02", time: "2 pm to 4 pm"},
+      { ClassNo:40, month:"AUG", day:"8", title:"Phase 4", type:"live", date:"2026-08-08", time: "2 pm to 4 pm"},
+      { ClassNo:41, month:"AUG", day:"9", title:"Phase 4", type:"live", date:"2026-08-09", time: "2 pm to 4 pm"},
+      { ClassNo:42, month:"AUG", day:"15", title:"Phase 4", type:"live", date:"2026-08-15", time: "2 pm to 4 pm"}
     ],
     ml: [
-	  { ClassNo:1, month:"APR", day:"4", title:"Phase 1", type:"live", date:"2026-04-04", time: "6 pm to 8 pm"},
-      { ClassNo:2, month:"APR", day:"5", title:"Phase 1", type:"live", date:"2026-04-05", time: "6 pm to 8 pm"},
-      { ClassNo:3, month:"APR", day:"11", title:"Phase 1", type:"live", date:"2026-04-11", time: "6 pm to 8 pm"},
-      { ClassNo:4, month:"APR", day:"12", title:"Phase 1", type:"live", date:"2026-04-12", time: "6 pm to 8 pm"},
-      { ClassNo:5, month:"APR", day:"18", title:"Phase 1", type:"live", date:"2026-04-18", time: "6 pm to 8 pm"},
-      { ClassNo:6, month:"APR", day:"19", title:"Phase 1", type:"live", date:"2026-04-19", time: "6 pm to 8 pm"},
-      { ClassNo:7, month:"APR", day:"25", title:"Phase 1", type:"live", date:"2026-04-25", time: "6 pm to 8 pm"},
-      { ClassNo:8, month:"APR", day:"26", title:"Phase 1", type:"live", date:"2026-04-26", time: "6 pm to 8 pm"},
-      { ClassNo:9, month:"MAY", day:"2", title:"Phase 1", type:"live", date:"2026-05-02", time: "6 pm to 8 pm"},
-      { ClassNo:10, month:"MAY", day:"3", title:"Phase 1", type:"live", date:"2026-05-03", time: "6 pm to 8 pm"},
-      { ClassNo:11, month:"MAY", day:"9", title:"Phase 1", type:"live", date:"2026-05-09", time: "6 pm to 8 pm"},
-      { ClassNo:12, month:"MAY", day:"10", title:"Phase 2", type:"live", date:"2026-05-10", time: "6 pm to 8 pm"},
-      { ClassNo:13, month:"MAY", day:"16", title:"Phase 2", type:"live", date:"2026-05-16", time: "6 pm to 8 pm"},
-      { ClassNo:14, month:"MAY", day:"17", title:"Phase 2", type:"live", date:"2026-05-17", time: "6 pm to 8 pm"},
-      { ClassNo:15, month:"MAY", day:"23", title:"Phase 2", type:"live", date:"2026-05-23", time: "6 pm to 8 pm"},
-      { ClassNo:16, month:"MAY", day:"24", title:"Phase 3", type:"live", date:"2026-05-24", time: "6 pm to 8 pm"},
-      { ClassNo:17, month:"MAY", day:"30", title:"Phase 3", type:"live", date:"2026-05-30", time: "6 pm to 8 pm"},
-      { ClassNo:18, month:"MAY", day:"31", title:"Phase 3", type:"live", date:"2026-05-31", time: "6 pm to 8 pm"},
-      { ClassNo:19, month:"JUN", day:"6", title:"Phase 3", type:"live", date:"2026-06-06", time: "6 pm to 8 pm"},
-      { ClassNo:20, month:"JUN", day:"7", title:"Phase 3", type:"live", date:"2026-06-07", time: "6 pm to 8 pm"},
-      { ClassNo:21, month:"JUN", day:"13", title:"Phase 3", type:"live", date:"2026-06-13", time: "6 pm to 8 pm"},
-      { ClassNo:22, month:"JUN", day:"14", title:"Phase 3", type:"live", date:"2026-06-14", time: "6 pm to 8 pm"},
-      { ClassNo:23, month:"JUN", day:"20", title:"Phase 3", type:"live", date:"2026-06-20", time: "6 pm to 8 pm"},
-      { ClassNo:24, month:"JUN", day:"21", title:"Phase 3", type:"live", date:"2026-06-21", time: "6 pm to 8 pm"},
-      { ClassNo:25, month:"JUN", day:"27", title:"Phase 3", type:"live", date:"2026-06-27", time: "6 pm to 8 pm"},
-      { ClassNo:26, month:"JUN", day:"28", title:"Phase 4", type:"live", date:"2026-06-28", time: "6 pm to 8 pm"},
-      { ClassNo:27, month:"JUL", day:"4", title:"Phase 4", type:"live", date:"2026-07-04", time: "6 pm to 8 pm"},
-      { ClassNo:28, month:"JUL", day:"5", title:"Phase 4", type:"live", date:"2026-07-05", time: "6 pm to 8 pm"},
-      { ClassNo:29, month:"JUL", day:"11", title:"Phase 5", type:"live", date:"2026-07-11", time: "6 pm to 8 pm"},
-      { ClassNo:30, month:"JUL", day:"12", title:"Phase 5", type:"live", date:"2026-07-12", time: "6 pm to 8 pm"},
-      { ClassNo:31, month:"JUL", day:"18", title:"Phase 5", type:"live", date:"2026-07-18", time: "6 pm to 8 pm"},
-      { ClassNo:32, month:"JUL", day:"19", title:"Phase 6", type:"live", date:"2026-07-19", time: "6 pm to 8 pm"},
-      { ClassNo:33, month:"JUL", day:"25", title:"Phase 6", type:"live", date:"2026-07-25", time: "6 pm to 8 pm"},
-      { ClassNo:34, month:"JUL", day:"26", title:"Phase 6", type:"live", date:"2026-07-26", time: "6 pm to 8 pm"},
-      { ClassNo:35, month:"AUG", day:"1", title:"Phase 6", type:"live", date:"2026-08-01", time: "6 pm to 8 pm"},
-      // { ClassNo:40, month:"AUG", day:"2", title:"Phase 1", type:"live", date:"2026-08-02" , time: "6 pm to 8 pm"},
-      // { ClassNo:41, month:"AUG", day:"8", title:"Phase 1", type:"live", date:"2026-08-08" , time: "6 pm to 8 pm"},
-      // { ClassNo:42, month:"AUG", day:"9", title:"Phase 1", type:"live", date:"2026-08-09" , time: "6 pm to 8 pm"}
+      { ClassNo:1, month:"APR", day:"4", title:"Phase 1", type:"live", date:"2026-04-04", time: "10 pm to 12 am"},
+      { ClassNo:2, month:"APR", day:"5", title:"Phase 1", type:"live", date:"2026-04-05", time: "10 pm to 12 am"},
+      { ClassNo:3, month:"APR", day:"11", title:"Phase 1", type:"live", date:"2026-04-11", time: "10 pm to 12 am"},
+      { ClassNo:4, month:"APR", day:"12", title:"Phase 1", type:"live", date:"2026-04-12", time: "10 pm to 12 am"},
+      { ClassNo:5, month:"APR", day:"18", title:"Phase 1", type:"live", date:"2026-04-18", time: "10 pm to 12 am"},
+      { ClassNo:6, month:"APR", day:"19", title:"Phase 1", type:"live", date:"2026-04-19", time: "10 pm to 12 am"},
+      { ClassNo:7, month:"APR", day:"25", title:"Phase 1", type:"live", date:"2026-04-25", time: "10 pm to 12 am"},
+      { ClassNo:8, month:"APR", day:"26", title:"Phase 1", type:"live", date:"2026-04-26", time: "10 pm to 12 am"},
+      { ClassNo:9, month:"MAY", day:"2", title:"Phase 1", type:"live", date:"2026-05-02", time: "10 pm to 12 am"},
+      { ClassNo:10, month:"MAY", day:"3", title:"Phase 1", type:"live", date:"2026-05-03", time: "10 pm to 12 am"},
+      { ClassNo:11, month:"MAY", day:"9", title:"Phase 1", type:"live", date:"2026-05-09", time: "10 pm to 12 am"},
+      { ClassNo:12, month:"MAY", day:"10", title:"Phase 2", type:"live", date:"2026-05-10", time: "10 pm to 12 am"},
+      { ClassNo:13, month:"MAY", day:"16", title:"Phase 2", type:"live", date:"2026-05-16", time: "10 pm to 12 am"},
+      { ClassNo:14, month:"MAY", day:"17", title:"Phase 2", type:"live", date:"2026-05-17", time: "10 pm to 12 am"},
+      { ClassNo:15, month:"MAY", day:"23", title:"Phase 2", type:"live", date:"2026-05-23", time: "10 pm to 12 am"},
+      { ClassNo:16, month:"MAY", day:"24", title:"Phase 3", type:"live", date:"2026-05-24", time: "10 pm to 12 am"},
+      { ClassNo:17, month:"MAY", day:"30", title:"Phase 3", type:"live", date:"2026-05-30", time: "10 pm to 12 am"},
+      { ClassNo:18, month:"MAY", day:"31", title:"Phase 3", type:"live", date:"2026-05-31", time: "10 pm to 12 am"},
+      { ClassNo:19, month:"JUN", day:"6", title:"Phase 3", type:"live", date:"2026-06-06", time: "10 pm to 12 am"},
+      { ClassNo:20, month:"JUN", day:"7", title:"Phase 3", type:"live", date:"2026-06-07", time: "10 pm to 12 am"},
+      { ClassNo:21, month:"JUN", day:"13", title:"Phase 3", type:"live", date:"2026-06-13", time: "10 pm to 12 am"},
+      { ClassNo:22, month:"JUN", day:"14", title:"Phase 3", type:"live", date:"2026-06-14", time: "10 pm to 12 am"},
+      { ClassNo:23, month:"JUN", day:"20", title:"Phase 3", type:"live", date:"2026-06-20", time: "10 pm to 12 am"},
+      { ClassNo:24, month:"JUN", day:"21", title:"Phase 3", type:"live", date:"2026-06-21", time: "10 pm to 12 am"},
+      { ClassNo:25, month:"JUN", day:"27", title:"Phase 3", type:"live", date:"2026-06-27", time: "10 pm to 12 am"},
+      { ClassNo:26, month:"JUN", day:"28", title:"Phase 4", type:"live", date:"2026-06-28", time: "10 pm to 12 am"},
+      { ClassNo:27, month:"JUL", day:"4", title:"Phase 4", type:"live", date:"2026-07-04", time: "10 pm to 12 am"},
+      { ClassNo:28, month:"JUL", day:"5", title:"Phase 4", type:"live", date:"2026-07-05", time: "10 pm to 12 am"},
+      { ClassNo:29, month:"JUL", day:"11", title:"Phase 5", type:"live", date:"2026-07-11", time: "10 pm to 12 am"},
+      { ClassNo:30, month:"JUL", day:"12", title:"Phase 5", type:"live", date:"2026-07-12", time: "10 pm to 12 am"},
+      { ClassNo:31, month:"JUL", day:"18", title:"Phase 5", type:"live", date:"2026-07-18", time: "10 pm to 12 am"},
+      { ClassNo:32, month:"JUL", day:"19", title:"Phase 6", type:"live", date:"2026-07-19", time: "10 pm to 12 am"},
+      { ClassNo:33, month:"JUL", day:"25", title:"Phase 6", type:"live", date:"2026-07-25", time: "10 pm to 12 am"},
+      { ClassNo:34, month:"JUL", day:"26", title:"Phase 6", type:"live", date:"2026-07-26", time: "10 pm to 12 am"},
+      { ClassNo:35, month:"AUG", day:"1", title:"Phase 6", type:"live", date:"2026-08-01", time: "10 pm to 12 am"}
     ],
   });
 
@@ -831,9 +828,12 @@ const ProfessionalCourseSchedule = ({
                           Class Link
                         </div>
                         {purchased ? (
-                          <>Link</>
+                          <> 
+                            <div><b>Meeting Link: </b> <span className = "bg-blue-700 text-white font-bold px-3 py-[1px] rounded"><Link to = {`${examname == "webdev" ? "https://us06web.zoom.us/j/81764384293?pwd=ingk0B8Qm1WMxtO21pNhkZl3B0hJxz.1" : examname == "dsa" ? "https://us06web.zoom.us/j/81954602362?pwd=I3P5HSB3gzozQwhzVa9oCz4Z1aBY6U.1" : examname == "fundamentals" ? "https://us06web.zoom.us/j/81647078530?pwd=TDrcAsD5Ab9JXyd1QGPx2dXpL24LzR.1" : "https://us06web.zoom.us/j/87537975890?pwd=F8mpPaqPWE2bBSbUntJB2iOWjZWlAZ.1"}`}>Join</Link></span></div>
+                            <div><b>Passcode: </b> {examname == "webdev" && 755550}{examname == "fundamentals" && 125780}{examname == "dsa" && 857096}{examname == "ml" && 792895}</div>
+                          </>
                         ) : (
-                          <div className="text-slate-600">
+                          <div className="text-red-600">
                             <b>Purchase the course to activate the link</b>
                           </div>
                         )}
@@ -849,6 +849,11 @@ const ProfessionalCourseSchedule = ({
 
                     {nextClass ? (
                       <>
+
+                        <div className="text-slate-800 font-semibold">
+                          Class Number - {nextClass?.ClassNo}
+                        </div>
+
                         <div className="text-slate-800 font-semibold">
                           {nextClass?.title}
                         </div>
@@ -859,6 +864,9 @@ const ProfessionalCourseSchedule = ({
                             month: "short",
                             day: "numeric",
                           })}
+                        </div>
+                        <div className="text-slate-600 text-sm">
+                          {nextClass?.time}
                         </div>
                       </>
                     ) : (
@@ -901,6 +909,12 @@ const ProfessionalCourseSchedule = ({
                             </div>
                           </div>
 
+                          <div className="flex-shrink-0 bg-gradient-to-br from-slate-100 to-slate-200 rounded-xl p-4 text-center md:min-w-[80px]">
+                            <div className="text-md font-semibold text-slate-600">
+                              {session.time}
+                            </div>
+                          </div>
+
                           {/* Session Content */}
                           <div className="flex-1">
                             <div className="flex items-start justify-between mb-3">
@@ -908,21 +922,20 @@ const ProfessionalCourseSchedule = ({
                                 {session.title}
                               </h4>
                               <div
-                                className={`flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold border ${getStatusColor(
-                                  session.status || "upcoming",
-                                )}`}
+                                className={`flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold border`}
                               >
-                                {getTypeIcon(session.type || "live")}
-                                {session.status || "upcoming"}
+                                {session?.ClassNo < (nextClass?.ClassNo ?? Infinity) ? "Completed" : "Upcoming"}
                               </div>
                             </div>
 
-                            <div className="flex items-center justify-between">
-                              <button className="opacity-0 group-hover:opacity-100 transition-opacity text-blue-600 hover:text-blue-700 flex items-center gap-1">
+                            {purchased && <div className="flex items-center justify-between">
+                              <button className="opacity-0 group-hover:opacity-100 transition-opacity text-blue-600 hover:text-blue-700 flex items-center gap-1" onClick={() => {
+                                window.open(`${examname == "webdev" ? "https://us06web.zoom.us/j/81764384293?pwd=ingk0B8Qm1WMxtO21pNhkZl3B0hJxz.1" : examname == "dsa" ? "https://us06web.zoom.us/j/81954602362?pwd=I3P5HSB3gzozQwhzVa9oCz4Z1aBY6U.1" : examname == "fundamentals" ? "https://us06web.zoom.us/j/81647078530?pwd=TDrcAsD5Ab9JXyd1QGPx2dXpL24LzR.1" : "https://us06web.zoom.us/j/87537975890?pwd=F8mpPaqPWE2bBSbUntJB2iOWjZWlAZ.1"}`, "_blank")
+                              }}>
                                 Join Session
                                 <ChevronRight className="w-4 h-4" />
                               </button>
-                            </div>
+                            </div>}
                           </div>
                         </div>
                       </div>

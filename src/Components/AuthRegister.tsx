@@ -149,7 +149,7 @@ function AuthRegister() {
             <div className="relative z-10">
               <div className="text-4xl mb-4">🚀</div>
               <h1 className="text-3xl md:text-4xl font-bold text-white mb-2">
-                Join Kepler 22B
+                Join Kepler Codes
               </h1>
               <p className="text-blue-100 text-lg">
                 Complete your registration to unlock the future of tech

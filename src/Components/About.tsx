@@ -13,7 +13,7 @@ const About: FC<componentPropsInterface> = () => {
         <div className="relative max-w-7xl mx-auto px-6 py-20">
           <div className="text-center space-y-6">
             <h1 className="text-6xl font-bold bg-gradient-to-r from-blue-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent">
-              Kepler 22B
+              Kepler Codes
             </h1>
             <p className="text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
               Empowering India's white-collar workforce with cutting-edge technical and mathematical skills for the future job market

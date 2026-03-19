@@ -58,14 +58,14 @@ const Index: FC<componentPropsInterface> = ({ auth, details }) => {
                 <div className="relative">
                   <img
                     src="/Images/Kepler_Logo.png"
-                    alt="Kepler 22B"
+                    alt="Kepler Codes"
                     width={40}
                     height={40}
                     className="rounded-lg transition-transform group-hover:scale-105"
                   />
                 </div>
                 <div className="flex flex-col">
-                  <span className="text-xl font-bold text-gray-900 tracking-tight">Kepler 22B</span>
+                  <span className="text-xl font-bold text-gray-900 tracking-tight">Kepler Codes</span>
                 </div>
               </Link>
             </div>
@@ -340,13 +340,13 @@ const Index: FC<componentPropsInterface> = ({ auth, details }) => {
             <Link to="/" className="flex items-center space-x-2" onClick={() => setNavOpen(false)}>
               <img
                 src="/Images/Kepler_Logo.png"
-                alt="Kepler 22B"
+                alt="Kepler Codes"
                 width={32}
                 height={32}
                 className="rounded-lg"
               />
               <div>
-                <span className="text-lg font-bold text-gray-900">Kepler 22B</span>
+                <span className="text-lg font-bold text-gray-900">Kepler Codes</span>
               </div>
             </Link>
 

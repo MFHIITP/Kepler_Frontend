@@ -154,7 +154,7 @@ function Register() {
               </svg>
             </div>
             <h1 className="text-3xl font-bold text-white mb-2">
-              Join Kepler 22B
+              Join Kepler Codes
             </h1>
             <p className="text-blue-100 text-lg">
               Start your tech education journey today
