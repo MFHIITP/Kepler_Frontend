@@ -136,21 +136,21 @@ function ProfessionalCourseDetails({details} : { details: UserDetails }) {
   };
 
   const courseInfo = {
-    languages: {
-      title: "Computer Languages Mastery Program",
-      subtitle:
-        "Comprehensive preparation for all object oriented programming languages",
-      image: "/Images/AllTeachers.jpg",
-      highlights: [
-        "Complete guidance from experts in the industry",
-        "Interactive doubt-clearing sessions",
-        "Comprehensive study materials",
-        "Regular assessments and feedback",
-      ],
-      duration: "5 months",
-      students: "10+",
-      rating: 4.8,
-    },
+    // languages: {
+    //   title: "Computer Languages Mastery Program",
+    //   subtitle:
+    //     "Comprehensive preparation for all object oriented programming languages",
+    //   image: "/Images/AllTeachers.jpg",
+    //   highlights: [
+    //     "Complete guidance from experts in the industry",
+    //     "Interactive doubt-clearing sessions",
+    //     "Comprehensive study materials",
+    //     "Regular assessments and feedback",
+    //   ],
+    //   duration: "5 months",
+    //   students: "10+",
+    //   rating: 4.8,
+    // },
     fundamentals: {
       title: "Complete Computer Fundamentals Program",
       subtitle:

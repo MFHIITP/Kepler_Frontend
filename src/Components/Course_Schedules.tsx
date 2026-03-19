@@ -115,7 +115,7 @@ const ProfessionalCourseSchedule = ({
       duration: "5 Months / Bi-Weekly Classes",
       students: "10+",
       rating: 4.9,
-      startDate: "March 21st, 2026",
+      startDate: "March 20th, 2026",
       image: "/Images/WebDev1InternalImage.jpg",
     },
     dsa: {
@@ -127,7 +127,7 @@ const ProfessionalCourseSchedule = ({
       duration: "5 Months / Bi-Weekly Classes",
       students: "10+",
       rating: 4.7,
-      startDate: "March 20th, 2026",
+      startDate: "March 23th, 2026",
       image: "/Images/DSA1InternalImage.jpg",
     },
     fundamentals: {
@@ -151,7 +151,7 @@ const ProfessionalCourseSchedule = ({
       duration: "5 Months / Bi-Weekly Classes",
       students: "10+",
       rating: 4.7,
-      startDate: "April 4st, 2026",
+      startDate: "April 4th, 2026",
       image: "/Images/ML1InternalImage.gif",
     },
     placement: {
@@ -163,7 +163,7 @@ const ProfessionalCourseSchedule = ({
       duration: "5 Months / Bi-Weekly Classes Per Course",
       students: "10+",
       rating: 4.7,
-      startDate: "March 21st, 2026",
+      startDate: "March 20th, 2026",
       image: "/Images/placed.jpg",
     },
   });
