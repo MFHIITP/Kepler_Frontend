@@ -94,10 +94,10 @@ const ProfessionalCourseSchedule = ({
 
   useEffect(() => {
     getPurchasedCourseMutation({
-      emailId: details.email,
+      emailId: details?.email,
       examname: examname ?? "",
     });
-  }, [details.email, examname]);
+  }, [details?.email, examname]);
 
   useEffect(() => {
     const nextClassValue = getNextClass();

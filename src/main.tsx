@@ -24,6 +24,13 @@ const executives: string[] = [
 const adminemails: string[] = [
   "hossainfarshid@gmail.com",
   "supratim.mukherjee123@gmail.com",
+  "idipan2003@gmail.com",
+  "vivek829h@gmail.com",
+  "satwikcoder03@gmail.com",
+  "purnendukumarmisra9@gmail.com",
+  "irfanhgazi@gmail.com",
+  "sohailalamx@gmail.com",
+  "surjayank@gmail.com"
 ];
 
 // Lazy load the App component
