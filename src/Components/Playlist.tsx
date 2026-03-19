@@ -34,7 +34,7 @@ function ProfessionalVideoPlaylist({ exam, details }: { exam: string, details: U
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentProgress, setCurrentProgress] = useState(0);
   const [showPlaylist, setShowPlaylist] = useState(false); // For mobile toggle
-  const [currentPlaylist, setCurrentPlaylist] = useState<VideoItem[]>([]);
+  const [currentPlaylist, setCurrentPlaylist] = useState<VideoItem[] | null>(null);
   const [loading, setLoading] = useState(false);
   const selectedVideo = currentPlaylist?.find((video) => video.id === selectedVideoId) || currentPlaylist?.[0];
 
@@ -212,7 +212,7 @@ function ProfessionalVideoPlaylist({ exam, details }: { exam: string, details: U
               </div>
             </div>
             <div className="text-xs md:text-sm text-slate-600">
-              {!currentPlaylist || currentPlaylist.length == 0 ? (
+              {!currentPlaylist ? (
                 <div className="flex items-start gap-2.5 mt-1 p-3 rounded-xl bg-gradient-to-r from-red-50 to-orange-50 border border-red-100">
                   <div className="flex-shrink-0 mt-0.5 w-7 h-7 rounded-lg bg-red-100 flex items-center justify-center">
                     <ShoppingCart className="w-3.5 h-3.5 text-red-500" />
