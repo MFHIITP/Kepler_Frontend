@@ -20,15 +20,10 @@ export const MyContext = createContext<contextInterface | undefined>(undefined);
 const executives: string[] = [
   "hossainfarshid@gmail.com",
   "supratim.mukherjee123@gmail.com",
-  "subha072001@gmail.com",
-"arijit.01paul@gmail.com"
 ];
 const adminemails: string[] = [
   "hossainfarshid@gmail.com",
   "supratim.mukherjee123@gmail.com",
-  "arijit.01paul@gmail.com",
-  "ssagnik56@gmail.com",
-  "subha072001@gmail.com",
 ];
 
 // Lazy load the App component
