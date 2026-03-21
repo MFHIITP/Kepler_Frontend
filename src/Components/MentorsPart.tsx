@@ -2,13 +2,13 @@ import { useState, useEffect, useRef } from "react";
 
 const teamMembers = [
     {
-    name: "Vivek Halder",
+    name: "Kepler Codes",
     role: "Co-Founder & Developer",
     tags: ["Developer"],
     company: "Google · Amazon",
     color: "from-pink-500 to-rose-500",
     bio: "With his unbound experience in the field of working with tech giants, expect nothing short of achieving absolute mastery over the dominion of all things related to Web Development.",
-    initials: "/Images/VivekHaldar.jpg",
+    initials: "/Images/Kepler_Logo.png",
   },
   {
     name: "Farshid Hossain",

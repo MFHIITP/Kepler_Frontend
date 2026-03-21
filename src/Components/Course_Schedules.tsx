@@ -170,7 +170,7 @@ const ProfessionalCourseSchedule = ({
 
   const [scheduleData] = useState({
     webdev: [
-      { ClassNo:1, month:"MAR", day:"20", title:"Phase 0", type:"live", date:"2026-03-20", time: "7 pm to 9 pm"},
+      { ClassNo:1, month:"MAR", day:"20", title:"Phase 0", type:"live", date:"2026-03-20", time: "8 pm to 10 pm"},
       { ClassNo:2, month:"MAR", day:"26", title:"Phase 0", type:"live", date:"2026-03-26", time: "7 pm to 9 pm"},
       { ClassNo:3, month:"MAR", day:"27", title:"Phase 0", type:"live", date:"2026-03-27", time: "7 pm to 9 pm"},
       { ClassNo:4, month:"APR", day:"2", title:"Phase 0", type:"live", date:"2026-04-02", time: "7 pm to 9 pm"},
@@ -483,16 +483,73 @@ const ProfessionalCourseSchedule = ({
     navigate("/profiles");
   };
 
+  const parseTime = (date: string, time: string) => {
+    const [start, end] = time.split(" to ");
+
+    const convert = (t: string) => {
+      let [hour, modifier] = t.split(" ");
+      let h = parseInt(hour);
+
+      if (modifier === "pm" && h !== 12) h += 12;
+      if (modifier === "am" && h === 12) h = 0;
+
+      return h;
+    };
+
+    const startHour = convert(start);
+    const endHour = convert(end);
+
+    const startDate = new Date(date);
+    startDate.setHours(startHour, 0, 0, 0);
+
+    const endDate = new Date(date);
+    endDate.setHours(endHour, 0, 0, 0);
+
+    return { startDate, endDate };
+  };
+
   const getNextClass = () => {
     if (examname == "placement") return null;
-  
+
     const now = new Date();
-  
-    const upcoming = currentSchedule.filter((session: any) => session.date).map((session: any) => ({
+
+    // 1️⃣ Check today's class
+    for (let session of currentSchedule) {
+      const { startDate, endDate } = parseTime(
+        session.date,
+        session.time
+      );
+
+      const today = new Date();
+      const sessionDay = new Date(
+        startDate.getFullYear(),
+        startDate.getMonth(),
+        startDate.getDate()
+      );
+      const todayDay = new Date(
+        today.getFullYear(),
+        today.getMonth(),
+        today.getDate()
+      );
+
+      // Same day check
+      if (sessionDay.getTime() === todayDay.getTime()) {
+        // If class NOT finished → return this
+        if (now <= endDate) {
+          return session;
+        }
+      }
+    }
+
+    // 2️⃣ Otherwise → next future class
+    const upcoming = currentSchedule
+      .map((session: any) => ({
         ...session,
         fullDate: new Date(session.date),
-      })).filter((session: any) => session.fullDate >= now).sort((a: any, b: any) => a.fullDate - b.fullDate);
-  
+      }))
+      .filter((session: any) => session.fullDate > now)
+      .sort((a: any, b: any) => a.fullDate - b.fullDate);
+
     return upcoming[0] || null;
   };
 
@@ -716,10 +773,6 @@ const ProfessionalCourseSchedule = ({
                         Comprehensive curriculum designed for success
                       </p>
                     </div>
-                    <button className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl font-semibold transition-colors inline-flex items-center gap-2">
-                      <Download className="w-4 h-4" />
-                      Download PDF
-                    </button>
                   </div>
                 </div>
 

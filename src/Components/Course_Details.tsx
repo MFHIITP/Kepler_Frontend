@@ -46,24 +46,24 @@ function ProfessionalCourseDetails({details} : { details: UserDetails }) {
     navigate(`/profiles`);
   };
   const teachersData = {
-    languages: [
-      {
-        id: 1,
-        name: "Purnendu Kumar Misra",
-        image: "/Images/Shubhayan_image.jpg",
-        subjects: ["Java", "C++"],
-        experience: "1+ Years Teaching",
-        rating: 4.9,
-        students: "50+",
-        description:
-          "Specializes in Object Oriented Programming concepts and principles, with extensive experience in C++, Java and Python. Currently endeavouring to share his extensive knowledge with the enthusiasts on the platform.",
-      },
-    ],
+    // languages: [
+    //   {
+    //     id: 1,
+    //     name: "Purnendu Kumar Misra",
+    //     image: "/Images/Shubhayan_image.jpg",
+    //     subjects: ["Java", "C++"],
+    //     experience: "1+ Years Teaching",
+    //     rating: 4.9,
+    //     students: "50+",
+    //     description:
+    //       "Specializes in Object Oriented Programming concepts and principles, with extensive experience in C++, Java and Python. Currently endeavouring to share his extensive knowledge with the enthusiasts on the platform.",
+    //   },
+    // ],
     webdev: [
       {
         id: 1,
-        name: "Vivek Haldar",
-        image: "/Images/VivekHaldar.jpg",
+        name: "Kepler Codes",
+        image: "/Images/Kepler_Logo.png",
         subjects: ["Frontend", "Backend", "DataBase", "DevOps"],
         experience: "1+ Years Teaching",
         rating: 4.9,
