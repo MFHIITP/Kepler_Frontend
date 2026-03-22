@@ -214,7 +214,7 @@ const ProfessionalCourseSchedule = ({
       { ClassNo:42, month:"AUG", day:"13", title:"Phase 7", type:"live", date:"2026-08-13", time: "7 pm to 9 pm"}
     ],
     dsa: [
-      { ClassNo:1, month:"MAR", day:"23", title:"Phase 0", type:"live", date:"2026-03-23", time: "6 pm to 8 pm"},
+      { ClassNo:1, month:"MAR", day:"23", title:"Phase 0", type:"live", date:"2026-03-23", time: "6:30 pm to 8:30 pm"},
       { ClassNo:2, month:"MAR", day:"28", title:"Phase 1", type:"live", date:"2026-03-28", time: "6 pm to 8 pm"},
       { ClassNo:3, month:"MAR", day:"29", title:"Phase 1", type:"live", date:"2026-03-29", time: "6 pm to 8 pm"},
       { ClassNo:4, month:"APR", day:"4", title:"Phase 1", type:"live", date:"2026-04-04", time: "6 pm to 8 pm"},
