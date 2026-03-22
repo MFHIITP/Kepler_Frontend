@@ -254,11 +254,11 @@ function ProfessionalVideoPlaylist({ exam, details }: { exam: string, details: U
                     <div className="flex gap-3 md:gap-4">
                       {/* Thumbnail */}
                       <div className="relative flex-shrink-0">
-                        {/* <img
+                        <img
                           src={video.image}
                           alt={video.name}
                           className="w-16 md:w-20 h-9 md:h-11 rounded-lg object-cover"
-                        /> */}
+                        />
                         <div className="absolute bottom-0.5 md:bottom-1 bg-black/80 text-white text-xs px-1 rounded">
                           {video.time}
                         </div>

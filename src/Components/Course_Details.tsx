@@ -97,14 +97,25 @@ function ProfessionalCourseDetails({details} : { details: UserDetails }) {
     fundamentals: [
       {
         id: 1,
-        name: "Farshid Hossain",
-        image: "/Images/FarshidHossain.jpg",
-        subjects: ["CN", "DBMS", "OS", "COA", "OOPS"],
+        name: "Satwik Biswas",
+        image: "/Images/SatwikBiswas.jpg",
+        subjects: ["CN", "OOPS"],
         experience: "1+ Years Teaching",
         rating: 4.9,
         students: "50+",
         description:
-          "With his direct and to the point approach to the principles of OOPS, DBMS, OS and System Design, get ready to sharpen and hone your skills in CS Fundamentals, and get a solid grasp on the domain.",
+          "With his direct and to the point approach to the principles of OOPS, and CN, get ready to sharpen and hone your skills in CS Fundamentals, and get a solid grasp on the domain.",
+      },
+      {
+        id: 2,
+        name: "Purnendu Kumar Misra",
+        image: "/Images/PurnenduKumarMishra.jpg",
+        subjects: ["DBMS", "OS"],
+        experience: "1+ Years Teaching",
+        rating: 4.9,
+        students: "50+",
+        description:
+          "With his direct and to the point approach to the principles of DBMS and OS, get ready to sharpen and hone your skills in CS Fundamentals, and get a solid grasp on the domain.",
       },
     ],
     ml: [
@@ -123,14 +134,45 @@ function ProfessionalCourseDetails({details} : { details: UserDetails }) {
     placement: [
       {
         id: 1,
-        name: "Vivek Haldar",
-        image: "/Images/VivekHaldar.jpg",
-        subjects: ["Frontend", "Backend", "DataBase", "DevOps"],
+        name: "Irfan Gazi",
+        image: "/Images/IrfanGazi.png",
+        subjects: [
+          "Arrays",
+          "Linked Lists",
+          "Binary Search",
+          "Sliding Window",
+          "Trees",
+          "Graphs",
+          "Dynamic Programming",
+          "Tries",
+        ],
+        experience: "1+ Years Teaching",
+        rating: 4.8,
+        students: "50+",
+        description:
+          "With his unbound expertise in the field of Data Structures and Algorithms, expect nothing less than the best when it comes to solving coding challenges like a pro."
+      },
+      {
+        id: 2,
+        name: "Satwik Biswas",
+        image: "/Images/SatwikBiswas.jpg",
+        subjects: ["CN", "OOPS"],
         experience: "1+ Years Teaching",
         rating: 4.9,
         students: "50+",
         description:
-          "Learn from experts in the field of Full Stack Development and devOps, and prepare projects and applications that would leave everyone mesmerized.",
+          "With his direct and to the point approach to the principles of OOPS, and CN, get ready to sharpen and hone your skills in CS Fundamentals, and get a solid grasp on the domain.",
+      },
+      {
+        id: 3,
+        name: "Dipan Mondal",
+        image: "/Images/DipanMondal.jpg",
+        subjects: ["ML", "AI", "DL", "LLM"],
+        experience: "1+ Years Teaching",
+        rating: 4.9,
+        students: "50+",
+        description:
+          "With his no nonsense approach the the field of Machine Learning, Deep Learning, Data Science and its associated principles, you would be able to dive deep into this ever widening field with a level of confidence that you have never had before.",
       },
     ],
   };
