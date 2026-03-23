@@ -80,6 +80,8 @@ const apiRoutes = {
         studentDetailFromStudentData: '/admins/getStudentDetailsFromStudentData',
     },
     homePage: '/api/homePage',
+    getSchedule: '/scheduleSyllabus/getCourseSchedule',
+    getSyllabus: "/scheduleSyllabus/getCourseSyllabus",
     problems: {
         getProblem: '/problems/getTodayProblem',
         runProblem: '/problems/runProblem' ,
