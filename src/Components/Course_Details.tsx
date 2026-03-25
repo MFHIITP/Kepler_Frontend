@@ -197,7 +197,7 @@ function ProfessionalCourseDetails({details} : { details: UserDetails }) {
       title: "Complete Computer Fundamentals Program",
       subtitle:
         "Comprehensive preparation for Computer Networks, Database Management, Operating Systems and Computer Organization and Architechture",
-      image: "/Images/AllTeachers.jpg",
+      image: "/Images/Kepler_Logo.png",
       highlights: [
         "Complete guidance from experts in the industry",
         "Interactive doubt-clearing sessions",
@@ -211,7 +211,7 @@ function ProfessionalCourseDetails({details} : { details: UserDetails }) {
     webdev: {
       title: "Complete Web Development package",
       subtitle: "Complete Full Stack Web Development with Dev Ops Masterclass",
-      image: "/Images/AllTeachers.jpg",
+      image: "/Images/Kepler_Logo.png",
       highlights: [
         "Complete guidance from experts in the industry",
         "Interactive doubt-clearing sessions",
@@ -226,7 +226,7 @@ function ProfessionalCourseDetails({details} : { details: UserDetails }) {
       title: "Complete DSA masterclass package",
       subtitle:
         "Targeted Preparation for all variations of DSA questions in any job interview",
-      image: "/Images/AllTeachers.jpg",
+      image: "/Images/Kepler_Logo.png",
       highlights: [
         "Complete guidance from experts in the industry",
         "Interactive doubt-clearing sessions",
@@ -241,7 +241,7 @@ function ProfessionalCourseDetails({details} : { details: UserDetails }) {
       title: "Complete ML masterclass package",
       subtitle:
         "Targeted Preparation for all variations of ML questions in any job interview",
-      image: "/Images/AllTeachers.jpg",
+      image: "/Images/Kepler_Logo.png",
       highlights: [
         "Complete guidance from experts in the industry",
         "Interactive doubt-clearing sessions",
@@ -255,7 +255,7 @@ function ProfessionalCourseDetails({details} : { details: UserDetails }) {
     placement: {
       title: "Complete Package Involving DSA, Web Development and CS Fundamentals",
       subtitle: "This tracker is designed for students who want both interview problem solving and real project proof. You will learn DSA patterns, build a deployable web portfolio, and master the CS fundamentals that interviewers ask repeatedly.",
-      image: "/Images/AllTeachers.jpg",
+      image: "/Images/Kepler_Logo.png",
       highlights: [
         "Complete guidance from experts in the industry",
         "Interactive doubt-clearing sessions",
